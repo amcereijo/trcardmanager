@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+    <string name="app_name">TRCardManager</string>
+    
+     <!-- login -->
+	<string name="email">Email:</string>
+	<string name="password">Contraseña:</string>
+	<string name="btn_login_enter">Entrar</string>
+	<string name="login_error_message">Email and/or contraseña incorrecto</string>
+	<string name="login_error_connection_message">Error de conexión al conectarse</string>
+	<string name="login_rememberme">Recuedame</string>
+    
+	<!-- cards list -->    
+	<string name="cards_list_title">Tus tarjetas</string>
+    <string name="cards_add_to_list">Añadir </string>
+    
+    <string name="cards_list_card_title">Tarjeta: </string>
+    <string name="cards_list_card_balance">Saldo: </string>
+    
+    <!-- active card -->
+    <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegurate de haberla activado telefonicamente.</string>
+    
+</resources>
