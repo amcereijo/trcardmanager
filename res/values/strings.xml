@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+    <string name="hello">Hello World, TRCardManagerActivity!</string>
+    <string name="app_name">TRCardManager</string>
+    
+     <!-- login -->
+	<string name="email">Email:</string>
+	<string name="password">Password:</string>
+	<string name="btn_login_enter">Enter</string>
+	<string name="login_error_message">Email and/or password incorrect</string>
+	<string name="login_error_connection_message">Netwrok error to login</string>
+	<string name="login_rememberme">Remember me</string>
+    
+	<!-- cards list -->    
+	<string name="cards_list_title">Your Cards</string>
+    <string name="cards_add_to_list">Add </string>
+    
+    <string name="cards_list_card_title">Card: </string>
+    <string name="cards_list_card_balance">Balance: </string>
+    
+</resources>

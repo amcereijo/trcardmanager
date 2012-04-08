@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:padding="10dip"
+	android:background="#819FF7">
+	<!--  Email Label -->
+	<TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/white"
+	        android:text="@string/email"/>
+	<EditText android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dip"
+	        android:layout_marginBottom="20dip"
+	        android:singleLine="true"
+	        android:id="@+id/email"/>
+	<!--  Password Label -->
+	<TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/white"
+	        android:text="@string/password"/>
+	<EditText android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dip"
+	        android:singleLine="true"
+	        android:password="true"
+	        android:id="@+id/password"/>
+	<LinearLayout android:orientation="horizontal"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:background="#819FF7">
+		<CheckBox android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dip"
+	        android:id="@+id/rememberme"/>
+		<TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/white"
+	        android:text="@string/login_rememberme"/>
+	</LinearLayout>
+	<!-- Login button -->
+	<Button android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="10dip"
+	        android:text="@string/btn_login_enter"
+	        android:id="@+id/btn_login_enter"/>
+	
+	<LinearLayout android:visibility="invisible"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:background="@drawable/login_error_border"
+	    android:id="@+id/error_login_layout">
+	    <TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:background="#819FF7"
+	        android:textColor="@android:color/white"
+	        android:paddingTop="2dp"
+	        android:paddingBottom="2dp"
+	        android:gravity="center_vertical|center_horizontal"
+	        android:id="@+id/error_login_text_view"/>
+	</LinearLayout>
+	
+</LinearLayout>
