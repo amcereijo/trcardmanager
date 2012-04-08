@@ -37,5 +37,9 @@ public class CardDao {
 	public String getBalance() {
 		return balance;
 	}
+	
+	public CardDao getCopy() {
+		return new CardDao(getId(), getCardNumber(), getBalance());
+	}
 
 }

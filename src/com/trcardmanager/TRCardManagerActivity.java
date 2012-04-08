@@ -1,9 +1,7 @@
 package com.trcardmanager;
 
 import java.io.IOException;
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -28,6 +26,7 @@ import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
+import com.trcardmanager.exception.TRCardManagerUpdateCardException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 
 public class TRCardManagerActivity extends Activity {
@@ -48,6 +47,7 @@ public class TRCardManagerActivity extends Activity {
 			httpAction.getActualCardBalance(user);
 			//db actions
 			dbHelper.addCard(user.getRowId(), user.getActualCard());
+			dbHelper.updateCardBalance(user.getActualCard());
 			dbHelper.findUserCards(user);
 			//view actions
 			addCardsToView(user);
@@ -209,7 +209,74 @@ public class TRCardManagerActivity extends Activity {
 		textActualOrRemoveCardStart.setLayoutParams(relLayoutParmsIcon);
  		cardDataLayout.addView(textActualOrRemoveCardStart);
  		
+ 		
+ 		if(!actualCard){
+ 			TextView textNoActive = new TextView(getApplicationContext());
+ 			textNoActive.setGravity(Gravity.CENTER_VERTICAL);
+
+ 			textNoActive.setBackgroundResource(R.drawable.no_active);
+ 			textNoActive.setOnClickListener(new OnClickListener() {
+ 					public void onClick(View v) {
+ 						//active card
+ 						long cardId = v.getId()/1000;
+ 						changeActiveCard(cardId);
+ 					}
+ 				});
+ 			textNoActive.setId((int)card.getId()*1000);
+ 	 		RelativeLayout.LayoutParams relLayoutParmsNoActive = 
+ 					new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+ 	 		relLayoutParmsNoActive.addRule(RelativeLayout.LEFT_OF,textActualOrRemoveCardStart.getId());
+ 	 		textNoActive.setLayoutParams(relLayoutParmsNoActive);
+ 	 		cardDataLayout.addView(textNoActive);
+ 		}
+ 		
  		return cardDataLayout;
+    }
+    
+    private void changeActiveCard(long cardId){
+    	UserDao user = TRCardManagerApplication.getUser();
+    	CardDao newActiveCard = findCardById(user.getCards(),cardId);
+    	//http active card
+    	TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+    	try {
+			httpAction.activateCard(user, newActiveCard);
+			//refresh in memory list
+			user.getCards().remove(newActiveCard);
+			CardDao tempCard = user.getActualCard().getCopy();
+			user.setActualCard(newActiveCard);
+			user.getCards().add(tempCard);
+			
+			httpAction.getActualCardBalance(user);
+			//update balance card
+			TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
+			dbHelper.updateCardBalance(newActiveCard);
+	    	//show
+			addCardsToView(user);
+		} catch (IOException e) {
+			e.printStackTrace();
+			showErrorDialog(R.string.activate_card_error);
+		} catch (TRCardManagerUpdateCardException e) {
+			e.printStackTrace();
+			showErrorDialog(R.string.activate_card_error);
+		} catch (TRCardManagerDataException e) {
+			e.printStackTrace();
+			//TODO change message
+			showErrorDialog(R.string.activate_card_error);
+		}
+    	
+    }
+    
+    private void showErrorDialog(int messageCode){
+    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	builder.setMessage(messageCode)
+    	       .setCancelable(false)
+    	       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int id) {
+    	                dialog.cancel();
+    	           }
+    	       });
+    	AlertDialog alert = builder.create();
+    	alert.show();
     }
     
     private TextView createCardDataTextView(String text,boolean bold){
@@ -246,6 +313,15 @@ public class TRCardManagerActivity extends Activity {
     }
     
     
+    
+    private CardDao findCardById(List<CardDao> cards, long id){
+    	for(CardDao card:cards){
+    		if(card.getId() == id){
+    			return card;
+    		}
+    	}
+    	return null;
+    }
     
     private void addCardIfNotExist(UserDao user,CardDao card){
     	List<CardDao> cards = user.getCards();

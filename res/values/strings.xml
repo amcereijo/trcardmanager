@@ -19,4 +19,7 @@
     <string name="cards_list_card_title">Card: </string>
     <string name="cards_list_card_balance">Balance: </string>
     
+    <!-- active card -->
+    <string name="activate_card_error">Card can not be active. Please, check the card number and be sure the card was activated by phone.</string>
+    
 </resources>
