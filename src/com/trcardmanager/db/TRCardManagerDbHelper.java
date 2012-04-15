@@ -13,7 +13,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class TRCardManagerDbHelper extends SQLiteOpenHelper {
-		//boolean = integers 0 (false) and 1 (true).
+	//boolean = integers 0 (false) and 1 (true).
+	private static final int VALUE_OF_TRUE = 1;
+	private static final int VALUE_OF_FALSE = 0;
 	//the rowid is like a id of user
 	
 	private static final int DATABASE_VERSION = 5;
@@ -22,7 +24,7 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	private static final String CARD_TABLE_NAME = "table_cards";
 	
 	private static final String CREATE_TABLE_USER = "create table "
-		+USER_TABLE_NAME+" (email text, password text, rememberme integer default 0," +
+		+USER_TABLE_NAME+" (email text, password text, rememberme integer default "+VALUE_OF_FALSE+" ," +
 			"primary key (email))";
 	private static final String CREATE_TABLE_CARD = "create table "+
 		CARD_TABLE_NAME+" (userid integer, cardnumber text, balance text, " +
@@ -56,12 +58,13 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		UserDao user = null;
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(USER_TABLE_NAME, new String[]{"rowid","email","password","rememberme"},
-				"rememberme=1",null, null, null, null);
+				"rememberme=?",new String[]{""+VALUE_OF_TRUE}, null, null, null);
 		if(cursor.moveToFirst()){
 			user = new UserDao(cursor.getString(1), cursor.getString(2),
 					getBooleanValueOfInt(cursor.getInt(3)));
 			user.setRowId(cursor.getLong(0));
 		}
+		cursor.close();
 		db.close();
 		return user;
 	}
@@ -74,6 +77,7 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 			user.setRowId(cursor.getLong(0));
 			user.setRememberme(getBooleanValueOfInt(cursor.getInt(1)));
 		}
+		cursor.close();
 		db.close();
 	}
 	
@@ -127,6 +131,8 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 				user.getCards().add(card);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
+		db.close();
 	}
 	
 	
@@ -170,23 +176,25 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		if(cursor.moveToFirst()){
 			card = new CardDao(cursor.getLong(0),null,null);
 		}
+		cursor.close();
+		db.close();
 		return card;
 	}
 	
 	private void clearRemeberMeUsers(){
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("rememberme",0);
+		values.put("rememberme",VALUE_OF_FALSE);
 		db.update(USER_TABLE_NAME, values, null, null);
 		db.close();
 	}
 	
 	private int getIntValueOfBoolean(boolean booleanValue){
-		return booleanValue?1:0;
+		return booleanValue?VALUE_OF_TRUE:VALUE_OF_FALSE;
 	}
 	
 	private boolean getBooleanValueOfInt(int intValue){
-		return 1 == intValue;
+		return VALUE_OF_TRUE == intValue;
 	}
 
 }

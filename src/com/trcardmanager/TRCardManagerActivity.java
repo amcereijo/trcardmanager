@@ -3,8 +3,6 @@ package com.trcardmanager;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,6 +19,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.trcardmanager.action.TRCardManagerLoadAndSaveDataAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
@@ -35,38 +34,13 @@ public class TRCardManagerActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-        //get http card
-        
-        TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-        TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
-        UserDao user = TRCardManagerApplication.getUser();
-        try {
-        	//http actions
-			httpAction.getActualCard(user);
-			httpAction.getActualCardBalance(user);
-			//db actions
-			dbHelper.addCard(user.getRowId(), user.getActualCard());
-			dbHelper.updateCardBalance(user.getActualCard());
-			dbHelper.findUserCards(user);
-			//view actions
-			addCardsToView(user);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TRCardManagerDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        
-        //get db cards
-        //update db cards
-        
+        TRCardManagerLoadAndSaveDataAction loadAndSaveDataAction = 
+        	new TRCardManagerLoadAndSaveDataAction();
+        UserDao user = loadAndSaveDataAction.getUserData();
+		//view actions
+		addCardsToView(user);
     }
+    
     
     
     public void clickAddCard(View v) {
@@ -323,22 +297,5 @@ public class TRCardManagerActivity extends Activity {
     	return null;
     }
     
-    private void addCardIfNotExist(UserDao user,CardDao card){
-    	List<CardDao> cards = user.getCards();
-    	String newCardNumber = card.getCardNumber();
-    	boolean match = false;
-    	for(CardDao actualCard:cards){
-    		if(actualCard.getCardNumber().equals(newCardNumber)){
-    			match = true;
-    		}
-    	}
-    	if(!match){
-    		cards.add(card);
-    	}else{
-    		
-    	}
-    }
-    
    
-    
 }
