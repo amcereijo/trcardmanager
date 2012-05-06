@@ -19,7 +19,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.trcardmanager.action.TRCardManagerLoadAndSaveDataAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
@@ -29,19 +28,25 @@ import com.trcardmanager.exception.TRCardManagerUpdateCardException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 
 public class TRCardManagerActivity extends Activity {
-    /** Called when the activity is first created. */
+   
+	
+	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        TRCardManagerLoadAndSaveDataAction loadAndSaveDataAction = 
-        	new TRCardManagerLoadAndSaveDataAction();
-        UserDao user = loadAndSaveDataAction.getUserData();
+        
+		UserDao user = TRCardManagerApplication.getUser();
 		//view actions
-		addCardsToView(user);
+		addCardsToView(user);		
+		TRCardManagerApplication.setActualActivity(this);
     }
     
-    
+    @Override
+    protected void onRestart() {
+    	super.onRestart();
+    	TRCardManagerApplication.setActualActivity(this);
+    }
     
     public void clickAddCard(View v) {
 		//show view to add cardNumber

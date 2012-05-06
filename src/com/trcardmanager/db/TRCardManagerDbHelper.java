@@ -2,15 +2,15 @@ package com.trcardmanager.db;
 
 import java.util.ArrayList;
 
-import com.trcardmanager.dao.CardDao;
-import com.trcardmanager.dao.UserDao;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.trcardmanager.dao.CardDao;
+import com.trcardmanager.dao.UserDao;
 
 public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	//boolean = integers 0 (false) and 1 (true).

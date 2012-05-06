@@ -11,10 +11,14 @@
 	<string name="login_error_message">Email and/or password incorrect</string>
 	<string name="login_error_connection_message">Netwrok error to login</string>
 	<string name="login_rememberme">Remember me</string>
+	<string name="loggin_load_dialog_title">Loggin</string>
+    <string name="loggin_load_dialog_text">Loggin in system...</string>
     
 	<!-- cards list -->    
 	<string name="cards_list_title">Your Cards</string>
     <string name="cards_add_to_list">Add </string>
+    <string name="loadcards_load_dialog_title">Your cards</string>
+    <string name="loadcards_load_dialog_text">Loading your data...</string>
     
     <string name="cards_list_card_title">Card: </string>
     <string name="cards_list_card_balance">Balance: </string>

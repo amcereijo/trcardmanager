@@ -1,14 +1,15 @@
 package com.trcardmanager.application;
 
-import com.trcardmanager.dao.UserDao;
-
+import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
+
+import com.trcardmanager.dao.UserDao;
 
 public class TRCardManagerApplication extends Application {
 
 	private static UserDao user;
-	private static Context context;
+	//private static Context context;
+	private static Activity actualActivity;
 	
 	public static void setUser(UserDao user) {
 		TRCardManagerApplication.user = user;
@@ -17,11 +18,19 @@ public class TRCardManagerApplication extends Application {
 		return user;
 	}
 	
-	public static Context getContext(){
-		return context;
+	public static void setActualActivity(Activity actualActivity) {
+		TRCardManagerApplication.actualActivity = actualActivity;
 	}
-	public static void setContext(Context context) {
-		TRCardManagerApplication.context = context;
+	public static Activity getActualActivity() {
+		return actualActivity;
 	}
+	
+	
+//	public static Context getContext(){
+//		return context;
+//	}
+//	public static void setContext(Context context) {
+//		TRCardManagerApplication.context = context;
+//	}
 	
 }

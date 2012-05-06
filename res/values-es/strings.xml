@@ -10,10 +10,14 @@
 	<string name="login_error_message">Email and/or contraseña incorrecto</string>
 	<string name="login_error_connection_message">Error de conexión al conectarse</string>
 	<string name="login_rememberme">Recuedame</string>
+	<string name="loggin_load_dialog_title">Autenticar</string>
+    <string name="loggin_load_dialog_text">Autenticando en el sistema...</string>
     
 	<!-- cards list -->    
 	<string name="cards_list_title">Tus tarjetas</string>
     <string name="cards_add_to_list">Añadir </string>
+    <string name="loadcards_load_dialog_title">Tus tarjetas</string>
+    <string name="loadcards_load_dialog_text">Cargando tus datos...</string>
     
     <string name="cards_list_card_title">Tarjeta: </string>
     <string name="cards_list_card_balance">Saldo: </string>
