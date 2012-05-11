@@ -5,7 +5,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:padding="10dip"
-	android:background="#819FF7">
+	android:background="#18376C">
 	<!--  Email Label -->
 	<TextView android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
 	<LinearLayout android:orientation="horizontal"
 	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"
-	    android:background="#819FF7">
+	    android:background="#18376C">
 		<CheckBox android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5dip"

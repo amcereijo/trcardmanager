@@ -261,7 +261,8 @@ public class TRCardManagerActivity extends Activity {
     private TextView createCardDataTextView(String text,boolean bold){
 		TextView textView = new TextView(getApplicationContext());
 		textView.setText(text);
-		textView.setTextColor(Color.rgb(52,90,204));
+		textView.setTextColor(Color.parseColor("#18376C"));
+//		textView.setTextColor(Color.rgb(52,90,204));
 		if(bold){
 			textView.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
 		}else{

@@ -15,6 +15,11 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 
+/**
+ * Activity to login
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerLoginActivity extends Activity {
 	
 	
@@ -64,10 +69,6 @@ public class TRCardManagerLoginActivity extends Activity {
 		String email = ((EditText)findViewById(R.id.email)).getText().toString();
 		String password = ((EditText)findViewById(R.id.password)).getText().toString();
 		boolean rememberme = ((CheckBox)findViewById(R.id.rememberme)).isChecked();
-		
-		System.out.println("Loged with email:"+email+" and password:"+password+
-				" .Want remember: "+rememberme);
-		
 		UserDao user = new UserDao(email, password, rememberme);
 		return user;
 	}

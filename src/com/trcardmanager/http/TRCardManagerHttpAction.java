@@ -2,8 +2,10 @@ package com.trcardmanager.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,6 +20,13 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
@@ -28,6 +37,9 @@ import com.trcardmanager.string.TRCardManagerStringHelper;
 
 public class TRCardManagerHttpAction {
 
+	private static final int TIMEOUT = 5000;
+	private static final String LOGIN_RESPONSE_OK = "2";
+	
 	private static final String COOKIE_NAME = "CWNWSESSION";
     private static final String URL_BASE = "https://ticketrestaurant.edenred.es/TRC/";
     private static final String URL_LOGIN = "checkUserLogin.php";
@@ -42,32 +54,24 @@ public class TRCardManagerHttpAction {
     private static final String PREPARE_UPDATE_CARD_START_SEARCH = "<input type=\"hidden\" name=\"id\" value=\"";
     private static final String PREPARE_UPDATE_CARD_END_SEARCH = "\">";
     
-    private static final String CARD_VALUE_START_SEARCH = "name=\"num_card\" value=\"";
-    private static final String CARD_VALUE_END_SEARCH = "\"";
-    
-    private static final String BALANCE_VALUE_START_SEARCH = "<p class=\"result\">";
-    private static final String BALANCE_VALUE_END_SEARCH = " ";
-    
-    private static final String LOGIN_RESPONSE_OK = "2";
     
        
-    public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, ClientProtocolException, IOException{
-    	HttpPost post = new HttpPost(URL_BASE+URL_LOGIN);
-    	List<NameValuePair> params = createPostListParameters( new String[][]{
-    			{"user", user.getEmail()},{"passwd", user.getPassword()},
-    			{"type", TYPE_PARAMETER}
-    	});
+    public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
+    		ClientProtocolException, IOException{
+		Map<String, String> postMap = new HashMap<String, String>();
+			postMap.put("user", user.getEmail());
+			postMap.put("passwd", user.getPassword());
+			postMap.put("type", TYPE_PARAMETER);
 		
-		post.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
-
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpResponse response = httpClient.execute(post);
-		HttpEntity entity = response.getEntity();
-
-		System.out.println("Login form get: " + response.getStatusLine());
-		if (entity != null) {
-			String cookieValue = processLoginResponse(httpClient,entity);
-			user.setCookieValue(cookieValue);
+		Response response = Jsoup.connect(URL_BASE+URL_LOGIN).data(postMap).execute();
+		if(response != null){
+			String responseString = response.body();
+	    	if(LOGIN_RESPONSE_OK.equals(responseString)){
+	    		 String cookieValue = response.cookie(COOKIE_NAME);
+	    		 user.setCookieValue(cookieValue);
+	    	}else{
+	    		throw new TRCardManagerLoginException();
+	    	}
 		}else{
 			throw new TRCardManagerLoginException();
 		}
@@ -75,46 +79,31 @@ public class TRCardManagerHttpAction {
     
     public void getActualCard(UserDao user) throws ClientProtocolException,
     		IOException, TRCardManagerDataException{
-    	DefaultHttpClient httpClient = new DefaultHttpClient();
-    	HttpGet get = new HttpGet(URL_BASE+URL_MY_ACCOUNT);
-    	get.addHeader("Cookie", COOKIE_NAME+"="+user.getCookieValue());
-    	
-    	HttpResponse response = httpClient.execute(get);
-    	HttpEntity entity = response.getEntity();
-    	
-    	System.out.println("consulta tarjeta get: " + response.getStatusLine());
-        if (entity != null) {
-        	String html = EntityUtils.toString(entity,HTTP.UTF_8);
-        	String cardNumber = new TRCardManagerStringHelper(html)
-        		.getStringBetwen(CARD_VALUE_START_SEARCH, CARD_VALUE_END_SEARCH);
-            System.out.println("Card Number:: "+cardNumber);
-            
-            CardDao card = new CardDao(cardNumber);
-            user.setActualCard(card);
-        }
+        Document htmlDocument = getHttpPage(URL_MY_ACCOUNT,user.getCookieValue());
+        Element elNumCard = htmlDocument.getElementById("num_card");
+        String numCardValue = elNumCard.attr("value");
+        Log.i("", "consulta tarjeta get: " + numCardValue);
+        CardDao card = new CardDao(numCardValue);
+        user.setActualCard(card);
     }
     
     public void getActualCardBalance(UserDao user) throws ClientProtocolException,
-		IOException, TRCardManagerDataException{
-    	DefaultHttpClient httpClient = new DefaultHttpClient();
-    	HttpGet get = new HttpGet(URL_BASE+URL_BALANCE);
-    	get.addHeader("Cookie", COOKIE_NAME+"="+user.getCookieValue());
-    	get.addHeader("Accept-Charset","utf-8");
-    
-    	HttpResponse response = httpClient.execute(get);
-    	HttpEntity entity = response.getEntity();
+		IOException, TRCardManagerDataException{  
     	
-    	System.out.println("consulta tarjeta get: " + response.getStatusLine());
-        if (entity != null) {
-        	String html = EntityUtils.toString(entity,HTTP.UTF_8);
-        	String cardBalance = new TRCardManagerStringHelper(html)
-        		.getStringBetwen(BALANCE_VALUE_START_SEARCH, BALANCE_VALUE_END_SEARCH);
-            System.out.println("Card balance: "+cardBalance);
-            
-            user.getActualCard().setBalance(cardBalance);
-        }
+    	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
+        Elements elementsResult = htmlDocument.getElementsByClass("result");
+        Element elBalance = elementsResult.first();
+        String balance = elBalance.html();
+        Log.i("", "consulta saldo get: " + balance);
+        int substringposition = balance.indexOf(" ");
+        user.getActualCard().setBalance(balance.substring(0,
+        		substringposition>0?substringposition:balance.length()-1));
     }
     
+    
+    private Document getHttpPage(String httpPage, String cookieValue) throws IOException{
+    	return Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT).get();
+    }
     
     public String getPrepareUpdateCard(UserDao user) throws ClientProtocolException,
 		IOException, TRCardManagerDataException{
@@ -127,7 +116,7 @@ public class TRCardManagerHttpAction {
 		HttpResponse response = httpClient.execute(get);
 		HttpEntity entity = response.getEntity();
 		
-		System.out.println("prepare update card get: " + response.getStatusLine());
+		Log.i("","prepare update card get: " + response.getStatusLine());
 		if (entity != null) {
 			String html = EntityUtils.toString(entity,HTTP.UTF_8);
 			id = new TRCardManagerStringHelper(html)
