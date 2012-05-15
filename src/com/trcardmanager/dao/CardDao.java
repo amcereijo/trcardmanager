@@ -1,10 +1,14 @@
 package com.trcardmanager.dao;
 
+import java.util.List;
+
 public class CardDao {
 	
 	private long id;
 	private String cardNumber; 
 	private String balance = "0,00";
+	
+	private List<MovementDao> movements;
 	
 	public CardDao(String cardNumber) {
 		setCardNumber(cardNumber);
@@ -15,6 +19,13 @@ public class CardDao {
 		setCardNumber(cardNumber);
 		setId(id);
 		setBalance(balance);
+	}
+	
+	public void setMovements(List<MovementDao> movements) {
+		this.movements = movements;
+	}
+	public List<MovementDao> getMovements() {
+		return movements;
 	}
 	
 	public void setId(long id) {

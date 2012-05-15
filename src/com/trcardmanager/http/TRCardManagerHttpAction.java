@@ -14,7 +14,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -29,6 +28,7 @@ import org.jsoup.select.Elements;
 import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
+import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
@@ -87,7 +87,7 @@ public class TRCardManagerHttpAction {
         user.setActualCard(card);
     }
     
-    public void getActualCardBalance(UserDao user) throws ClientProtocolException,
+    public void getActualCardBalanceAndMovements(UserDao user) throws ClientProtocolException,
 		IOException, TRCardManagerDataException{  
     	
     	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
@@ -98,6 +98,9 @@ public class TRCardManagerHttpAction {
         int substringposition = balance.indexOf(" ");
         user.getActualCard().setBalance(balance.substring(0,
         		substringposition>0?substringposition:balance.length()-1));
+        
+        List<MovementDao> movements = getMovementsList(htmlDocument);
+        user.getActualCard().setMovements(movements);
     }
     
     
@@ -176,29 +179,47 @@ public class TRCardManagerHttpAction {
     }
  
     
-    private String processLoginResponse(DefaultHttpClient httpClient, HttpEntity entity) throws TRCardManagerLoginException,IOException{
-    	String responseString = EntityUtils.toString(entity,HTTP.UTF_8);
-    	if(LOGIN_RESPONSE_OK.equals(responseString)){
-    		 return findCookieLogin(httpClient);
+   
+    private List<MovementDao> getMovementsList(Document htmlDocument) throws IOException{
+    	List<MovementDao> movementsList = new ArrayList<MovementDao>();
+    
+    	Element table =  htmlDocument.getElementsByClass("tab_movs").first();
+    	Elements tableRows = table.getElementsByTag("tr");
+    	int firstDataRow = 2;
+    	for(int cont=firstDataRow;cont<tableRows.size();cont++){
+    		MovementDao movement = getMovement(tableRows.get(cont));
+    		Log.i("", "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
+    		movementsList.add(movement);
     	}
-    	throw new TRCardManagerLoginException();
+    	return movementsList;
     }
     
-    private String findCookieLogin(DefaultHttpClient httpClient)throws TRCardManagerLoginException{
-    	System.out.println("Post logon cookies:");
-		List<Cookie> cookies = httpClient.getCookieStore().getCookies();
-		if (!cookies.isEmpty()) {
-			for(Cookie cookie : cookies){
-				if(COOKIE_NAME.equals(cookie.getName())){
-					String cookieValue = cookie.getValue();
-					System.out.println("VALUE get - " + cookieValue);
-					return cookieValue;
-				}
-			}
-		}
-		throw new TRCardManagerLoginException();
+    private MovementDao getMovement(Element dataRow){
+    	MovementDao movement = new MovementDao();
+    	Elements dataCells = dataRow.getElementsByTag("td");
+    	String date = dataCells.get(0).html();
+    	String hour = dataCells.get(1).html();
+    	String operationType = dataCells.get(3).html();
+    	
+    	String amount = dataCells.get(4).html();
+    	String trade = dataCells.get(5).html();
+    	String state = dataCells.get(6).html();
+    	
+    	movement.setDate(getAtFirstWhiteSpace(date));
+    	movement.setHour(getAtFirstWhiteSpace(hour));
+    	movement.setOperationType(operationType);
+    	movement.setAmount(getAtFirstWhiteSpace(amount)+"€");
+    	movement.setTrade(trade);
+    	movement.setState(state);
+    	
+    	return movement;
     }
     
+    private String getAtFirstWhiteSpace(String value){
+    	int pos = value.indexOf(" ");
+    	pos = pos == -1?value.length():pos;
+    	return value.substring(0,pos);
+    }
     
     
     private List<NameValuePair> createPostListParameters(String[][] nameVaules){

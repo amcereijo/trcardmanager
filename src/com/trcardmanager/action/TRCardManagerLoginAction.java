@@ -127,7 +127,7 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	        TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(activity);
 	    	//http actions
 			httpAction.getActualCard(userDao);
-			httpAction.getActualCardBalance(userDao);
+			httpAction.getActualCardBalanceAndMovements(userDao);
 			//db actions
 			dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
 			dbHelper.updateCardBalance(userDao.getActualCard());

@@ -32,9 +32,9 @@
 		    android:onClick="clickAddCard"
 		    android:layout_centerVertical="true"/>
 	</RelativeLayout>
-    
-    <LinearLayout android:orientation="vertical"
-	    android:layout_height="fill_parent"
+	
+	 <LinearLayout android:orientation="vertical"
+	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
 	    android:id="@+id/cards_layout"
 	    android:paddingLeft="10dip"
@@ -45,7 +45,184 @@
 		
 	</LinearLayout>
     
-     
-    
+
+	    
+	<!-- <TableLayout
+	  xmlns:android="http://schemas.android.com/apk/res/android"
+	  android:layout_width="fill_parent"
+	  android:layout_height="fill_parent"
+	  android:background="@android:color/white">
+	
+	  <TableRow android:background="@android:color/white"
+	      android:layout_marginLeft="1dp"
+          android:layout_marginTop="0dp"
+          android:layout_marginRight="1dp"
+          android:layout_marginBottom="0dp">
+	    <TextView android:text="Fecha"
+	        android:layout_width="115dp"        
+	        android:layout_column="0"
+	        android:layout_weight="1"
+	        android:textColor="@android:color/white"
+            android:background="#18376C"
+            android:layout_margin="0dp"
+            android:gravity="center_horizontal"/>
+	    <TextView android:text="Hora"
+	        android:layout_width="80dp"
+	        android:layout_column="1"
+	        android:layout_weight="1"
+	        android:textColor="@android:color/white"
+            android:background="#18376C"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal">
+	    </TextView>
+	    <TextView android:text="Importe"
+	        android:layout_width="100dp"
+	        android:layout_column="2"
+	        android:layout_weight="1"
+	        android:textColor="@android:color/white"
+            android:background="#18376C"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal">
+	    </TextView>
+	    <TextView android:text="Comercio"
+	        android:layout_width="165dp"
+	        android:layout_column="3"
+	        android:layout_weight="1"
+	        android:textColor="@android:color/white"
+            android:background="#18376C"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal">
+	    </TextView>
+
+	  </TableRow>
+	
+	    <ScrollView android:layout_width="460dp">      
+	    <TableLayout android:id="@+id/score_table"
+	      android:layout_width="fill_parent"
+	  		android:layout_height="fill_parent"
+	      android:background="@android:color/white">          
+	    <TableRow android:background="@android:color/white"
+	      android:layout_marginLeft="1dp"
+          android:layout_marginTop="0dp"
+          android:layout_marginRight="1dp"
+          android:layout_marginBottom="0dp" 
+	        android:layout_width="fill_parent"
+	  		android:layout_height="wrap_content">
+	       <TextView android:text="10/05/2012"
+	        android:layout_width="115dp"        
+	        android:layout_column="0"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="@android:color/white"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal"/>
+	    <TextView android:text="14:54"
+	        android:layout_width="80dp"
+	        android:layout_column="1"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="@android:color/white"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal">
+	    </TextView>
+	    <TextView android:text="-10,95€"
+	        android:layout_width="100dp"
+	        android:layout_column="2"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="@android:color/white"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="right">
+	    </TextView>
+	    <TextView android:text="RESTAURANTE VIPS MAN M"
+	        android:layout_width="165dp"
+	        android:layout_column="3"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="@android:color/white"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="left">
+	    </TextView>
+	    </TableRow>
+	     <TableRow android:background="@android:color/white"
+	      android:layout_marginLeft="1dp"
+          android:layout_marginTop="0dp"
+          android:layout_marginRight="1dp"
+          android:layout_marginBottom="0dp" 
+	        android:layout_width="fill_parent"
+	  		android:layout_height="wrap_content">
+	       <TextView android:text="09/05/2012"
+	        android:layout_width="115dp"        
+	        android:layout_column="0"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="#E0E6F8"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal"/>
+	    <TextView android:text="22:55"
+	        android:layout_width="80dp"
+	        android:layout_column="1"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="#E0E6F8"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="center_horizontal">
+	    </TextView>
+	    <TextView android:text="+130,60€"
+	        android:layout_width="100dp"
+	        android:layout_column="2"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="#E0E6F8"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="right">
+	    </TextView>
+	    <TextView android:text=""
+	        android:layout_width="165dp"
+	        android:layout_column="3"
+	        android:layout_weight="1"
+	        android:textColor="#18376C"
+            android:background="#E0E6F8"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="0dp"
+            android:gravity="left">
+	    </TextView>
+	    </TableRow>
+	  </TableLayout>
+	  </ScrollView>     
+	</TableLayout> -->
+        
 
 </LinearLayout>

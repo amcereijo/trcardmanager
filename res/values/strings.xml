@@ -26,4 +26,7 @@
     <!-- active card -->
     <string name="activate_card_error">Card can not be active. Please, check the card number and be sure the card was activated by phone.</string>
     
+    <!-- card movements -->
+    <string name="movements.movemements">Movements:</string>    
+    
 </resources>

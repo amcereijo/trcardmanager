@@ -25,4 +25,7 @@
     <!-- active card -->
     <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegurate de haberla activado telefonicamente.</string>
     
+    <!-- card movements -->
+    <string name="movements.movemements">Movimientos:</string>
+    
 </resources>
