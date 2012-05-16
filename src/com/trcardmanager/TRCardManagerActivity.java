@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.EditText;
@@ -37,16 +38,17 @@ public class TRCardManagerActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
         setContentView(R.layout.main);
         
 		UserDao user = TRCardManagerApplication.getUser();
 		//view actions
 		addCardsToView(user);		
 		TRCardManagerApplication.setActualActivity(this);
-		//TODO is there actual card?
-		//add cards in second 
-		//new TRCardManagerMovementsAction().execute();
     }
+    
+    
     
     
     private void addMovementsToView(List<MovementDao> movements,LinearLayout viewActualCard ){

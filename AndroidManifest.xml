@@ -11,21 +11,20 @@
     <application
         android:icon="@drawable/icono"
         android:label="@string/app_name"
-        android:name=".application.TRCardManagerApplication">
+        android:name=".application.TRCardManagerApplication"
+        >
         <activity
             android:label="@string/app_name"
-            android:name=".login.TRCardManagerLoginActivity" >
+            android:name=".login.TRCardManagerLoginActivity" 
+            android:screenOrientation="portrait">
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".TRCardManagerActivity" >
-<!--             <intent-filter > -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
-<!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
-<!--             </intent-filter> -->
+            android:name=".TRCardManagerActivity" 
+            android:screenOrientation="portrait">
         </activity>
         
     </application>

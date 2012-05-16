@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	
-    <string name="hello">Hello World, TRCardManagerActivity!</string>
     <string name="app_name">TRCardManager</string>
     
      <!-- login -->
@@ -9,10 +8,10 @@
 	<string name="password">Password:</string>
 	<string name="btn_login_enter">Enter</string>
 	<string name="login_error_message">Email and/or password incorrect</string>
-	<string name="login_error_connection_message">Netwrok error to login</string>
+	<string name="login_error_connection_message">Network error</string>
 	<string name="login_rememberme">Remember me</string>
-	<string name="loggin_load_dialog_title">Loggin</string>
-    <string name="loggin_load_dialog_text">Loggin in system...</string>
+	<string name="loggin_load_dialog_title">Login</string>
+    <string name="loggin_load_dialog_text">Logging in system...</string>
     
 	<!-- cards list -->    
 	<string name="cards_list_title">Your Cards</string>

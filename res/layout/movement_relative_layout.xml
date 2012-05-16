@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="0dp" >
+    android:padding="0sp" >
 
     <TextView
         android:id="@+id/hour_movement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="2dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="2sp"
         android:text=""
         android:textColor="#18376C" />
 
@@ -21,10 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/hour_movement"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="2dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="2sp"
         android:text=""
         android:textColor="#18376C" />
 	
@@ -34,10 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/hour_movement"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="1dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="1sp"
         android:text=""
         android:textColor="#18376C" />
 
@@ -48,10 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/hour_movement"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="1dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="1sp"
         android:text=""
         android:textColor="#18376C" />
 	
@@ -61,10 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hour_movement"
         android:layout_toLeftOf="@id/state_movement"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="1dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="1sp"
         android:text=""
         android:textColor="#18376C" />
     
@@ -74,10 +74,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/operation_movement"
-        android:paddingBottom="2dp"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:paddingTop="1dp"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="1sp"
         android:text=""
         android:textColor="#18376C" />
 

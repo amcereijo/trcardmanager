@@ -8,8 +8,8 @@
 	<string name="password">Contraseña:</string>
 	<string name="btn_login_enter">Entrar</string>
 	<string name="login_error_message">Email and/or contraseña incorrecto</string>
-	<string name="login_error_connection_message">Error de conexión al conectarse</string>
-	<string name="login_rememberme">Recuedame</string>
+	<string name="login_error_connection_message">Error de red</string>
+	<string name="login_rememberme">Recuerdame</string>
 	<string name="loggin_load_dialog_title">Autenticar</string>
     <string name="loggin_load_dialog_text">Autenticando en el sistema...</string>
     
