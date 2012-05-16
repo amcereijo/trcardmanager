@@ -49,7 +49,25 @@ public class TRCardManagerActivity extends Activity {
     }
     
     
+    @Override
+    public void onBackPressed() {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.exit_dialog_question_title);
+		alert.setMessage(R.string.exit_dialog_question_message);
+		alert.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						// System.exit(0);
+						closeApplication();
+					}
+				});
+		alert.setNegativeButton(android.R.string.no, null);
+		alert.show();
+    }
     
+    private void closeApplication(){
+    	this.finish();
+    }
     
     private void addMovementsToView(List<MovementDao> movements,LinearLayout viewActualCard ){
     	

@@ -6,7 +6,9 @@ import android.app.Application;
 import com.trcardmanager.dao.UserDao;
 
 public class TRCardManagerApplication extends Application {
-
+	
+	public static int BACK_EXIT_APPLICATION = 99;
+	
 	private static UserDao user;
 	//private static Context context;
 	private static Activity actualActivity;

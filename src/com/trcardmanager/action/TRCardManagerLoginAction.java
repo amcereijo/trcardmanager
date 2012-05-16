@@ -105,10 +105,12 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	
 	private void loadUserData(){
 		TRCardManagerApplication.setUser(userDao);
-			getUserData();
-			Intent settings = new Intent(activity, TRCardManagerActivity.class);
-			activity.startActivity(settings);
+		getUserData();
+		Intent settings = new Intent(activity, TRCardManagerActivity.class);
+		activity.startActivityForResult(settings,TRCardManagerApplication.BACK_EXIT_APPLICATION);
 	}
+	
+	
 	
 	private void getUserData(){
         if(!isDataReady(userDao)){

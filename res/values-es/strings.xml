@@ -28,4 +28,8 @@
     <!-- card movements -->
     <string name="movements.movemements">Movimientos:</string>
     
+    <!-- dialog application exit -->
+    <string name="exit_dialog_question_title">Cerrar aplicación</string>
+    <string name="exit_dialog_question_message">¿Quieres salir de la aplicación?</string>
+    
 </resources>
