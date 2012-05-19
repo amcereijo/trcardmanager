@@ -12,16 +12,17 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
@@ -57,7 +58,6 @@ public class TRCardManagerActivity extends Activity {
 		alert.setPositiveButton(android.R.string.yes,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						// System.exit(0);
 						closeApplication();
 					}
 				});
@@ -70,42 +70,11 @@ public class TRCardManagerActivity extends Activity {
     }
     
     private void addMovementsToView(List<MovementDao> movements,LinearLayout viewActualCard ){
-    	
-    	LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 
-    			LinearLayout.LayoutParams.WRAP_CONTENT);
-    	lp.setMargins(14, 3, 14, 3);
-    	
     	LayoutInflater inflater = LayoutInflater.from(this);
     	LinearLayout linearScrollMovements = (LinearLayout) inflater.inflate(R.layout.list_movements, null,false);
-    	ScrollView  scrollMovements =  (ScrollView) linearScrollMovements.getChildAt(2);
-    	LinearLayout linearMovements = (LinearLayout) scrollMovements.getChildAt(0);
     	
-    	boolean isOdd = false;
-    	for(MovementDao movement:movements){
-    		LinearLayout viewMovement = null;
-    		if(!isOdd){
-		    		viewMovement = (LinearLayout) inflater.inflate(R.layout.card_movement, null,false);
-		    		viewMovement.setLayoutParams(lp);
-    		}else{
-		    		viewMovement = (LinearLayout)inflater.inflate(R.layout.card_movement_odd, null,false);
-		    		viewMovement.setLayoutParams(lp);
-    		}
-    		
-    		RelativeLayout realtiveMovementLayout = (RelativeLayout)inflater.inflate(
-    				R.layout.movement_relative_layout, null,false);
-    		
-    		((TextView)realtiveMovementLayout.findViewById(R.id.hour_movement)).setText(movement.getHour()+" -");
-    		((TextView)realtiveMovementLayout.findViewById(R.id.date_movement)).setText(movement.getDate());
-    		((TextView)realtiveMovementLayout.findViewById(R.id.operation_movement)).setText(movement.getOperationType());
-    		((TextView)realtiveMovementLayout.findViewById(R.id.balance_movement)).setText(movement.getAmount());
-    		((TextView)realtiveMovementLayout.findViewById(R.id.state_movement)).setText(movement.getState());
-    		((TextView)realtiveMovementLayout.findViewById(R.id.trade_movement)).setText(movement.getTrade());
-    		
-    		viewMovement.addView(realtiveMovementLayout);
-    		
-    		linearMovements.addView(viewMovement);
-    		isOdd = !isOdd;
-    	}
+    	ListView linearMovements = (ListView)linearScrollMovements.getChildAt(2);
+    	linearMovements.setAdapter(new MovementsListViewAdapter(this, R.id.listViewMovements, movements));
     	
     	viewActualCard.addView(linearScrollMovements);
     }
@@ -118,16 +87,10 @@ public class TRCardManagerActivity extends Activity {
     
     
     public void clickMovementsText(View v){
-    	ScrollView scrollMovements = (ScrollView)findViewById(R.id.scrollMovements);
-    	int visibility = scrollMovements.getVisibility();
-    	if(visibility == LinearLayout.VISIBLE){
-    		visibility = LinearLayout.GONE;
-    	}else{
-    		visibility = LinearLayout.VISIBLE;
-    	}
-    	scrollMovements.setVisibility(visibility);
-    	scrollMovements.getParent().requestLayout();
-    	//scrollMovements.getParent().getParent().requestLayout();
+    	ListView listMovements = (ListView)findViewById(R.id.listViewMovements);
+    	int visibility = (listMovements.getVisibility() == ListView.VISIBLE)?ListView.GONE:ListView.VISIBLE;
+    	listMovements.setVisibility(visibility);
+    	listMovements.getParent().requestLayout();
     }
     
     public void clickAddCard(View v) {
