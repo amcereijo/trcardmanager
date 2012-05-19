@@ -151,10 +151,13 @@ public class TRCardManagerHttpAction {
     public void getMoreMovements(UserDao user) throws IOException{
     	MovementsDao movementsData = user.getActualCard().getMovementsData();
     	List<String> paginationUrls = movementsData.getPaginationLinks();
-    	for(String url:paginationUrls){
-    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
-        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
-        	movementsData.getMovements().addAll(pageMovements);
+    	for(int actual=0;actual<paginationUrls.size();actual++){
+    		if(actual != movementsData.getActualPage()){
+	    		String url = paginationUrls.get(actual);
+	    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
+	        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
+	        	movementsData.getMovements().addAll(pageMovements);
+    		}
     	}
     }
     
