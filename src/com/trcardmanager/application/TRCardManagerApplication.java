@@ -10,8 +10,8 @@ public class TRCardManagerApplication extends Application {
 	public static int BACK_EXIT_APPLICATION = 99;
 	
 	private static UserDao user;
-	//private static Context context;
 	private static Activity actualActivity;
+	private static boolean loadingInfo = Boolean.FALSE;
 	
 	public static void setUser(UserDao user) {
 		TRCardManagerApplication.user = user;
@@ -27,12 +27,11 @@ public class TRCardManagerApplication extends Application {
 		return actualActivity;
 	}
 	
-	
-//	public static Context getContext(){
-//		return context;
-//	}
-//	public static void setContext(Context context) {
-//		TRCardManagerApplication.context = context;
-//	}
+	public static void setLoadingInfo(boolean loadingInfo) {
+		TRCardManagerApplication.loadingInfo = loadingInfo;
+	}
+	public static boolean isLoadingInfo() {
+		return loadingInfo;
+	}
 	
 }

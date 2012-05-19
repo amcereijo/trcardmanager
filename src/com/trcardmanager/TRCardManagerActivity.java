@@ -170,7 +170,7 @@ public class TRCardManagerActivity extends Activity {
     	
     	CardDao actualCard = user.getActualCard();
 	    LinearLayout layActualCard = createCardLayout(actualCard,true);
-	    addMovementsToView(actualCard.getMovements(),layActualCard);
+	    addMovementsToView(actualCard.getMovementsData().getMovements(),layActualCard);
 		cardsLayout.addView(layActualCard);
 		
     	List<CardDao> cards = user.getCards();

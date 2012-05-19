@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
+import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
@@ -54,6 +55,9 @@ public class TRCardManagerHttpAction {
     private static final String PREPARE_UPDATE_CARD_START_SEARCH = "<input type=\"hidden\" name=\"id\" value=\"";
     private static final String PREPARE_UPDATE_CARD_END_SEARCH = "\">";
     
+    private static final String CLASS_TO_SEARH_ACTUAL_BALANCE = "result";
+    private static final String ID_TO_SEARCH_CARD_NUMBER = "num_card";
+    private static final String ATTRIBUTE_TO_GET_PROPERTY_VALUE = "value";
     
        
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
@@ -80,27 +84,78 @@ public class TRCardManagerHttpAction {
     public void getActualCard(UserDao user) throws ClientProtocolException,
     		IOException, TRCardManagerDataException{
         Document htmlDocument = getHttpPage(URL_MY_ACCOUNT,user.getCookieValue());
-        Element elNumCard = htmlDocument.getElementById("num_card");
-        String numCardValue = elNumCard.attr("value");
+        Element elNumCard = htmlDocument.getElementById(ID_TO_SEARCH_CARD_NUMBER);
+        String numCardValue = elNumCard.attr(ATTRIBUTE_TO_GET_PROPERTY_VALUE);
         Log.i("", "consulta tarjeta get: " + numCardValue);
         CardDao card = new CardDao(numCardValue);
         user.setActualCard(card);
     }
     
     public void getActualCardBalanceAndMovements(UserDao user) throws ClientProtocolException,
-		IOException, TRCardManagerDataException{  
-    	
+			IOException, TRCardManagerDataException{  
     	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
-        Elements elementsResult = htmlDocument.getElementsByClass("result");
+        
+    	String actualBalance = getActualBalance(htmlDocument);
+        user.getActualCard().setBalance(actualBalance);
+        
+        List<MovementDao> movementList = getMovementsList(htmlDocument);
+        MovementsDao movements = new MovementsDao();
+        	movements.setMovements(movementList);
+        	
+        getPaginationMovements(movements,htmlDocument);
+        
+        user.getActualCard().setMovementsData(movements);
+    }
+    
+    private String getActualBalance(Document htmlDocument){
+    	Elements elementsResult = htmlDocument.getElementsByClass(CLASS_TO_SEARH_ACTUAL_BALANCE);
         Element elBalance = elementsResult.first();
         String balance = elBalance.html();
         Log.i("", "consulta saldo get: " + balance);
         int substringposition = balance.indexOf(" ");
-        user.getActualCard().setBalance(balance.substring(0,
-        		substringposition>0?substringposition:balance.length()-1));
-        
-        List<MovementDao> movements = getMovementsList(htmlDocument);
-        user.getActualCard().setMovements(movements);
+        return balance.substring(0,
+        		substringposition>0?substringposition:balance.length()-1);
+    }
+    
+    private void getPaginationMovements(MovementsDao movementsDao,Document htmlDocument) throws ClientProtocolException,
+			IOException, TRCardManagerDataException{
+    	
+    	//SEARCH dates fromdate todate
+    	String fromDate = htmlDocument.getElementById("fromdate").attr("value");
+    	String toDate = htmlDocument.getElementById("todate").attr("value");
+    	movementsDao.setDateStart(fromDate);
+    	movementsDao.setDateEnd(toDate);
+    	
+    	//SEARH NUMBER OF PAGES class="tab_menu" --> class="derecha" --> <a /> hasta title="Imprimir"
+    	Element tabMenu = htmlDocument.getElementsByClass("tab_menu").get(0);
+    	Element pagesNumbers = tabMenu.getElementsByClass("derecha").get(0);
+    	Elements pagesLinks = pagesNumbers.getElementsByTag("a");
+    	
+    	//FILL LIST OF MOVEMENTS FROM PAGES
+    	List<String> listUrlLinks = new ArrayList<String>();
+    	for(Element pageLink : pagesLinks){
+    		String title = pageLink.attr("title");
+    		//avoid imprimir link
+    		if(title==null || "".equals(title.trim())){
+    			//call href value
+    			String href = pageLink.attr("href");
+    			listUrlLinks.add(href);
+    		}
+    	}
+    	movementsDao.setPaginationLinks(listUrlLinks);
+    	movementsDao.setActualPage(0);
+    	movementsDao.setNumberOfPages(listUrlLinks.size());
+    }
+    
+    
+    public void getMoreMovements(UserDao user) throws IOException{
+    	MovementsDao movementsData = user.getActualCard().getMovementsData();
+    	List<String> paginationUrls = movementsData.getPaginationLinks();
+    	for(String url:paginationUrls){
+    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
+        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
+        	movementsData.getMovements().addAll(pageMovements);
+    	}
     }
     
     
