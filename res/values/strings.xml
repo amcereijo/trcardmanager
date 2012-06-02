@@ -32,4 +32,15 @@
     <string name="exit_dialog_question_title">Close application</string>
     <string name="exit_dialog_question_message">Do you want close application?</string>
     
+    <!-- movements foot -->
+    <string name="movements.foot.load_message">Loading more movements...</string>
+    <string name="movements.foot.load_message_no_more">No more movements to load</string>
+    
+    
+    
+       <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
+    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_refreshing_label">Loading...</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    
 </resources>

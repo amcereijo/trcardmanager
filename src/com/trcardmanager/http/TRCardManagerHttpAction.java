@@ -161,6 +161,25 @@ public class TRCardManagerHttpAction {
     	}
     }
     
+    public List<MovementDao> getNextMovements(UserDao user) throws IOException{
+    	List<MovementDao> pageMovements = new ArrayList<MovementDao>();
+    	MovementsDao movementsData = user.getActualCard().getMovementsData();    	
+    	int actualPage = movementsData.getActualPage()+1;
+    	if(actualPage<movementsData.getNumberOfPages()){
+    		List<String> paginationUrls = movementsData.getPaginationLinks();
+    		String url = paginationUrls.get(actualPage);
+    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
+        	pageMovements = getMovementsList(htmlDocument);
+        	//movementsData.getMovements().addAll(pageMovements);
+        	movementsData.setActualPage(actualPage);
+    	}else{
+    		movementsData.setActualPage(movementsData.getNumberOfPages());
+    	}
+    	
+    	return pageMovements;
+    	
+    }
+    
     
     private Document getHttpPage(String httpPage, String cookieValue) throws IOException{
     	return Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT).get();

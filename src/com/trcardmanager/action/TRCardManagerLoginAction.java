@@ -135,7 +135,7 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 			dbHelper.updateCardBalance(userDao.getActualCard());
 			dbHelper.findUserCards(userDao);
 			
-			new TRCardManagerLoadPaginationAction(userDao).execute();
+			
 			
     	} catch (ClientProtocolException e) {
 			e.printStackTrace();

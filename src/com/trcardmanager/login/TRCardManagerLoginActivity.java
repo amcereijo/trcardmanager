@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.HeaderViewListAdapter;
 import android.widget.TextView;
 
 import com.trcardmanager.R;

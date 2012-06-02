@@ -32,4 +32,7 @@
     <string name="exit_dialog_question_title">Cerrar aplicación</string>
     <string name="exit_dialog_question_message">¿Quieres salir de la aplicación?</string>
     
+    <!-- movements foot -->
+    <string name="movements.foot.load_message">Cargando más movimientos...</string>
+    <string name="movements.foot.load_message_no_more">No hay más movimientos que cargar</string>
 </resources>

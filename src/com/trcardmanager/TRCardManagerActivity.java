@@ -1,6 +1,7 @@
 package com.trcardmanager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -8,13 +9,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -26,11 +30,15 @@ import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
+import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.views.TRCardManagerListViewBottomLoad;
+import com.trcardmanager.views.TRCardManagerListViewBottomLoad.OnRefreshListenerBottomLoad;
+import com.trcardmanager.views.TRCardManagerListViewBottomLoad.ScrollDirection;
 
 public class TRCardManagerActivity extends Activity {
    
@@ -69,15 +77,126 @@ public class TRCardManagerActivity extends Activity {
     	this.finish();
     }
     
+    ArrayAdapter<MovementDao> adapter;
+    
     private void addMovementsToView(List<MovementDao> movements,LinearLayout viewActualCard ){
     	LayoutInflater inflater = LayoutInflater.from(this);
     	LinearLayout linearScrollMovements = (LinearLayout) inflater.inflate(R.layout.list_movements, null,false);
     	
-    	ListView linearMovements = (ListView)linearScrollMovements.getChildAt(2);
-    	linearMovements.setAdapter(new MovementsListViewAdapter(this, R.id.listViewMovements, movements));
+    	List<MovementDao> movementsCopy = new ArrayList<MovementDao>();
+    	movementsCopy.addAll(movements);
+    	//linearMovements = (TRCardManagerListViewBottomLoad)linearScrollMovements.getChildAt(2);
+    	linearMovements = (TRCardManagerListViewBottomLoad)linearScrollMovements.getChildAt(1);
     	
+    	
+    	//ListView.LayoutParams lp = new ListView.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 
+    	//		LinearLayout.LayoutParams.WRAP_CONTENT);
+    	//LinearLayout convertView = new LinearLayout(getApplicationContext());
+		//convertView.setLayoutParams(lp);
+    	
+    	
+    	linearMovements.setOnRefreshListener(new OnRefreshListenerBottomLoad() {
+			
+            public void onRefresh() {
+                // Do work to refresh the list here.
+                new GetDataTask().execute(linearMovements.getScrollDirection());
+            }
+        });
+
+    	adapter = new MovementsListViewAdapter(this, R.id.listViewMovements, movementsCopy);
+		linearMovements.setAdapter(adapter);
+		
+
+		
     	viewActualCard.addView(linearScrollMovements);
     }
+    
+    TRCardManagerListViewBottomLoad linearMovements;
+    List<MovementDao> myListItems;
+    
+    private class GetDataTask extends AsyncTask<ScrollDirection, Void, Void> {
+
+        @Override
+        protected Void doInBackground(ScrollDirection...scrollDirection) {
+            
+        	if(scrollDirection[0] == ScrollDirection.UP){
+        		Log.i("ANGEL","Scroll up");
+        		 try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}else{
+        		Log.i("ANGEL","Scroll down");
+	        	// Simulates a background job.
+	        	UserDao user = TRCardManagerApplication.getUser();
+				MovementsDao movementsData = user.getActualCard().getMovementsData();
+				
+				
+				TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+				try {
+					List<MovementDao> lista = httpAction.getNextMovements(user);
+					//Reset the array that holds the new items
+			    	myListItems = new ArrayList<MovementDao>();
+					
+					//
+					int pageActual = movementsData.getActualPage();
+					int nextPage = pageActual+1;
+					Log.i("ANGEL", "--------------------- Add from "+pageActual+ " to "+nextPage);
+					int i=0;
+			    	for (i = 0; i < lista.size(); i++) {		
+			    		MovementDao m = lista.get(i);
+			        	myListItems.add(m);          	
+					}
+			    	Log.i("ANGEL", "--------------------- Added : "+i);
+			    	if(i==0){
+			    		//time to show message
+			    		 Thread.sleep(2000);
+			    	}
+			    	
+				} catch (IOException e) {
+					Log.e(this.getClass().toString(), e.getMessage(),e);
+				} catch(InterruptedException ine){
+					Log.e(this.getClass().toString(), ine.getMessage(),ine);
+				}
+        	}
+
+			//Done! now continue on the UI thread
+	        runOnUiThread(returnRes);
+			return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            //mListItems.addFirst("Added after refresh...");
+
+            // Call onRefreshComplete when the list has been refreshed.
+        	linearMovements.onRefreshComplete();
+
+            super.onPostExecute(result);
+        }
+        
+        private Runnable returnRes = new Runnable() {
+            
+            public void run() {
+            	
+    			//Loop thru the new items and add them to the adapter
+    			if(myListItems != null && myListItems.size() > 0){
+                    for(int i=0;i<myListItems.size();i++)
+                    	adapter.add(myListItems.get(i));
+                }
+            	
+    						
+    			//Tell to the adapter that changes have been made, this will cause the list to refresh
+                adapter.notifyDataSetChanged();
+
+            }
+        };
+    }
+    
+    
+    
     
     @Override
     protected void onRestart() {
@@ -128,7 +247,7 @@ public class TRCardManagerActivity extends Activity {
     
     
     private void addCardsToView(UserDao user){
-    	LinearLayout cardsLayout = (LinearLayout)findViewById(R.id.cards_layout);
+    	RelativeLayout cardsLayout = (RelativeLayout)findViewById(R.id.cards_layout);
     	cardsLayout.removeAllViews();
     	
     	CardDao actualCard = user.getActualCard();

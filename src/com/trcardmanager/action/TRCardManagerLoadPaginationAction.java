@@ -2,12 +2,12 @@ package com.trcardmanager.action;
 
 import java.io.IOException;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.http.TRCardManagerHttpAction;
-
-import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * Action to get more card movements

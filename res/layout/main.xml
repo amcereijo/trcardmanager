@@ -33,7 +33,7 @@
 		    android:layout_centerVertical="true"/>
 	</RelativeLayout>
 	
-	 <LinearLayout android:orientation="vertical"
+	 <RelativeLayout android:orientation="vertical"
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
 	    android:id="@+id/cards_layout"
@@ -43,7 +43,7 @@
 	    android:paddingBottom="10sp"
 	    android:background="@android:color/white">
 		
-	</LinearLayout>
+	</RelativeLayout>
     
 
 </LinearLayout>
