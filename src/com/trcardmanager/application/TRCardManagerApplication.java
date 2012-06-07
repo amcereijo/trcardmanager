@@ -2,12 +2,17 @@ package com.trcardmanager.application;
 
 import android.app.Activity;
 import android.app.Application;
-import android.text.GetChars;
 import android.util.Log;
 
 import com.trcardmanager.dao.UserDao;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerApplication extends Application {
+	private final static String TAG =TRCardManagerApplication.class.toString();
 	
 	public static int BACK_EXIT_APPLICATION = 99;
 	
@@ -30,7 +35,7 @@ public class TRCardManagerApplication extends Application {
 	}
 	
 	public static void setLoadingInfo(boolean loadingInfo) {
-		Log.i(TRCardManagerApplication.class.toString(), "---- SETED LOADING INFO TO " + loadingInfo);
+		Log.i(TAG, "---- SETED LOADING INFO TO " + loadingInfo);
 		TRCardManagerApplication.loadingInfo = loadingInfo;
 	}
 	public static boolean isLoadingInfo() {

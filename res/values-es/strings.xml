@@ -16,11 +16,14 @@
 	<!-- cards list -->    
 	<string name="cards_list_title">Tus tarjetas</string>
     <string name="cards_add_to_list">Añadir </string>
-    <string name="loadcards_load_dialog_title">Tus tarjetas</string>
+    <string name="loadcards_load_dialog_title">Tarjeta</string>
     <string name="loadcards_load_dialog_text">Cargando tus datos...</string>
     
     <string name="cards_list_card_title">Tarjeta: </string>
     <string name="cards_list_card_balance">Saldo: </string>
+    <string name="cards_list_card_balance_symbol">€</string>
+    
+    <string name="imagen_icon_text">Menú</string>
     
     <!-- active card -->
     <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegurate de haberla activado telefonicamente.</string>
@@ -32,7 +35,22 @@
     <string name="exit_dialog_question_title">Cerrar aplicación</string>
     <string name="exit_dialog_question_message">¿Quieres salir de la aplicación?</string>
     
+    <!-- card relative layout -->
+    <string name="card_hour_date_separator">-</string>
+    
     <!-- movements foot -->
     <string name="movements.foot.load_message">Cargando más movimientos...</string>
     <string name="movements.foot.load_message_no_more">No hay más movimientos que cargar</string>
+    
+    
+    <string name="pull_to_refresh_pull_label">Arrastra para buscar mas...</string>
+    <string name="pull_to_refresh_release_label">Suelta para buscar mas...</string>
+    <string name="pull_to_refresh_refreshing_label">Cargando...</string>
+    <string name="pull_to_refresh_tap_label">Toca para buscar mas...</string>
+    
+    <string name="push_to_refresh_push_label">Arrastra para actualizar...</string>
+    <string name="push_to_refresh_release_label">Suelta para actualizar...</string>
+    <string name="push_to_refresh_refreshing_label">Cargando...</string>
+    <string name="push_to_refresh_tap_label">Toca para actualizar...</string>
+    
 </resources>

@@ -25,6 +25,8 @@ import com.trcardmanager.dao.MovementDao;
  */
 public class MovementsListViewAdapter extends ArrayAdapter<MovementDao> {
 	
+	private final static String TAG = MovementsListViewAdapter.class.getName();
+	
 	private LayoutInflater inflater;
 	private Context context;
 	
@@ -57,7 +59,7 @@ public class MovementsListViewAdapter extends ArrayAdapter<MovementDao> {
     		convertView = new LinearLayout(context);
     		convertView.setLayoutParams(lp);
     		TextView textView = new TextView(context);
-    		textView.setText("Loading... ");
+    		textView.setText(R.string.pull_to_refresh_refreshing_label);
     		textView.setTextColor(Color.BLACK);
     		textView.setTypeface(Typeface.create(Typeface.SERIF,Typeface.BOLD));
     		textView.setGravity(Gravity.CENTER_VERTICAL);
@@ -73,7 +75,7 @@ public class MovementsListViewAdapter extends ArrayAdapter<MovementDao> {
 		RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
 				R.layout.movement_relative_layout, null,false);
 		
-		((TextView)relativeMovementLayout.findViewById(R.id.hour_movement)).setText(movement.getHour()+" -");
+		((TextView)relativeMovementLayout.findViewById(R.id.hour_movement)).setText(movement.getHour());
 		((TextView)relativeMovementLayout.findViewById(R.id.date_movement)).setText(movement.getDate());
 		((TextView)relativeMovementLayout.findViewById(R.id.operation_movement)).setText(movement.getOperationType());
 		((TextView)relativeMovementLayout.findViewById(R.id.balance_movement)).setText(movement.getAmount());

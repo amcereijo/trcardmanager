@@ -16,11 +16,14 @@
 	<!-- cards list -->    
 	<string name="cards_list_title">Your Cards</string>
     <string name="cards_add_to_list">Add </string>
-    <string name="loadcards_load_dialog_title">Your cards</string>
+    <string name="loadcards_load_dialog_title">Card</string>
     <string name="loadcards_load_dialog_text">Loading your data...</string>
     
     <string name="cards_list_card_title">Card: </string>
     <string name="cards_list_card_balance">Balance: </string>
+    <string name="cards_list_card_balance_symbol">€</string>
+    
+    <string name="imagen_icon_text">Menu</string>
     
     <!-- active card -->
     <string name="activate_card_error">Card can not be active. Please, check the card number and be sure the card was activated by phone.</string>
@@ -32,15 +35,23 @@
     <string name="exit_dialog_question_title">Close application</string>
     <string name="exit_dialog_question_message">Do you want close application?</string>
     
+    <!-- card relative layout -->
+    <string name="card_hour_date_separator">-</string>
+    
+    
     <!-- movements foot -->
     <string name="movements.foot.load_message">Loading more movements...</string>
     <string name="movements.foot.load_message_no_more">No more movements to load</string>
     
     
-    
-       <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
-    <string name="pull_to_refresh_release_label">Release to refresh...</string>
+    <string name="pull_to_refresh_pull_label">Pull to load more...</string>
+    <string name="pull_to_refresh_release_label">Release to load more...</string>
     <string name="pull_to_refresh_refreshing_label">Loading...</string>
-    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="pull_to_refresh_tap_label">Tap load more...</string>
+    
+    <string name="push_to_refresh_push_label">Pull to refresh...</string>
+    <string name="push_to_refresh_release_label">Release to refresh...</string>
+    <string name="push_to_refresh_refreshing_label">Loading...</string>
+    <string name="push_to_refresh_tap_label">Tap to refresh...</string>
     
 </resources>

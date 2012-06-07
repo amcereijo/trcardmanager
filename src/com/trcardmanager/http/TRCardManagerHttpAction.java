@@ -91,6 +91,48 @@ public class TRCardManagerHttpAction {
         user.setActualCard(card);
     }
     
+    /**
+     * Get lasta movements 
+     * @param user
+     * @return
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws TRCardManagerDataException
+     */
+    public List<MovementDao> updateLastMovementsAndBalance(UserDao user) throws IOException {  
+    	List<MovementDao> movementsToAdd = new ArrayList<MovementDao>();
+    	try{
+	    	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
+	    	
+	    	String actualBalance = getActualBalance(htmlDocument);
+	        user.getActualCard().setBalance(actualBalance);
+	        
+	    	List<MovementDao> newMovements = getMovementsList(htmlDocument);
+			
+			MovementsDao movements = user.getActualCard().getMovementsData();
+			List<MovementDao> actualList = movements.getMovements();
+			
+			if(actualList!=null && actualList.size()>0 &&
+					newMovements!=null && newMovements.size()>0){
+				MovementDao firstMovement = actualList.get(0);
+				for(int i=0;i<newMovements.size();i++){
+					MovementDao oneNewMovement = newMovements.get(i);
+					if(!oneNewMovement.getOperationId().equals(firstMovement.getOperationId())){
+						movementsToAdd.add(oneNewMovement);
+					}else{
+						i = newMovements.size();
+					}
+				}
+			}
+		}catch(Exception e){
+			Log.e("ANGEL",e.getMessage(),e);
+		}
+    	
+		return movementsToAdd;
+	}
+    
+  
+    
     public void getActualCardBalanceAndMovements(UserDao user) throws ClientProtocolException,
 			IOException, TRCardManagerDataException{  
     	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
@@ -276,12 +318,14 @@ public class TRCardManagerHttpAction {
     	Elements dataCells = dataRow.getElementsByTag("td");
     	String date = dataCells.get(0).html();
     	String hour = dataCells.get(1).html();
+    	String operationId = dataCells.get(2).html();
     	String operationType = dataCells.get(3).html();
     	
     	String amount = dataCells.get(4).html();
     	String trade = dataCells.get(5).html();
     	String state = dataCells.get(6).html();
     	
+    	movement.setOperationId(operationId);
     	movement.setDate(getAtFirstWhiteSpace(date));
     	movement.setHour(getAtFirstWhiteSpace(hour));
     	movement.setOperationType(operationType);

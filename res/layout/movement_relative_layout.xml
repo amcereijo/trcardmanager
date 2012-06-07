@@ -15,12 +15,24 @@
         android:paddingTop="2sp"
         android:text=""
         android:textColor="#18376C" />
+    
+     <TextView
+        android:id="@+id/hour_movement_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/hour_movement"
+        android:text="@string/card_hour_date_separator"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="2sp"
+        android:paddingTop="2sp"
+        android:textColor="#18376C" />
 
     <TextView
         android:id="@+id/date_movement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/hour_movement"
+        android:layout_toRightOf="@id/hour_movement_separator"
         android:paddingBottom="2sp"
         android:paddingLeft="2sp"
         android:paddingRight="2sp"

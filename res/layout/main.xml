@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
@@ -10,40 +10,105 @@
 	    android:layout_width="fill_parent"
 	    android:background="#18376C"
 	    android:padding="4sp"
+	    android:id="@+id/layout_card_information"
 	    >
-		<TextView android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/white"
-	        android:text="@string/cards_list_title"
-	        android:textSize="20sp"
-	        android:paddingLeft="10sp"
-	        android:layout_alignParentLeft="true"
-	        android:typeface="serif"
-	        android:textStyle="bold"
-	        android:layout_centerVertical="true"
-	        />
-		
-		<ImageButton android:layout_height="wrap_content"
+	    
+        <RelativeLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content"
+	    android:background="#18376C"
+	    android:padding="4sp"
+	    android:id="@+id/layout_image_button_icon"
+	    android:layout_alignParentLeft="true"
+	    >
+	        <ImageButton android:src="@drawable/icono"
+	            android:maxHeight="80sp"
+	            android:maxWidth="80sp"
+	            android:layout_alignParentLeft="true"
+	            android:id="@+id/image_button_icon"
+	            android:contentDescription="@string/imagen_icon_text"
+	           	android:layout_width="wrap_content"
+		    	android:layout_height="wrap_content"
+		    	android:background="@drawable/icon_btn_border"
+		    />
+        </RelativeLayout>
+        
+         <RelativeLayout 
+		    android:layout_height="wrap_content"
 		    android:layout_width="wrap_content"
-		    android:text="@drawable/add_btn_border"
-		    android:src="@drawable/list_add"
-		    android:id="@+id/btn_add_card"
-		    android:layout_alignParentRight="true"
-		    android:onClick="clickAddCard"
-		    android:layout_centerVertical="true"/>
+		    android:background="#18376C"
+		    android:padding="4sp"
+		    android:id="@+id/layout_card_number_balance"
+		    android:layout_toRightOf="@id/layout_image_button_icon"
+	    	>
+			<TextView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@android:color/white"
+		        android:id="@+id/card_number_title"
+		        android:text="@string/cards_list_card_title"
+		        android:textSize="18sp"
+		        android:paddingLeft="0sp"
+		        android:typeface="serif"
+		       	android:layout_alignParentLeft="true"
+		        />
+			<TextView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@android:color/white"
+		        android:id="@+id/card_number"
+		        android:textSize="18sp"
+		        android:paddingLeft="5sp"
+		        android:typeface="serif"
+		        android:textStyle="bold"
+		        android:layout_alignParentRight="true"
+		        /><!-- android:layout_toRightOf="@id/card_number_title" -->
+			<TextView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@android:color/white"
+		        android:id="@+id/card_balance_title"
+		        android:text="@string/cards_list_card_balance"
+		        android:textSize="18sp"
+		        android:paddingLeft="0sp"
+		        android:typeface="serif"
+		        android:layout_below="@id/card_number_title"
+		        />
+			<TextView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@android:color/white"
+		        android:id="@+id/card_balance_symbol"
+		        android:text="@string/cards_list_card_balance_symbol"
+		        android:textSize="20sp"
+		        android:paddingLeft="1sp"
+		        android:typeface="serif"
+		        android:layout_below="@id/card_number_title"
+		        android:layout_alignParentRight="true"
+		        /><!-- android:layout_toRightOf="@id/card_balance" -->
+			<TextView android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@android:color/white"
+		        android:id="@+id/card_balance"
+		        android:textSize="20sp"
+		        android:paddingLeft="5sp"
+		        android:typeface="serif"
+		        android:textStyle="bold"
+		        android:layout_below="@id/card_number"
+		        android:layout_toLeftOf="@id/card_balance_symbol"
+	        />
+		</RelativeLayout>
+		 <!-- android:background="#22509F" -->
 	</RelativeLayout>
 	
-	 <RelativeLayout android:orientation="vertical"
-	    android:layout_height="wrap_content"
-	    android:layout_width="fill_parent"
-	    android:id="@+id/cards_layout"
-	    android:paddingLeft="10sp"
-	    android:paddingRight="10sp"
-	    android:paddingTop="10sp"
-	    android:paddingBottom="10sp"
-	    android:background="@android:color/white">
-		
-	</RelativeLayout>
+    <com.trcardmanager.views.TRCardManagerListViewBottomLoad 
+		android:id="@+id/layout_listview_movements"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#E0E6F8"
+        android:orientation="vertical"
+        android:paddingBottom="0sp"
+        android:paddingLeft="0sp"
+        android:paddingRight="0sp"
+        android:paddingTop="0sp"
+        android:layout_below="@id/layout_card_information"
+        />
     
 
-</LinearLayout>
+</RelativeLayout>

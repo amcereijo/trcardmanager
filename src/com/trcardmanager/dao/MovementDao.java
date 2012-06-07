@@ -6,7 +6,7 @@ package com.trcardmanager.dao;
  *
  */
 public class MovementDao{
-
+	private String operationId;
 	private String date;
 	private String hour;
 	private String amount;
@@ -14,6 +14,12 @@ public class MovementDao{
 	private String operationType;
 	private String state;
 	
+	public void setOperationId(String operationId) {
+		this.operationId = operationId;
+	}
+	public String getOperationId() {
+		return operationId;
+	}
 	public String getDate() {
 		return date;
 	}

@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.trcardmanager.R;
 import com.trcardmanager.TRCardManagerActivity;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
@@ -22,6 +24,8 @@ import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 
 public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
+	
+	private final static String TAG = TRCardManagerLoginAction.class.getName();
 	
 	private ProgressDialog loadingDialog;
 	private UserDao userDao;
@@ -76,6 +80,9 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 		} catch (IOException e) {
 			e.printStackTrace();
 			loginCode = R.string.login_error_connection_message;
+		}catch(Exception e){
+			e.printStackTrace();
+			loginCode = R.string.login_error_message;
 		}
 	}
 	
@@ -106,8 +113,11 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	private void loadUserData(){
 		TRCardManagerApplication.setUser(userDao);
 		getUserData();
-		Intent settings = new Intent(activity, TRCardManagerActivity.class);
-		activity.startActivityForResult(settings,TRCardManagerApplication.BACK_EXIT_APPLICATION);
+		
+		if(R.string.login_error_message != loginCode){
+			Intent settings = new Intent(activity, TRCardManagerActivity.class);
+			activity.startActivityForResult(settings,TRCardManagerApplication.BACK_EXIT_APPLICATION);
+		}
 	}
 	
 	
@@ -130,19 +140,30 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	    	//http actions
 			httpAction.getActualCard(userDao);
 			httpAction.getActualCardBalanceAndMovements(userDao);
-			//db actions
-			dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
-			dbHelper.updateCardBalance(userDao.getActualCard());
-			dbHelper.findUserCards(userDao);
 			
-			
-			
+			CardDao card = userDao.getActualCard();
+			if( card == null || card.getMovementsData() == null ||
+					card.getMovementsData().getMovements() ==null){
+				loginCode = R.string.login_error_message;
+			}else{
+				//db actions
+				dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
+				dbHelper.updateCardBalance(userDao.getActualCard());
+				dbHelper.findUserCards(userDao);
+			}
+
     	} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_connection_message;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_connection_message;
 		} catch (TRCardManagerDataException e) {
-			e.printStackTrace();
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_message;
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_message;
 		}
     }
 	
