@@ -1,6 +1,8 @@
 package com.trcardmanager.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.action.TRCardManagerLoginAction;
@@ -65,6 +68,8 @@ public class TRCardManagerLoginActivity extends Activity {
 	    if(requestCode == TRCardManagerApplication.BACK_EXIT_APPLICATION){
 	        if(resultCode == RESULT_CANCELED){
 	            finish();
+	        }else if(resultCode == TRCardManagerApplication.SESSION_EXPIRED_APPLICATION){
+	        	Toast.makeText(getApplicationContext(), R.string.session_expired, Toast.LENGTH_LONG).show();
 	        }
 	    }
 	}

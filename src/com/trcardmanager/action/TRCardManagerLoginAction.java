@@ -21,11 +21,19 @@ import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
+import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	
 	private final static String TAG = TRCardManagerLoginAction.class.getName();
+	
+	private final static int LOGIN_CODE_OK = -1;
 	
 	private ProgressDialog loadingDialog;
 	private UserDao userDao;
@@ -34,7 +42,7 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	private int loginCode;
 	
 	public TRCardManagerLoginAction(UserDao user) {
-		this.activity = TRCardManagerApplication.getActualActivity();;
+		this.activity = TRCardManagerApplication.getActualActivity();
 		this.userDao = user;
 		this.trCardManagerDbHelper = new TRCardManagerDbHelper(activity);
 	}
@@ -54,37 +62,41 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	@Override
 	protected void onPostExecute(Integer result) {
 		loadingDialog.cancel();
-		if(R.string.login_error_connection_message == loginCode || R.string.login_error_message == loginCode){
-			updateViewErrorLogin(loginCode);
+		if(loginCode != LOGIN_CODE_OK){
+			updateViewErrorLogin();
 		}
 	}
 
 	@Override
 	protected Integer doInBackground(Void... params) {
-		doLogin();
-		processLoginCode();
+		loginCode = LOGIN_CODE_OK;
+		try{
+			httpLogin();
+			userInDb();
+			
+			publishProgress();
+			
+			loadUserData();
+		}catch(TRCardManagerLoginException te){
+			Log.e(TAG, te.getMessage(),te);
+			loginCode = R.string.login_error_message;
+		} catch (ClientProtocolException e) {
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_connection_message;
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_connection_message;
+		}catch(TRCardManagerSessionException se){
+			Log.e(TAG, se.getMessage(),se);
+			loginCode = R.string.login_error_message;
+		}catch(Exception e){
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_connection_error;
+		}
 		return loginCode;
 	}
 	
 	
-	private void doLogin(){
-		loginCode = -1;
-		try{
-			httpLogin();
-			userInDb();
-		}catch(TRCardManagerLoginException te){
-			loginCode = R.string.login_error_message;
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-			loginCode = R.string.login_error_connection_message;
-		} catch (IOException e) {
-			e.printStackTrace();
-			loginCode = R.string.login_error_connection_message;
-		}catch(Exception e){
-			e.printStackTrace();
-			loginCode = R.string.login_error_message;
-		}
-	}
 	
 	private void httpLogin() throws TRCardManagerLoginException, ClientProtocolException, IOException{
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
@@ -103,18 +115,12 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 		}
 	}
 	
-	private void processLoginCode(){
-		if(!(R.string.login_error_connection_message == loginCode || R.string.login_error_message == loginCode)){
-			this.publishProgress();
-			loadUserData();
-		}
-	}
 	
-	private void loadUserData(){
+	private void loadUserData() throws ClientProtocolException, IOException, 
+			TRCardManagerDataException, TRCardManagerSessionException{
 		TRCardManagerApplication.setUser(userDao);
 		getUserData();
-		
-		if(R.string.login_error_message != loginCode){
+		if(loginCode == LOGIN_CODE_OK){
 			Intent settings = new Intent(activity, TRCardManagerActivity.class);
 			activity.startActivityForResult(settings,TRCardManagerApplication.BACK_EXIT_APPLICATION);
 		}
@@ -122,9 +128,12 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	
 	
 	
-	private void getUserData(){
+	private void getUserData() throws ClientProtocolException, IOException, 
+			TRCardManagerDataException, TRCardManagerSessionException{
         if(!isDataReady(userDao)){
         	loadAndSaveUserData();
+        }else{
+        	loginCode = R.string.login_error_message;
         }
 	}
 	
@@ -133,44 +142,30 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
     }
     
     
-    private void loadAndSaveUserData(){
-    	try{
-    		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-	        TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(activity);
-	    	//http actions
-			httpAction.getActualCard(userDao);
-			httpAction.getActualCardBalanceAndMovements(userDao);
-			
-			CardDao card = userDao.getActualCard();
-			if( card == null || card.getMovementsData() == null ||
-					card.getMovementsData().getMovements() ==null){
-				loginCode = R.string.login_error_message;
-			}else{
-				//db actions
-				dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
-				dbHelper.updateCardBalance(userDao.getActualCard());
-				dbHelper.findUserCards(userDao);
-			}
-
-    	} catch (ClientProtocolException e) {
-			Log.e(TAG, e.getMessage(),e);
-			loginCode = R.string.login_error_connection_message;
-		} catch (IOException e) {
-			Log.e(TAG, e.getMessage(),e);
-			loginCode = R.string.login_error_connection_message;
-		} catch (TRCardManagerDataException e) {
-			Log.e(TAG, e.getMessage(),e);
+    private void loadAndSaveUserData() throws ClientProtocolException, IOException,
+    		TRCardManagerDataException, TRCardManagerSessionException{
+		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+        TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(activity);
+    	//http actions
+		httpAction.getActualCard(userDao);
+		httpAction.getActualCardBalanceAndMovements(userDao);
+		
+		CardDao card = userDao.getActualCard();
+		if( card == null || card.getMovementsData() == null ||
+				card.getMovementsData().getMovements() ==null){
 			loginCode = R.string.login_error_message;
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(),e);
-			loginCode = R.string.login_error_message;
-		}
+		}else{
+			//db actions
+			dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
+			dbHelper.updateCardBalance(userDao.getActualCard());
+			dbHelper.findUserCards(userDao);
+		}   	
     }
 	
 	
-	private void updateViewErrorLogin(int loginError){
+	private void updateViewErrorLogin(){
 		TextView errorTextView = (TextView)activity.findViewById(R.id.error_login_text_view);
-		errorTextView.setText(loginError);
-		 ((LinearLayout) activity.findViewById(R.id.error_login_layout)).setVisibility(View.VISIBLE);
+		errorTextView.setText(loginCode);
+		((LinearLayout) activity.findViewById(R.id.error_login_layout)).setVisibility(View.VISIBLE);
 	}
 }

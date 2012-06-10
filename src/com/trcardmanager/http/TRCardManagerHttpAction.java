@@ -2,6 +2,7 @@ package com.trcardmanager.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +20,7 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,12 +35,19 @@ import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
+import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
 import com.trcardmanager.string.TRCardManagerStringHelper;
 
 public class TRCardManagerHttpAction {
+	
+	private static final String TAG = TRCardManagerHttpAction.class.getName();
+	
+	private static final String LOGIN_FIELD_TYPE = "type";
+	private static final String LOGIN_FIELD_PASSW = "passwd";
+	private static final String LOGIN_FIELD_USER = "user";
 
-	private static final int TIMEOUT = 5000;
+	private static final int TIMEOUT = 15000;
 	private static final String LOGIN_RESPONSE_OK = "2";
 	
 	private static final String COOKIE_NAME = "CWNWSESSION";
@@ -48,7 +57,6 @@ public class TRCardManagerHttpAction {
     private static final String URL_MY_ACCOUNT = "mi_cuenta.html";
     private static final String TYPE_PARAMETER = "trc";
     private static final String URL_UPDATE_CARD = "sendMyAccountCard.php";
-    private static final String UPDATE_CARD_ID_PARAMETER = "updCard";
     private static final String UPDATE_CARD_PROFILE_PARAMETER = "TRCU";
     private static final String UPDATE_CARD_RESPONSE_OK = "OK";
     private static final String URL_PREPARE_UPDATE_CARD = "mi_cuenta.html";
@@ -63,9 +71,9 @@ public class TRCardManagerHttpAction {
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
     		ClientProtocolException, IOException{
 		Map<String, String> postMap = new HashMap<String, String>();
-			postMap.put("user", user.getEmail());
-			postMap.put("passwd", user.getPassword());
-			postMap.put("type", TYPE_PARAMETER);
+			postMap.put(LOGIN_FIELD_USER, user.getEmail());
+			postMap.put(LOGIN_FIELD_PASSW, user.getPassword());
+			postMap.put(LOGIN_FIELD_TYPE, TYPE_PARAMETER);
 		
 		Response response = Jsoup.connect(URL_BASE+URL_LOGIN).data(postMap).execute();
 		if(response != null){
@@ -82,11 +90,11 @@ public class TRCardManagerHttpAction {
     }
     
     public void getActualCard(UserDao user) throws ClientProtocolException,
-    		IOException, TRCardManagerDataException{
+    		IOException, TRCardManagerDataException, TRCardManagerSessionException{
         Document htmlDocument = getHttpPage(URL_MY_ACCOUNT,user.getCookieValue());
         Element elNumCard = htmlDocument.getElementById(ID_TO_SEARCH_CARD_NUMBER);
         String numCardValue = elNumCard.attr(ATTRIBUTE_TO_GET_PROPERTY_VALUE);
-        Log.i("", "consulta tarjeta get: " + numCardValue);
+        Log.d(TAG, "Query actual card: " + numCardValue);
         CardDao card = new CardDao(numCardValue);
         user.setActualCard(card);
     }
@@ -98,43 +106,62 @@ public class TRCardManagerHttpAction {
      * @throws ClientProtocolException
      * @throws IOException
      * @throws TRCardManagerDataException
+     * @throws TRCardManagerSessionException 
      */
-    public List<MovementDao> updateLastMovementsAndBalance(UserDao user) throws IOException {  
-    	List<MovementDao> movementsToAdd = new ArrayList<MovementDao>();
+    public List<MovementDao> updateLastMovementsAndBalance(UserDao user) throws IOException,TRCardManagerDataException, TRCardManagerSessionException {  
+    	
     	try{
 	    	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
-	    	
-	    	String actualBalance = getActualBalance(htmlDocument);
-	        user.getActualCard().setBalance(actualBalance);
-	        
+	        //last movements
 	    	List<MovementDao> newMovements = getMovementsList(htmlDocument);
 			
+	    	//Actual movement list
 			MovementsDao movements = user.getActualCard().getMovementsData();
 			List<MovementDao> actualList = movements.getMovements();
 			
-			if(actualList!=null && actualList.size()>0 &&
-					newMovements!=null && newMovements.size()>0){
-				MovementDao firstMovement = actualList.get(0);
-				for(int i=0;i<newMovements.size();i++){
-					MovementDao oneNewMovement = newMovements.get(i);
-					if(!oneNewMovement.getOperationId().equals(firstMovement.getOperationId())){
-						movementsToAdd.add(oneNewMovement);
-					}else{
-						i = newMovements.size();
-					}
-				}
+			if(actualList!=null && actualList.size()>0 && newMovements!=null && newMovements.size()>0){
+				onlyNewMovements(newMovements, actualList);
 			}
+			
+			if(newMovements.size()>0){
+				String actualBalance = getActualBalance(htmlDocument);
+		        user.getActualCard().setBalance(actualBalance);
+			}
+			
+			return newMovements;
+		}catch(TRCardManagerSessionException se){
+			throw se;
 		}catch(Exception e){
-			Log.e("ANGEL",e.getMessage(),e);
+			Log.e(TAG,e.getMessage(),e);
+			throw new TRCardManagerDataException(e);
 		}
     	
-		return movementsToAdd;
+		
+	}
+
+	private void onlyNewMovements(List<MovementDao> newMovements,
+			List<MovementDao> actualList) {
+		//Actual last movement
+		MovementDao firstMovement = actualList.get(0);
+		
+		int newMovementsSize = newMovements.size();
+		boolean movementFoundedInList = false;
+		
+		for(int i=-1;i<newMovementsSize;){
+			if(movementFoundedInList){
+				//delete movements currently in list
+				newMovements.remove(i++);
+				--newMovementsSize;
+			}else{
+				MovementDao oneNewMovement = newMovements.get(++i);
+				movementFoundedInList = (oneNewMovement.getOperationId().equals(firstMovement.getOperationId()));
+			}
+		}
 	}
     
-  
     
     public void getActualCardBalanceAndMovements(UserDao user) throws ClientProtocolException,
-			IOException, TRCardManagerDataException{  
+			IOException, TRCardManagerDataException, TRCardManagerSessionException{  
     	Document htmlDocument = getHttpPage(URL_BALANCE,user.getCookieValue());
         
     	String actualBalance = getActualBalance(htmlDocument);
@@ -153,7 +180,7 @@ public class TRCardManagerHttpAction {
     	Elements elementsResult = htmlDocument.getElementsByClass(CLASS_TO_SEARH_ACTUAL_BALANCE);
         Element elBalance = elementsResult.first();
         String balance = elBalance.html();
-        Log.i("", "consulta saldo get: " + balance);
+        Log.d(TAG, "consulta saldo get: " + balance);
         int substringposition = balance.indexOf(" ");
         return balance.substring(0,
         		substringposition>0?substringposition:balance.length()-1);
@@ -190,20 +217,21 @@ public class TRCardManagerHttpAction {
     }
     
     
-    public void getMoreMovements(UserDao user) throws IOException{
-    	MovementsDao movementsData = user.getActualCard().getMovementsData();
-    	List<String> paginationUrls = movementsData.getPaginationLinks();
-    	for(int actual=0;actual<paginationUrls.size();actual++){
-    		if(actual != movementsData.getActualPage()){
-	    		String url = paginationUrls.get(actual);
-	    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
-	        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
-	        	movementsData.getMovements().addAll(pageMovements);
-    		}
-    	}
-    }
+//    public void getMoreMovements(UserDao user) throws IOException{
+//    	MovementsDao movementsData = user.getActualCard().getMovementsData();
+//    	List<String> paginationUrls = movementsData.getPaginationLinks();
+//    	for(int actual=0;actual<paginationUrls.size();actual++){
+//    		if(actual != movementsData.getActualPage()){
+//	    		String url = paginationUrls.get(actual);
+//	    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
+//	        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
+//	        	movementsData.getMovements().addAll(pageMovements);
+//    		}
+//    	}
+//    }
+//    
     
-    public List<MovementDao> getNextMovements(UserDao user) throws IOException{
+    public List<MovementDao> getNextMovements(UserDao user) throws IOException, TRCardManagerSessionException{
     	List<MovementDao> pageMovements = new ArrayList<MovementDao>();
     	MovementsDao movementsData = user.getActualCard().getMovementsData();    	
     	int actualPage = movementsData.getActualPage()+1;
@@ -223,8 +251,16 @@ public class TRCardManagerHttpAction {
     }
     
     
-    private Document getHttpPage(String httpPage, String cookieValue) throws IOException{
-    	return Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT).get();
+    private Document getHttpPage(String httpPage, String cookieValue) throws IOException,TRCardManagerSessionException{
+    	Connection connection = Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT);
+    	Response response = connection.execute();
+    	String url = response.url().toString();
+    	boolean logedIn = url.contains(httpPage);
+    	//boolean logedIn = response.hasCookie(COOKIE_NAME);
+    	if(!logedIn){
+    		throw new TRCardManagerSessionException();
+    	}
+    	return connection.get();
     }
     
     public String getPrepareUpdateCard(UserDao user) throws ClientProtocolException,
@@ -238,12 +274,12 @@ public class TRCardManagerHttpAction {
 		HttpResponse response = httpClient.execute(get);
 		HttpEntity entity = response.getEntity();
 		
-		Log.i("","prepare update card get: " + response.getStatusLine());
+		Log.d(TAG,"prepare update card get: " + response.getStatusLine());
 		if (entity != null) {
 			String html = EntityUtils.toString(entity,HTTP.UTF_8);
 			id = new TRCardManagerStringHelper(html)
 				.getStringBetwen(PREPARE_UPDATE_CARD_START_SEARCH, PREPARE_UPDATE_CARD_END_SEARCH);
-		    System.out.println("id: "+id);
+		    Log.d(TAG,"id: "+id);
 		}
 		return id;
 	}
@@ -307,7 +343,7 @@ public class TRCardManagerHttpAction {
     	int firstDataRow = 2;
     	for(int cont=firstDataRow;cont<tableRows.size();cont++){
     		MovementDao movement = getMovement(tableRows.get(cont));
-    		Log.i("", "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
+    		Log.d(TAG, "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
     		movementsList.add(movement);
     	}
     	return movementsList;
@@ -329,7 +365,7 @@ public class TRCardManagerHttpAction {
     	movement.setDate(getAtFirstWhiteSpace(date));
     	movement.setHour(getAtFirstWhiteSpace(hour));
     	movement.setOperationType(operationType);
-    	movement.setAmount(getAtFirstWhiteSpace(amount)+"€");
+    	movement.setAmount(getAtFirstWhiteSpace(amount));
     	movement.setTrade(trade);
     	movement.setState(state);
     	
@@ -338,7 +374,7 @@ public class TRCardManagerHttpAction {
     
     private String getAtFirstWhiteSpace(String value){
     	int pos = value.indexOf(" ");
-    	pos = pos == -1?value.length():pos;
+    	pos = pos == -1? value.length() : pos;
     	return value.substring(0,pos);
     }
     

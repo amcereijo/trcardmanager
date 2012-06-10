@@ -9,9 +9,11 @@
 	<string name="btn_login_enter">Entrar</string>
 	<string name="login_error_message">Email and/or contraseña incorrecto</string>
 	<string name="login_error_connection_message">Error de red</string>
+	<string name="login_error_connection_error">Error de conexión</string>
 	<string name="login_rememberme">Recuerdame</string>
 	<string name="loggin_load_dialog_title">Autenticar</string>
     <string name="loggin_load_dialog_text">Autenticando en el sistema...</string>
+    <string name="session_expired">Su sessión ha caducado</string>
     
 	<!-- cards list -->    
 	<string name="cards_list_title">Tus tarjetas</string>

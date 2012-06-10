@@ -9,9 +9,11 @@
 	<string name="btn_login_enter">Enter</string>
 	<string name="login_error_message">Email and/or password incorrect</string>
 	<string name="login_error_connection_message">Network error</string>
+	<string name="login_error_connection_error">Connection error</string>
 	<string name="login_rememberme">Remember me</string>
 	<string name="loggin_load_dialog_title">Login</string>
     <string name="loggin_load_dialog_text">Logging in system...</string>
+    <string name="session_expired">Session expired</string>
     
 	<!-- cards list -->    
 	<string name="cards_list_title">Your Cards</string>
