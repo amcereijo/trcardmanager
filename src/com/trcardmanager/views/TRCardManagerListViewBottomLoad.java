@@ -31,13 +31,17 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 
     private static final String TAG = "PullToRefreshListView";
     
+    private static final int M_REFRESH_TOP_VIEW_ID = 2011; 
+    private static final int M_REFRESH_BOTTOM_VIEW_ID = 2012;
+    
     public enum ScrollDirection{
     	UP,
-    	DOWN
+    	DOWN,
+    	NONE
     }
 
     
-    private ScrollDirection scrollDirection = ScrollDirection.DOWN;
+    private ScrollDirection scrollDirection = ScrollDirection.NONE;
 
     private OnRefreshListenerBottomLoad mOnRefreshListener;
 
@@ -136,6 +140,9 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
         
         mRefreshTopViewImage.setMinimumHeight(50);
         mRefreshBottomViewImage.setMinimumHeight(50);
+        
+        mRefreshTopView.setId(M_REFRESH_TOP_VIEW_ID);
+        mRefreshBottomView.setId(M_REFRESH_BOTTOM_VIEW_ID);
         
         mRefreshTopView.setOnClickListener(new OnClickRefreshListener());
         mRefreshBottomView.setOnClickListener(new OnClickRefreshListener());
@@ -440,19 +447,15 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 	                	actionScrollDown(firstVisibleItem, visibleItemCount, totalItemCount);
 	                }else if(mRefreshFooterState != REFRESHING && scrollDirection == ScrollDirection.UP) {
 	                	actionScrollUp(firstVisibleItem, visibleItemCount, totalItemCount);
-	                }
-	        	
-	        	
+	                }        	
 	        } else if (mCurrentScrollState == SCROLL_STATE_FLING
 	                && firstVisibleItem == 0
 	                && mRefreshHeaderState != REFRESHING) {
 	            setSelection(1);
-	            mBounceHackHeader = true;
-	        	
+	            mBounceHackHeader = true;	        	
 	        } else if (mCurrentScrollState == SCROLL_STATE_FLING
 	                && firstVisibleItem + visibleItemCount == totalItemCount
 	                && mRefreshFooterState != REFRESHING) {
-
 	        	setSelection(totalItemCount-visibleItemCount);
 	            mBounceHackFooter = true;
 	        //} else if (mBounceHack && mCurrentScrollState == SCROLL_STATE_FLING) {
@@ -465,7 +468,6 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 	        		setSelection(totalItemCount-visibleItemCount);
 	        	}
 	        }
-
 	        if (mOnScrollListener != null) {
 	            mOnScrollListener.onScroll(view, firstVisibleItem,
 	                    visibleItemCount, totalItemCount);
@@ -539,7 +541,7 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 	        	 if(scrollDirection == ScrollDirection.UP){
 	        		 mBounceHackHeader = false;
 	        		 Log.i(TAG,"Direction to UP ser mBounceHeader --> false");
-	        	 }else{
+	        	 }else if(scrollDirection == ScrollDirection.DOWN){
 	        		 mBounceHackFooter = false;
 	        		 Log.i(TAG,"Direction to DOWN ser mBounceFooter --> false");
 	        	 }
@@ -595,7 +597,7 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 	    	if(scrollDirection == ScrollDirection.UP){
 	    		setLastHeaderUpdated(lastUpdated);
 	    		Log.i(TAG,"Call onrefreshComplete for Header");
-	    	}else{
+	    	}else if(scrollDirection == ScrollDirection.DOWN){
 	    		setLastBottomUpdated(lastUpdated);
 	    		Log.i(TAG,"Call onrefreshComplete for footer");
 	    	}
@@ -616,17 +618,17 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 		        	Log.i(TAG,"onRefreshComplete up");
 		        	setSelection(1);
 		        }
-	        }else{
+	        }else if(scrollDirection == ScrollDirection.DOWN){
 	        	Log.i(TAG,"CAll onRefreshComplete down -- resetFooter");
 	        	resetFooter();
 	        	if (mRefreshBottomView.getTop() < getBottom() ){
 		            invalidateViews();
 		        	Log.i(TAG,"onRefreshComplete down");
-		        	setSelection(getFirstVisiblePosition()-1);
-		            
+		        	int selectedPosition = getFirstVisiblePosition()-1>0?getFirstVisiblePosition()-1:1;
+		        	setSelection(selectedPosition);
 		        }
 	        }
-	        
+	        scrollDirection = ScrollDirection.NONE;
 	    }
 
 	    
@@ -638,15 +640,15 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
 	     */
 	    private class OnClickRefreshListener implements OnClickListener {
 
-	       
 	        public void onClick(View v) {
-	            if (mRefreshHeaderState != REFRESHING) {
-	            		 prepareForHeaderRefresh();
-	            		 onRefresh();
-	            }
-	            if(mRefreshFooterState != REFRESHING) {
-	    	        	 prepareForFooterRefresh();
-	    	        	 onRefresh();
+	        	if(v.getId() == M_REFRESH_TOP_VIEW_ID && mRefreshHeaderState != REFRESHING) {
+	        		scrollDirection = ScrollDirection.UP;
+            		prepareForHeaderRefresh();
+            		onRefresh();
+	            }else if(v.getId() == M_REFRESH_BOTTOM_VIEW_ID && mRefreshFooterState != REFRESHING) {
+	            	scrollDirection = ScrollDirection.DOWN;
+	            	prepareForFooterRefresh();
+    	        	onRefresh();
 	            }
 	        }
 

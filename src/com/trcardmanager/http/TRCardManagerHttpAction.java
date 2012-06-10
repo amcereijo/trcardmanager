@@ -150,7 +150,7 @@ public class TRCardManagerHttpAction {
 		for(int i=-1;i<newMovementsSize;){
 			if(movementFoundedInList){
 				//delete movements currently in list
-				newMovements.remove(i++);
+				newMovements.remove(i);
 				--newMovementsSize;
 			}else{
 				MovementDao oneNewMovement = newMovements.get(++i);
@@ -169,7 +169,7 @@ public class TRCardManagerHttpAction {
         
         List<MovementDao> movementList = getMovementsList(htmlDocument);
         MovementsDao movements = new MovementsDao();
-        	movements.setMovements(movementList);
+        movements.setMovements(movementList);
         	
         getPaginationMovements(movements,htmlDocument);
         
@@ -256,7 +256,6 @@ public class TRCardManagerHttpAction {
     	Response response = connection.execute();
     	String url = response.url().toString();
     	boolean logedIn = url.contains(httpPage);
-    	//boolean logedIn = response.hasCookie(COOKIE_NAME);
     	if(!logedIn){
     		throw new TRCardManagerSessionException();
     	}
@@ -341,7 +340,7 @@ public class TRCardManagerHttpAction {
     	Element table =  htmlDocument.getElementsByClass("tab_movs").first();
     	Elements tableRows = table.getElementsByTag("tr");
     	int firstDataRow = 2;
-    	for(int cont=firstDataRow;cont<tableRows.size();cont++){
+    	for(int cont=firstDataRow;cont<4/*tableRows.size()*/;cont++){
     		MovementDao movement = getMovement(tableRows.get(cont));
     		Log.d(TAG, "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
     		movementsList.add(movement);
