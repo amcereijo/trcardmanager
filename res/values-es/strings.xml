@@ -55,4 +55,7 @@
     <string name="push_to_refresh_refreshing_label">Cargando...</string>
     <string name="push_to_refresh_tap_label">Toca para actualizar...</string>
     
+      <!-- movement separator view -->
+    <string name="separator_text">Histórico</string>
+    
 </resources>

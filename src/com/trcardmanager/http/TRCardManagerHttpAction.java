@@ -340,7 +340,7 @@ public class TRCardManagerHttpAction {
     	Element table =  htmlDocument.getElementsByClass("tab_movs").first();
     	Elements tableRows = table.getElementsByTag("tr");
     	int firstDataRow = 2;
-    	for(int cont=firstDataRow;cont<4/*tableRows.size()*/;cont++){
+    	for(int cont=firstDataRow;cont<tableRows.size();cont++){
     		MovementDao movement = getMovement(tableRows.get(cont));
     		Log.d(TAG, "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
     		movementsList.add(movement);

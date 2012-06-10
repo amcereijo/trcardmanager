@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.trcardmanager.R;
 import com.trcardmanager.dao.MovementDao;
+import com.trcardmanager.dao.MovementSeparatorDao;
 
 /**
  * Adapter to build movement list
@@ -29,8 +30,6 @@ public class MovementsListViewAdapter extends ArrayAdapter<MovementDao> {
 	
 	private LayoutInflater inflater;
 	private Context context;
-	
-	
 	
 	public MovementsListViewAdapter(Context context, int textViewResourceId,
 			List<MovementDao> objects) {
@@ -47,14 +46,18 @@ public class MovementsListViewAdapter extends ArrayAdapter<MovementDao> {
     	MovementDao movement = getItem(position);
     	
     	if(movement!=null){
-			if(position%2!=0){
+    		boolean movementSeparator = (movement instanceof MovementSeparatorDao); 
+    		if(movementSeparator){
+    			convertView = (LinearLayout)inflater.inflate(R.layout.movements_separator, null,false);
+    		}else if(position%2!=0){
 				convertView = (LinearLayout) inflater.inflate(R.layout.card_movement, null,false);
 			}else{
 				convertView = (LinearLayout)inflater.inflate(R.layout.card_movement_odd, null,false);
 			}
-			convertView.setLayoutParams(lp);
-			
-			((LinearLayout)convertView).addView(createAndFillDataMovementLayout(movement));
+			if(!movementSeparator){
+				convertView.setLayoutParams(lp);
+				((LinearLayout)convertView).addView(createAndFillDataMovementLayout(movement));
+			}
     	}else{
     		convertView = new LinearLayout(context);
     		convertView.setLayoutParams(lp);
