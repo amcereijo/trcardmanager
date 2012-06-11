@@ -68,30 +68,32 @@
         android:textColor="#18376C" />
 	
     <TextView
-        android:id="@+id/balance_movement"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/hour_movement"
-        android:layout_toLeftOf="@id/state_movement"
-        android:paddingBottom="2sp"
-        android:paddingLeft="2sp"
-        android:paddingRight="2sp"
-        android:paddingTop="1sp"
-        android:text=""
-        android:textColor="#18376C" />
-    
-    <TextView
         android:id="@+id/balance_movement_symbol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/hour_movement"
-        android:layout_toLeftOf="@id/balance_movement"
+        android:layout_toLeftOf="@id/state_movement"
         android:paddingBottom="2sp"
         android:paddingLeft="0sp"
         android:paddingRight="2sp"
         android:paddingTop="1sp"
         android:text="@string/cards_list_card_balance_symbol"
         android:textColor="#18376C" />
+    
+    <TextView
+        android:id="@+id/balance_movement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hour_movement"
+        android:layout_toLeftOf="@id/balance_movement_symbol"
+        android:paddingBottom="2sp"
+        android:paddingLeft="2sp"
+        android:paddingRight="0sp"
+        android:paddingTop="1sp"
+        android:text=""
+        android:textColor="#18376C" />
+    
+    
     
     <TextView
         android:id="@+id/trade_movement"

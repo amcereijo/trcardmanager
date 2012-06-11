@@ -6,9 +6,8 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
@@ -83,12 +82,23 @@ public class TRCardManagerActivity extends Activity {
     }
     
     
-   
-    
     @Override
     protected void onRestart() {
+    	Log.d(TAG, "On restart application");
     	super.onRestart();
-    	TRCardManagerApplication.setActualActivity(this);
+    	if(isDataStillReady()){
+    		TRCardManagerApplication.setActualActivity(this);
+    	}else{
+    		this.setResult(TRCardManagerApplication.SESSION_EXPIRED_APPLICATION);
+        	this.finish();
+    	}
+    }
+    
+    
+    private boolean isDataStillReady(){
+    	UserDao user = TRCardManagerApplication.getUser();
+    	boolean stillReady = (user != null);	
+    	return stillReady;
     }
     
     
