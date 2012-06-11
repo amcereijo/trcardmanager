@@ -12,7 +12,7 @@ public class MovementsDao {
 	private String dateEnd;
 	private int numberOfPages;
 	private int actualPage;
-	private int historicalNumberOfPages;
+	private int historicalNumberOfPages = -1;
 	private int historicalActualPage;
 	
 	public void setPaginationLinks(List<String> paginationLinks) {

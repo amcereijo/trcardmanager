@@ -2,7 +2,6 @@ package com.trcardmanager.http;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -31,6 +30,7 @@ import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
+import com.trcardmanager.dao.MovementSeparatorDao;
 import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
@@ -41,6 +41,8 @@ import com.trcardmanager.string.TRCardManagerStringHelper;
 
 public class TRCardManagerHttpAction {
 	
+	private static final int HISTORICAL_LIST_MOVEMENTS_START_POSITION = 2;
+
 	private static final String TAG = TRCardManagerHttpAction.class.getName();
 	
 	private static final String LOGIN_FIELD_TYPE = "type";
@@ -62,6 +64,10 @@ public class TRCardManagerHttpAction {
     private static final String URL_PREPARE_UPDATE_CARD = "mi_cuenta.html";
     private static final String PREPARE_UPDATE_CARD_START_SEARCH = "<input type=\"hidden\" name=\"id\" value=\"";
     private static final String PREPARE_UPDATE_CARD_END_SEARCH = "\">";
+    
+    private static final String URL_HISTORICAL = "consulta_movimientos.html";
+    private static final String HISTORICAL_SEARCH_DATE_FROM = "01/01/2001";
+    
     
     private static final String CLASS_TO_SEARH_ACTUAL_BALANCE = "result";
     private static final String ID_TO_SEARCH_CARD_NUMBER = "num_card";
@@ -88,6 +94,10 @@ public class TRCardManagerHttpAction {
 			throw new TRCardManagerLoginException();
 		}
     }
+    
+    
+    
+    
     
     public void getActualCard(UserDao user) throws ClientProtocolException,
     		IOException, TRCardManagerDataException, TRCardManagerSessionException{
@@ -215,23 +225,10 @@ public class TRCardManagerHttpAction {
     	movementsDao.setActualPage(0);
     	movementsDao.setNumberOfPages(listUrlLinks.size());
     }
+       
     
-    
-//    public void getMoreMovements(UserDao user) throws IOException{
-//    	MovementsDao movementsData = user.getActualCard().getMovementsData();
-//    	List<String> paginationUrls = movementsData.getPaginationLinks();
-//    	for(int actual=0;actual<paginationUrls.size();actual++){
-//    		if(actual != movementsData.getActualPage()){
-//	    		String url = paginationUrls.get(actual);
-//	    		Document htmlDocument = getHttpPage(url,user.getCookieValue());
-//	        	List<MovementDao> pageMovements = getMovementsList(htmlDocument);
-//	        	movementsData.getMovements().addAll(pageMovements);
-//    		}
-//    	}
-//    }
-//    
-    
-    public List<MovementDao> getNextMovements(UserDao user) throws IOException, TRCardManagerSessionException{
+    public List<MovementDao> getNextMovements(UserDao user) throws IOException, TRCardManagerSessionException,
+    		TRCardManagerDataException{
     	List<MovementDao> pageMovements = new ArrayList<MovementDao>();
     	MovementsDao movementsData = user.getActualCard().getMovementsData();    	
     	int actualPage = movementsData.getActualPage()+1;
@@ -244,12 +241,94 @@ public class TRCardManagerHttpAction {
         	movementsData.setActualPage(actualPage);
     	}else{
     		movementsData.setActualPage(movementsData.getNumberOfPages());
+    		pageMovements = getNextHistoricalMovements(user);
     	}
     	
     	return pageMovements;
     	
     }
     
+    private List<MovementDao> getNextHistoricalMovements(UserDao user) throws IOException, 
+			TRCardManagerSessionException,TRCardManagerDataException{
+		
+		MovementsDao movementsDao = user.getActualCard().getMovementsData();
+		int actualPage = movementsDao.getHistoricalActualPage();
+		
+		String lastDate = movementsDao.getMovements().get(movementsDao.getMovements().size()-1).getDate();
+		StringBuilder strb = new StringBuilder().append("?pag=").append(actualPage).append("&fromdate=")
+			.append(HISTORICAL_SEARCH_DATE_FROM).append("&todate=").append(lastDate).append("&consultamov=ALL");
+		
+		Document htmlDocument = getHttpPage(URL_HISTORICAL+strb,user.getCookieValue());
+		
+		Element dataTable = htmlDocument.body().getElementsByClass("tab_movs").first();
+		//Look for pages?
+		if(movementsDao.getHistoricalNumberOfPages()==-1){
+			//look for number of pages
+			movementsDao.setHistoricalNumberOfPages(lookForHistoricalTotalPages(dataTable));
+		}
+		
+		List<MovementDao> historicalMovements = new ArrayList<MovementDao>();
+		if(actualPage == 0){
+			//add separator
+			historicalMovements.add(new MovementSeparatorDao());
+		}
+		
+		if(actualPage<movementsDao.getHistoricalNumberOfPages()){
+			getPageHistoricalMovements(actualPage, dataTable,
+					historicalMovements);
+			movementsDao.setHistoricalActualPage(actualPage+1);
+		}
+		
+		return historicalMovements; 
+	}
+	
+	
+	private void getPageHistoricalMovements(int actualPage, Element dataTable,
+			List<MovementDao> historicalMovements) {
+		Elements trListData = dataTable.getElementsByTag("tr");
+		for(int i=HISTORICAL_LIST_MOVEMENTS_START_POSITION;i<trListData.size();i++){
+			Element actualTr = trListData.get(i);
+			MovementDao newMovement = getHistorialMovementData(actualPage, i, actualTr);
+			historicalMovements.add(newMovement);
+		}
+	}
+	
+	
+	private MovementDao getHistorialMovementData(int actualPage, int i,
+			Element actualTr) {
+		Elements tdListData = actualTr.getElementsByTag("td");
+		String date = tdListData.get(0).html();
+		String hour = getAtFirstWhiteSpace(tdListData.get(1).html());
+		String operationType = tdListData.get(2).html();
+		String amount = getAtFirstWhiteSpace(tdListData.get(3).html());
+		String trade = tdListData.get(4).html();
+		//generate an id
+		String operationId = new StringBuilder().append(actualPage)
+			.append(i-HISTORICAL_LIST_MOVEMENTS_START_POSITION).toString();
+		MovementDao newMovement = new MovementDao();
+			newMovement.setDate(date);
+			newMovement.setHour(hour);
+			newMovement.setOperationType(operationType);
+			newMovement.setAmount(amount);
+			newMovement.setTrade(trade);
+			newMovement.setOperationId(operationId);
+		return newMovement;
+	}
+	
+	
+	private int lookForHistoricalTotalPages(Element dataTable) throws TRCardManagerDataException {
+		Element tdTabMenu = dataTable.getElementsByClass("tab_menu").first();
+		Element spanData = tdTabMenu.getElementsByClass("izquierda").first();
+		String spanContent = spanData.html();
+		int lastWhiteSpacePosition = spanContent.lastIndexOf(" ");
+		int lastTwoPointsPosition = spanContent.lastIndexOf(":");
+		String totalPages = spanContent.substring(lastWhiteSpacePosition+1,lastTwoPointsPosition);
+		try{
+			return Integer.parseInt(totalPages);
+		}catch(NumberFormatException nue){
+			throw new TRCardManagerDataException("Error getting historical total page number:"+nue.getMessage());
+		}
+	}
     
     private Document getHttpPage(String httpPage, String cookieValue) throws IOException,TRCardManagerSessionException{
     	Connection connection = Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT);
