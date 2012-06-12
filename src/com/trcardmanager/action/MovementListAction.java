@@ -16,8 +16,8 @@ import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
-import com.trcardmanager.views.TRCardManagerListViewBottomLoad;
-import com.trcardmanager.views.TRCardManagerListViewBottomLoad.ScrollDirection;
+import com.trcardmanager.views.TRCardManagerListView;
+import com.trcardmanager.views.TRCardManagerListView.ScrollDirection;
 
 /**
  * 
@@ -31,14 +31,14 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 	private UserDao user = TRCardManagerApplication.getUser();
 	
 	private ArrayAdapter<MovementDao> adapter;
-	private TRCardManagerListViewBottomLoad linearMovements;
+	private TRCardManagerListView linearMovements;
 	private List<MovementDao> movements;
 	private ScrollDirection scrollDirection;
 	private TextView balanceView;
 	
 	private boolean sessionActive = true;
 	
-	public MovementListAction(TRCardManagerListViewBottomLoad linearMovements,
+	public MovementListAction(TRCardManagerListView linearMovements,
 			ArrayAdapter<MovementDao> adapter,TextView balanceView) {
 		this.linearMovements = linearMovements;
 		this.adapter = adapter;

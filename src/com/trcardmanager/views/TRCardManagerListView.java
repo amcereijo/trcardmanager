@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.trcardmanager.R;
 
-public class TRCardManagerListViewBottomLoad extends ListView implements
+public class TRCardManagerListView extends ListView implements
 		OnScrollListener {
 
 	private static final int TAP_TO_REFRESH = 1;
@@ -81,17 +81,17 @@ public class TRCardManagerListViewBottomLoad extends ListView implements
     private boolean mBounceHackHeader;
     private boolean mBounceHackFooter;
 	
-	public TRCardManagerListViewBottomLoad(Context context) {
+	public TRCardManagerListView(Context context) {
 		super(context,null);
 		init();
 	}
 	
-	public TRCardManagerListViewBottomLoad(Context context, AttributeSet attrs) {
+	public TRCardManagerListView(Context context, AttributeSet attrs) {
 		super(context,attrs);
 		init();
 	}
 	
-	public TRCardManagerListViewBottomLoad(Context context, AttributeSet attrs, int defStyle) {
+	public TRCardManagerListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs,defStyle);
 		init();
 	}

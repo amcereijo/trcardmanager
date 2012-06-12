@@ -19,8 +19,8 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
-import com.trcardmanager.views.TRCardManagerListViewBottomLoad;
-import com.trcardmanager.views.TRCardManagerListViewBottomLoad.OnRefreshListenerBottomLoad;
+import com.trcardmanager.views.TRCardManagerListView;
+import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad;
 
 /**
  * 
@@ -70,7 +70,7 @@ public class TRCardManagerActivity extends Activity {
     private void addMovementsToView(List<MovementDao> movements){
     	List<MovementDao> movementsCopy = new ArrayList<MovementDao>();
     	movementsCopy.addAll(movements);
-    	final TRCardManagerListViewBottomLoad linearMovements = (TRCardManagerListViewBottomLoad)findViewById(R.id.layout_listview_movements);
+    	final TRCardManagerListView linearMovements = (TRCardManagerListView)findViewById(R.id.layout_listview_movements);
     	final ArrayAdapter<MovementDao> adapter = new MovementsListViewAdapter(this, R.id.layout_listview_movements, movementsCopy);
     	final TextView balanceView = (TextView)findViewById(R.id.card_balance);
     	linearMovements.setOnRefreshListener(new OnRefreshListenerBottomLoad() {

@@ -96,7 +96,7 @@
 		</RelativeLayout>
 	</RelativeLayout>
 	
-    <com.trcardmanager.views.TRCardManagerListViewBottomLoad 
+    <com.trcardmanager.views.TRCardManagerListView 
 		android:id="@+id/layout_listview_movements"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
