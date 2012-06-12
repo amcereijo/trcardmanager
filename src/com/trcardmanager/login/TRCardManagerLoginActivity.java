@@ -1,8 +1,6 @@
 package com.trcardmanager.login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -43,6 +41,7 @@ public class TRCardManagerLoginActivity extends Activity {
 		super.onRestart();
     	TRCardManagerApplication.setActualActivity(this);
     }
+	
 	
 	private void fillRemeberedUser(){
 		TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());

@@ -2,6 +2,11 @@ package com.trcardmanager.dao;
 
 import java.util.List;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class MovementsDao {
 	
 	public final static int MAX_MOVEMENTS_PAGE = 10;

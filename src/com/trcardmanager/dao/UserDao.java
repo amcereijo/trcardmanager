@@ -3,6 +3,11 @@ package com.trcardmanager.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class UserDao {
 	
 	private long rowId = -1;

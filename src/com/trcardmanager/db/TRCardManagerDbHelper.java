@@ -12,6 +12,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	//boolean = integers 0 (false) and 1 (true).
 	private static final int VALUE_OF_TRUE = 1;

@@ -36,7 +36,6 @@ public class TRCardManagerApplication extends Application {
 	}
 	
 	public static void setLoadingInfo(boolean loadingInfo) {
-		Log.d(TAG, "---- SETED LOADING INFO TO " + loadingInfo);
 		TRCardManagerApplication.loadingInfo = loadingInfo;
 	}
 	public static boolean isLoadingInfo() {

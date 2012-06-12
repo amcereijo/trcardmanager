@@ -61,36 +61,6 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 		return null;
 	}
 	
-	private class MovementsListRunnable implements Runnable{
-		public void run() {
-			if(scrollDirection == ScrollDirection.UP){
-        		updateNewMovementsInfo();
-        	}else{
-        		updateMoreMovements();
-        	}
-            adapter.notifyDataSetChanged();
-		}
-
-		private void updateMoreMovements() {
-			if(movements != null && movements.size() > 0){
-			    for(int i=0;i<movements.size();i++)
-			    	adapter.add(movements.get(i));
-			}
-		}
-
-		private void updateNewMovementsInfo() {
-			UserDao user = TRCardManagerApplication.getUser();
-			balanceView.setText(user.getActualCard().getBalance());
-			
-			int totalElements = adapter.getCount();
-			for(int i=0;i<totalElements;i++){
-				movements.add((MovementDao)adapter.getItem(i));
-			}
-			adapter.clear();
-			updateMoreMovements();
-		}
-    }
-	
 	
 	@Override
 	protected void onPostExecute(Void result) {
@@ -124,12 +94,6 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		try {
 			myListItems = httpAction.getNextMovements(user);
-			
-			MovementsDao movementsData = user.getActualCard().getMovementsData();
-			int pageActual = movementsData.getActualPage();
-			int nextPage = pageActual+1;
-			Log.d(TAG, "--------------------- Add from "+pageActual+ " to "+nextPage);
-
 		} catch (IOException e) {
 			Log.e(this.getClass().toString(), e.getMessage(),e);
 			myListItems = new ArrayList<MovementDao>();
@@ -150,5 +114,39 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
     	sessionActive = false;
     }
 	
+    /**
+     * Runnable class to do things in background
+     * @author angelcereijo
+     *
+     */
+    private class MovementsListRunnable implements Runnable{
+		public void run() {
+			if(scrollDirection == ScrollDirection.UP){
+        		updateNewMovementsInfo();
+        	}else{
+        		updateMoreMovements();
+        	}
+            adapter.notifyDataSetChanged();
+		}
+
+		private void updateMoreMovements() {
+			if(movements != null && movements.size() > 0){
+			    for(int i=0;i<movements.size();i++)
+			    	adapter.add(movements.get(i));
+			}
+		}
+
+		private void updateNewMovementsInfo() {
+			UserDao user = TRCardManagerApplication.getUser();
+			balanceView.setText(user.getActualCard().getBalance());
+			
+			int totalElements = adapter.getCount();
+			for(int i=0;i<totalElements;i++){
+				movements.add((MovementDao)adapter.getItem(i));
+			}
+			adapter.clear();
+			updateMoreMovements();
+		}
+    }
 }
 

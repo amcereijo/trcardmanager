@@ -81,7 +81,7 @@
 		        android:typeface="serif"
 		        android:layout_below="@id/card_number_title"
 		        android:layout_alignParentRight="true"
-		        /><!-- android:layout_toRightOf="@id/card_balance" -->
+		        />
 			<TextView android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textColor="@android:color/white"
@@ -94,7 +94,6 @@
 		        android:layout_toLeftOf="@id/card_balance_symbol"
 	        />
 		</RelativeLayout>
-		 <!-- android:background="#22509F" -->
 	</RelativeLayout>
 	
     <com.trcardmanager.views.TRCardManagerListViewBottomLoad 
@@ -108,6 +107,7 @@
         android:paddingRight="0sp"
         android:paddingTop="0sp"
         android:layout_below="@id/layout_card_information"
+        android:fadingEdgeLength="4sp"
         />
     
 

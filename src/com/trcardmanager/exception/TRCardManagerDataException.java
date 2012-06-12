@@ -1,5 +1,10 @@
 package com.trcardmanager.exception;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerDataException extends Exception {
 
 	private static final long serialVersionUID = 1018396017533142740L;

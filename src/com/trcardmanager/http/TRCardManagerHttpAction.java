@@ -4,21 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -36,9 +24,12 @@ import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
-import com.trcardmanager.exception.TRCardManagerUpdateCardException;
-import com.trcardmanager.string.TRCardManagerStringHelper;
 
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
 public class TRCardManagerHttpAction {
 	
 	private static final int HISTORICAL_LIST_MOVEMENTS_START_POSITION = 2;
@@ -58,17 +49,8 @@ public class TRCardManagerHttpAction {
     private static final String URL_BALANCE = "consulta_tarjeta.html";
     private static final String URL_MY_ACCOUNT = "mi_cuenta.html";
     private static final String TYPE_PARAMETER = "trc";
-    private static final String URL_UPDATE_CARD = "sendMyAccountCard.php";
-    private static final String UPDATE_CARD_PROFILE_PARAMETER = "TRCU";
-    private static final String UPDATE_CARD_RESPONSE_OK = "OK";
-    private static final String URL_PREPARE_UPDATE_CARD = "mi_cuenta.html";
-    private static final String PREPARE_UPDATE_CARD_START_SEARCH = "<input type=\"hidden\" name=\"id\" value=\"";
-    private static final String PREPARE_UPDATE_CARD_END_SEARCH = "\">";
-    
     private static final String URL_HISTORICAL = "consulta_movimientos.html";
     private static final String HISTORICAL_SEARCH_DATE_FROM = "01/01/2001";
-    
-    
     private static final String CLASS_TO_SEARH_ACTUAL_BALANCE = "result";
     private static final String ID_TO_SEARCH_CARD_NUMBER = "num_card";
     private static final String ATTRIBUTE_TO_GET_PROPERTY_VALUE = "value";
@@ -94,9 +76,6 @@ public class TRCardManagerHttpAction {
 			throw new TRCardManagerLoginException();
 		}
     }
-    
-    
-    
     
     
     public void getActualCard(UserDao user) throws ClientProtocolException,
@@ -140,15 +119,15 @@ public class TRCardManagerHttpAction {
 			
 			return newMovements;
 		}catch(TRCardManagerSessionException se){
+			Log.e(TAG,se.getMessage(),se);
 			throw se;
 		}catch(Exception e){
 			Log.e(TAG,e.getMessage(),e);
 			throw new TRCardManagerDataException(e);
 		}
-    	
-		
 	}
 
+    
 	private void onlyNewMovements(List<MovementDao> newMovements,
 			List<MovementDao> actualList) {
 		//Actual last movement
@@ -186,6 +165,7 @@ public class TRCardManagerHttpAction {
         user.getActualCard().setMovementsData(movements);
     }
     
+    
     private String getActualBalance(Document htmlDocument){
     	Elements elementsResult = htmlDocument.getElementsByClass(CLASS_TO_SEARH_ACTUAL_BALANCE);
         Element elBalance = elementsResult.first();
@@ -195,6 +175,7 @@ public class TRCardManagerHttpAction {
         return balance.substring(0,
         		substringposition>0?substringposition:balance.length()-1);
     }
+    
     
     private void getPaginationMovements(MovementsDao movementsDao,Document htmlDocument) throws ClientProtocolException,
 			IOException, TRCardManagerDataException{
@@ -214,7 +195,7 @@ public class TRCardManagerHttpAction {
     	List<String> listUrlLinks = new ArrayList<String>();
     	for(Element pageLink : pagesLinks){
     		String title = pageLink.attr("title");
-    		//avoid imprimir link
+    		//avoid print link
     		if(title==null || "".equals(title.trim())){
     			//call href value
     			String href = pageLink.attr("href");
@@ -247,6 +228,7 @@ public class TRCardManagerHttpAction {
     	return pageMovements;
     	
     }
+    
     
     private List<MovementDao> getNextHistoricalMovements(UserDao user) throws IOException, 
 			TRCardManagerSessionException,TRCardManagerDataException{
@@ -330,6 +312,7 @@ public class TRCardManagerHttpAction {
 		}
 	}
     
+	
     private Document getHttpPage(String httpPage, String cookieValue) throws IOException,TRCardManagerSessionException{
     	Connection connection = Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT);
     	Response response = connection.execute();
@@ -340,77 +323,6 @@ public class TRCardManagerHttpAction {
     	}
     	return connection.get();
     }
-    
-    public String getPrepareUpdateCard(UserDao user) throws ClientProtocolException,
-		IOException, TRCardManagerDataException{
-		
-    	String id = "";
-    	DefaultHttpClient httpClient = new DefaultHttpClient();
-		HttpGet get = new HttpGet(URL_BASE+URL_PREPARE_UPDATE_CARD);
-		get.addHeader("Cookie", COOKIE_NAME+"="+user.getCookieValue());
-		
-		HttpResponse response = httpClient.execute(get);
-		HttpEntity entity = response.getEntity();
-		
-		Log.d(TAG,"prepare update card get: " + response.getStatusLine());
-		if (entity != null) {
-			String html = EntityUtils.toString(entity,HTTP.UTF_8);
-			id = new TRCardManagerStringHelper(html)
-				.getStringBetwen(PREPARE_UPDATE_CARD_START_SEARCH, PREPARE_UPDATE_CARD_END_SEARCH);
-		    Log.d(TAG,"id: "+id);
-		}
-		return id;
-	}
-    
-    public void activateCard(UserDao user, CardDao card) throws IOException, TRCardManagerUpdateCardException, TRCardManagerDataException{
-    /*
-		var f = document.getElementById('updCard');
-		var _id = f.id.value;
-		var _profile = f.profile.value;
-        var _num_card = f.num_card.value; 			
-	    
-        $.ajax({
-           url: "sendMyAccountCard.php",
-           type: "POST",
-           dataType: "text",
-           data: {swlang: swlang, id: "updCard", profile: "TRCU", num_card: _num_card},	           		
-           error: function(req, err, obj) {
-    	 */
-    	//TRC4e1ad6e9cc5d0
-    	
-    	//Get 
-    	//<input type="hidden" name="id" value="TRC4e1ad6e9cc5d0">
-    	String id = getPrepareUpdateCard(user);
-    	
-    	HttpPost post = new HttpPost(URL_BASE+URL_UPDATE_CARD);
-    	List<NameValuePair> params = createPostListParameters(new String[][]{
-    			{"swlang",Locale.getDefault().getCountry()},
-    			{"id",id},
-    			{"profile",UPDATE_CARD_PROFILE_PARAMETER},
-    			{"num_card",card.getCardNumber()}
-    	});
-    	
-		post.setEntity(new UrlEncodedFormEntity(params,HTTP.UTF_8));
-		//post.addHeader("Cookie", COOKIE_NAME+"="+user.getCookieValue());
-		DefaultHttpClient httpClient = new DefaultHttpClient();
-		BasicClientCookie cookie = new BasicClientCookie(COOKIE_NAME, user.getCookieValue());
-		cookie.setDomain("ticketrestaurant.edenred.es");
-		cookie.setPath("/");
-		httpClient.getCookieStore().addCookie(cookie);
-		HttpResponse response = httpClient.execute(post);
-		HttpEntity entity = response.getEntity();
-
-		System.out.println("update card post response: " + response.getStatusLine());
-		if (entity != null){
-			String html = EntityUtils.toString(entity,HTTP.UTF_8); 
-			if(!UPDATE_CARD_RESPONSE_OK.equals(html)){
-				throw new TRCardManagerUpdateCardException(); 
-			}
-		}else{
-			throw new TRCardManagerUpdateCardException();
-		}
-    }
- 
     
    
     private List<MovementDao> getMovementsList(Document htmlDocument) throws IOException{
@@ -455,13 +367,5 @@ public class TRCardManagerHttpAction {
     	pos = pos == -1? value.length() : pos;
     	return value.substring(0,pos);
     }
-    
-    
-    private List<NameValuePair> createPostListParameters(String[][] nameVaules){
-    	List<NameValuePair> params = new ArrayList<NameValuePair>();
-    	for(String[] nameValue : nameVaules){
-    		params.add(new BasicNameValuePair(nameValue[0], nameValue[1]));
-    	}
-		return params;
-    }
+
 }

@@ -19,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.trcardmanager.R;
-import com.trcardmanager.adapter.MovementsListViewAdapter;
 
 public class TRCardManagerListViewBottomLoad extends ListView implements
 		OnScrollListener {
