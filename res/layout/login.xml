@@ -21,24 +21,29 @@
 	<TextView android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:textColor="@android:color/white"
-	        android:text="@string/email"/>
+	        android:text="@string/login_email_title"/>
 	<EditText android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5sp"
 	        android:layout_marginBottom="20sp"
 	        android:singleLine="true"
-	        android:id="@+id/email"/>
+	        android:id="@+id/login_email"
+	        android:hint="@string/login_email_hint"/>
+	
 	<!--  Password Label -->
 	<TextView android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:textColor="@android:color/white"
-	        android:text="@string/password"/>
+	        android:text="@string/login_password_title"/>
+	
 	<EditText android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5sp"
 	        android:singleLine="true"
-	        android:password="true"
-	        android:id="@+id/password"/>
+	        android:inputType="textPassword"
+	        android:id="@+id/login_password"
+	        android:hint="@string/login_password_hint"/>
+	
 	<LinearLayout android:orientation="horizontal"
 	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"
@@ -46,7 +51,7 @@
 		<CheckBox android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="5sp"
-	        android:id="@+id/rememberme"/>
+	        android:id="@+id/login_rememberme"/>
 		<TextView android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:textColor="@android:color/white"
@@ -56,7 +61,7 @@
 	<Button android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_marginTop="10sp"
-	        android:text="@string/btn_login_enter"
+	        android:text="@string/login_btn_enter"
 	        android:id="@+id/btn_login_enter"
 	        android:onClick="doLogin"
 	        android:clickable="true"/>

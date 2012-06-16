@@ -2,7 +2,9 @@ package com.trcardmanager.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -23,7 +25,10 @@ import com.trcardmanager.db.TRCardManagerDbHelper;
  */
 public class TRCardManagerLoginActivity extends Activity {
 	
+	private static final String TAG = TRCardManagerLoginActivity.class.getName(); 
 	
+	private UserDao user;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,8 +37,17 @@ public class TRCardManagerLoginActivity extends Activity {
 		setContentView(R.layout.login);    
 		 
 		TRCardManagerApplication.setActualActivity(this);
-		
-		fillRemeberedUser();
+		findRemeberedUser();
+		fillUserFields();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		findActualUser();
+		setContentView(R.layout.login);    
+		fillUserFields();
+		Log.d(TAG, "--- Rotate...");
+		super.onConfigurationChanged(newConfig);
 	}
 	
 	@Override
@@ -43,17 +57,30 @@ public class TRCardManagerLoginActivity extends Activity {
     }
 	
 	
-	private void fillRemeberedUser(){
+	private void findRemeberedUser(){
 		TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
-		UserDao user = dbHelper.findRemeberedUser();
+		user = dbHelper.findRemeberedUser();
+	}
+	
+	
+	private void fillUserFields(){
 		if(user!=null){
-			TextView emailTextView = (TextView)findViewById(R.id.email);
+			TextView emailTextView = (TextView)findViewById(R.id.login_email);
 			emailTextView.setText(user.getEmail());
-			TextView passTextView = (TextView)findViewById(R.id.password);
+			TextView passTextView = (TextView)findViewById(R.id.login_password);
 			passTextView.setText(user.getPassword());
-			CheckBox checkRememberme = (CheckBox)findViewById(R.id.rememberme);
-			checkRememberme.setChecked(true);
+			CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
+			checkRememberme.setChecked(user.isRememberme());
 		}
+	}
+	
+	private void findActualUser(){
+		TextView emailTextView = (TextView)findViewById(R.id.login_email);
+		TextView passTextView = (TextView)findViewById(R.id.login_password);
+		CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
+		user = new UserDao(emailTextView.getText().toString(),
+				passTextView.getText().toString(),
+				checkRememberme.isChecked());
 	}
 	
 	
@@ -74,9 +101,9 @@ public class TRCardManagerLoginActivity extends Activity {
 	}
 		
 	private UserDao getUserData(){
-		String email = ((EditText)findViewById(R.id.email)).getText().toString();
-		String password = ((EditText)findViewById(R.id.password)).getText().toString();
-		boolean rememberme = ((CheckBox)findViewById(R.id.rememberme)).isChecked();
+		String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
+		String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
+		boolean rememberme = ((CheckBox)findViewById(R.id.login_rememberme)).isChecked();
 		UserDao user = new UserDao(email, password, rememberme);
 		return user;
 	}

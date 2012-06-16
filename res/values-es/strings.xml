@@ -4,9 +4,11 @@
     <string name="app_name">TRCardManager</string>
     
      <!-- login -->
-	<string name="email">Email:</string>
-	<string name="password">Contraseña:</string>
-	<string name="btn_login_enter">Entrar</string>
+	<string name="login_email_title">Correo electrónico:</string>
+	<string name="login_email_hint">dirección de correo electrónico</string>
+	<string name="login_password_title">Contraseña:</string>
+	<string name="login_password_hint">contraseña</string>
+	<string name="login_btn_enter">Entrar</string>
 	<string name="login_error_message">Email and/or contraseña incorrecto</string>
 	<string name="login_error_connection_message">Error de red</string>
 	<string name="login_error_connection_error">Error de conexión</string>
@@ -55,7 +57,21 @@
     <string name="push_to_refresh_refreshing_label">Cargando...</string>
     <string name="push_to_refresh_tap_label">Toca para actualizar...</string>
     
-      <!-- movement separator view -->
+    <!-- movement separator view -->
     <string name="separator_text">Histórico</string>
+    
+    <!-- principal menu -->
+    <string name="principal_menu_settings">Configuración</string>
+    <string name="principal_menu_about">Acerca de</string>
+    
+    <!-- About layout -->
+    <string name="about_version">Versión</string>
+    <string name="about_developer">amcereijo@gmail.com</string>
+    <string name="about_application">La aplicación permite consultar el saldo de tu tarjeta ticketrestaurant del mismo modo que se podría hacer en la web.\n 
+		Permite visualizar el saldo actual de la tarjeta, los movimientos de últimos 45 días y el histórico de movimientos hasta el 1 de enero del año anterior.\n
+		Para visualizar más movimientos en la lista sólo debe arrastrar hacia arriba la lista actual y automáticamente se cargarán mas movimientos.\n
+		Si tiene la aplicación abierta y realiza un pago, basta con arrastrar hacía abajo la lista de movimientos para que aparezca el que acaba de realizar.\n\n
+		Espero que sea de utilidad y disfrute de su uso.\n\n</string>
+    <string name="about_application_icon">Icono de aplicación</string>
     
 </resources>

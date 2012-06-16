@@ -6,13 +6,18 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.trcardmanager.about.TRCardManagerAboutActivity;
 import com.trcardmanager.action.MovementListAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
@@ -45,6 +50,28 @@ public class TRCardManagerActivity extends Activity {
 		addCardsToView(user);		
 		TRCardManagerApplication.setActualActivity(this);
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.principal_menu, menu);
+        return true;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()){
+    		case R.id.principal_menu_settings:
+    			break;
+    		case R.id.principal_menu_about:
+    			Intent settings = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
+    			startActivity(settings);
+    			break;
+    	}
+    	return true;
+    }
+    
+    
     
     
     @Override

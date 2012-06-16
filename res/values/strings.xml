@@ -4,9 +4,11 @@
     <string name="app_name">TRCardManager</string>
     
      <!-- login -->
-	<string name="email">Email:</string>
-	<string name="password">Password:</string>
-	<string name="btn_login_enter">Enter</string>
+	<string name="login_email_title">Email:</string>
+	<string name="login_email_hint">email</string>
+	<string name="login_password_title">Password:</string>
+	<string name="login_password_hint">password</string>
+	<string name="login_btn_enter">Enter</string>
 	<string name="login_error_message">Email and/or password incorrect</string>
 	<string name="login_error_connection_message">Network error</string>
 	<string name="login_error_connection_error">Connection error</string>
@@ -58,5 +60,19 @@
     
     <!-- movement separator view -->
     <string name="separator_text">Historical</string>
+    
+    <!-- principal menu -->
+    <string name="principal_menu_settings">Configuration</string>
+    <string name="principal_menu_about">About</string>
+    
+    <!-- About layout -->
+    <string name="about_version">Version</string>
+    <string name="about_developer">amcereijo@gmail.com</string>
+    <string name="about_application">The application allows you to check the balance on your ticketrestaurant card in the same way that could be done on the web.\n
+		It displays the current balance of the card, last 45 days movements and historical movements until 1 January of the previous year.\n
+		To view more entries in the list, you only must drag the current list upwards and automatically more movements will be loaded.\n
+		If you have the application open and make a payment, simply drag the list of movements down to load the recent payment.\n\n
+		I hope this is useful and you can enjoy its use.\n\n</string>
+    <string name="about_application_icon">Application icon</string>
     
 </resources>

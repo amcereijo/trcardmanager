@@ -21,7 +21,7 @@
 	    android:id="@+id/layout_image_button_icon"
 	    android:layout_alignParentLeft="true"
 	    >
-	        <ImageButton android:src="@drawable/icono"
+	        <ImageButton android:src="@drawable/application_icon"
 	            android:maxHeight="80sp"
 	            android:maxWidth="80sp"
 	            android:layout_alignParentLeft="true"
