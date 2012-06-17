@@ -71,7 +71,16 @@
 		Permite visualizar el saldo actual de la tarjeta, los movimientos de últimos 45 días y el histórico de movimientos hasta el 1 de enero del año anterior.\n
 		Para visualizar más movimientos en la lista sólo debe arrastrar hacia arriba la lista actual y automáticamente se cargarán mas movimientos.\n
 		Si tiene la aplicación abierta y realiza un pago, basta con arrastrar hacía abajo la lista de movimientos para que aparezca el que acaba de realizar.\n\n
-		Espero que sea de utilidad y disfrute de su uso.\n\n</string>
+		Espero que le sea de utilidad y disfrute de su uso.\n\n</string>
     <string name="about_application_icon">Icono de aplicación</string>
+    <string name="about_button_feedback_text"><u>Envía una opinión</u></string>
+    
+    <!-- feedback layout and action-->
+    <string name="feed_back_title">Envía una opinión:</string>
+    <string name="feed_back_text_hint">Escribe una opinión/sugerencia/queja/mensaje...</string>
+    <string name="feed_back_send_button">Enviar</string>
+    <string name="feed_back_close_button">Cerrar</string>
+    <string name="feed_back_intention_text">Selecciona un programa:</string>
+    <string name="feed_back_no_intention_found">No hay un cliente de correo electrónico instalado.</string>
     
 </resources>

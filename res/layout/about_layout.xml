@@ -12,7 +12,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10sp" >
+            android:paddingBottom="6sp" >
 
             <ImageButton
                 android:id="@+id/about_icon_layout"
@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="30sp"
+                android:layout_marginTop="10sp"
                 android:background="@drawable/icon_btn_border"
                 android:contentDescription="@string/about_application_icon"
                 android:maxHeight="120sp"
@@ -58,6 +58,19 @@
                 android:paddingTop="4sp"
                 android:text="@string/about_developer"
                 android:textColor="@android:color/white" />
+            
+            <Button android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_button_feedback_text"
+                android:layout_marginTop="4sp"
+                android:id="@+id/about_button_opinon"
+                android:onClick="showFeedBackInput"
+                android:layout_below="@id/about_developer_text"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
+            
         </RelativeLayout>
 
         <View
