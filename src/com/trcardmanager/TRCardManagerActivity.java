@@ -19,11 +19,13 @@ import android.widget.TextView;
 
 import com.trcardmanager.about.TRCardManagerAboutActivity;
 import com.trcardmanager.action.MovementListAction;
+import com.trcardmanager.action.TRCardManagerLoginAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
+import com.trcardmanager.updatecard.TRCardManagerUpdateCardActivity;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad;
 
@@ -44,11 +46,7 @@ public class TRCardManagerActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         
         setContentView(R.layout.main);
-        
-		UserDao user = TRCardManagerApplication.getUser();
-		//view actions
-		addCardsToView(user);		
-		TRCardManagerApplication.setActualActivity(this);
+        initActivity();
     }
     
     @Override
@@ -62,15 +60,35 @@ public class TRCardManagerActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()){
     		case R.id.principal_menu_settings:
+    			Intent settingsUpdate = new Intent(this, TRCardManagerUpdateCardActivity.class);
+    			startActivityForResult(settingsUpdate, TRCardManagerApplication.CARD_UPDATED);
     			break;
     		case R.id.principal_menu_about:
-    			Intent settings = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
-    			startActivity(settings);
+    			Intent settingsAbout = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
+    			startActivity(settingsAbout);
     			break;
     	}
     	return true;
     }
     
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	 super.onActivityResult(requestCode, resultCode, data);
+    	 if(requestCode == TRCardManagerApplication.CARD_UPDATED){
+    		if(resultCode == TRCardManagerApplication.CARD_UPDATED){
+    			initActivity();
+    		}else if (resultCode == TRCardManagerApplication.SESSION_EXPIRED_APPLICATION){
+    			finishWithSessionExpired();
+    		}
+    	}
+    	
+    }
+
+	private void finishWithSessionExpired() {
+		this.setResult(TRCardManagerApplication.SESSION_EXPIRED_APPLICATION);
+		this.finish();
+	}
     
     
     
@@ -88,6 +106,15 @@ public class TRCardManagerActivity extends Activity {
 		alert.setNegativeButton(android.R.string.no, null);
 		alert.show();
     }
+    
+    private void initActivity(){
+    	UserDao user = TRCardManagerApplication.getUser();
+		//view actions
+		addCardsToView(user);		
+		TRCardManagerApplication.setActualActivity(this);
+		
+    }
+    
     
     private void closeApplication(){
     	this.finish();
@@ -116,8 +143,7 @@ public class TRCardManagerActivity extends Activity {
     	if(isDataStillReady()){
     		TRCardManagerApplication.setActualActivity(this);
     	}else{
-    		this.setResult(TRCardManagerApplication.SESSION_EXPIRED_APPLICATION);
-        	this.finish();
+    		finishWithSessionExpired();
     	}
     }
     

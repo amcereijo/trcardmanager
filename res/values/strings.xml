@@ -64,10 +64,11 @@
     <string name="separator_text">Historical</string>
     
     <!-- principal menu -->
-    <string name="principal_menu_settings">Configuration</string>
+    <string name="principal_menu_update_card">Update card</string>
     <string name="principal_menu_about">About</string>
     
     <!-- About layout -->
+    <string name="about_version_title">About</string>
     <string name="about_version">Version</string>
     <string name="about_developer">amcereijo@gmail.com</string>
     <string name="about_application">The application allows you to check the balance on your ticketrestaurant card in the same way that could be done on the web.\n
@@ -86,4 +87,15 @@
      <string name="feed_back_intention_text">Select an application</string>
      <string name="feed_back_no_intention_found">There are no email clients installed.</string>
     
+     <!-- Update card laytout -->
+     <string name="update_card_title">Update card</string>
+     <string name="update_card_cardnumber_actual_title">Actual card:</string>
+     <string name="update_card_cardnumber_title">New card:</string>
+     <string name="update_card_cardnumber_text">card number</string>
+     <string name="update_card_btn_update">Update</string>
+     <string name="update_card_error_card_size">The card number must be 16 digits</string>
+     <string name="update_card_loading_message_title">Update card</string>
+     <string name="update_card_loading_message_message">Updating card information</string>
+     <string name="update_card_dialog_error_button">Close</string>
+     
 </resources>

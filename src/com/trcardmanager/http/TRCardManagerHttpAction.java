@@ -4,9 +4,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -24,6 +35,8 @@ import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
+import com.trcardmanager.exception.TRCardManagerUpdateCardException;
+import com.trcardmanager.string.TRCardManagerStringHelper;
 
 /**
  * 
@@ -54,6 +67,10 @@ public class TRCardManagerHttpAction {
     private static final String CLASS_TO_SEARH_ACTUAL_BALANCE = "result";
     private static final String ID_TO_SEARCH_CARD_NUMBER = "num_card";
     private static final String ATTRIBUTE_TO_GET_PROPERTY_VALUE = "value";
+    private static final String URL_UPDATE_CARD = "sendMyAccountCard.php";
+    private static final String UPDATE_CARD_PROFILE_PARAMETER = "TRCU";
+    private static final String UPDATE_CARD_RESPONSE_OK = "OK";
+    private static final String URL_PREPARE_UPDATE_CARD = "mi_cuenta.html";
     
        
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
@@ -361,6 +378,56 @@ public class TRCardManagerHttpAction {
     	
     	return movement;
     }
+    
+    
+    
+    
+    public void activateCard(UserDao user, CardDao card) throws IOException, TRCardManagerUpdateCardException, TRCardManagerDataException, TRCardManagerSessionException{
+        /*
+    		var f = document.getElementById('updCard');
+    		var _id = f.id.value;
+    		var _profile = f.profile.value;
+            var _num_card = f.num_card.value; 			
+    	    
+            $.ajax({
+               url: "sendMyAccountCard.php",
+               type: "POST",
+               dataType: "text",
+               data: {swlang: swlang, id: "updCard", profile: "TRCU", num_card: _num_card},	           		
+               error: function(req, err, obj) {
+        	 */
+        	//TRC4e1ad6e9cc5d0
+        	
+        	//Get 
+        	//<input type="hidden" name="id" value="TRC4e1ad6e9cc5d0">
+        	String id = getPrepareUpdateCard(user);
+        	
+        	Map<String, String> postMap = new HashMap<String, String>();
+				postMap.put("swlang",Locale.getDefault().getCountry());
+				postMap.put("id",id);
+				postMap.put("profile",UPDATE_CARD_PROFILE_PARAMETER);
+				postMap.put("num_card",card.getCardNumber());
+
+			Response response = Jsoup.connect(URL_BASE+URL_UPDATE_CARD).cookie(COOKIE_NAME,user.getCookieValue()).timeout(TIMEOUT).data(postMap).execute();
+			if(response != null){
+				String responseString = response.body();
+				if(!UPDATE_CARD_RESPONSE_OK.equals(responseString)){
+    				throw new TRCardManagerUpdateCardException(); 
+    			}
+			}else{
+				throw new TRCardManagerUpdateCardException();
+			}
+        }
+    
+    
+    public String getPrepareUpdateCard(UserDao user) throws ClientProtocolException,
+			IOException, TRCardManagerDataException, TRCardManagerSessionException{
+    	Document document = getHttpPage(URL_PREPARE_UPDATE_CARD, user.getCookieValue());
+		Element form = document.getElementById("updCard");
+		Element inputHiddenId = form.getElementsByAttributeValue("name", "id").first();
+		String id = inputHiddenId.attr("value");
+		return id;
+	}
     
     private String getAtFirstWhiteSpace(String value){
     	int pos = value.indexOf(" ");

@@ -2,7 +2,9 @@ package com.trcardmanager.application;
 
 import android.app.Activity;
 import android.app.Application;
-import android.util.Log;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.preference.PreferenceManager;
 
 import com.trcardmanager.dao.UserDao;
 
@@ -16,10 +18,12 @@ public class TRCardManagerApplication extends Application {
 	
 	public static int BACK_EXIT_APPLICATION = 99;
 	public static int SESSION_EXPIRED_APPLICATION = 101;
+	public static int CARD_UPDATED = 103;
 	
 	private static UserDao user;
 	private static Activity actualActivity;
 	private static boolean loadingInfo = Boolean.FALSE;
+	
 	
 	public static void setUser(UserDao user) {
 		TRCardManagerApplication.user = user;

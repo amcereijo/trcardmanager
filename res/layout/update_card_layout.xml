@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#18376C" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10sp" >
+
+        <TextView
+            android:id="@+id/update_card_cardnumber_actual_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:text="@string/update_card_cardnumber_actual_title"
+            android:textColor="@android:color/white" />
+
+        <EditText
+            android:id="@+id/update_card_cardnumber_actual_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="none"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/update_card_cardnumber_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:text="@string/update_card_cardnumber_title"
+            android:textColor="@android:color/white" />
+	
+        
+        <AutoCompleteTextView android:id="@+id/update_card_cardnumber_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:hint="@string/update_card_cardnumber_text"
+            android:singleLine="true" 
+            android:inputType="number"/>
+        
+        <Button
+            android:id="@+id/update_card_btn_update"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:clickable="true"
+            android:text="@string/update_card_btn_update"
+            android:onClick="updateCard" />
+
+    </LinearLayout>
+
+</ScrollView>

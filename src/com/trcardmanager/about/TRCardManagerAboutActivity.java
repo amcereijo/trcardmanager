@@ -3,9 +3,11 @@ package com.trcardmanager.about;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
+import com.trcardmanager.application.TRCardManagerApplication;
 
 /**
  * 
@@ -32,8 +35,10 @@ public class TRCardManagerAboutActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.about_version_title);
 		setContentView(R.layout.about_layout);
 		loadAppVersion();
+		TRCardManagerApplication.setActualActivity(this);
 	}
 	
 	

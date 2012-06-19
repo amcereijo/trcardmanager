@@ -89,6 +89,9 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 		}catch(TRCardManagerSessionException se){
 			Log.e(TAG, se.getMessage(),se);
 			loginCode = R.string.login_error_message;
+		}catch(TRCardManagerDataException e){
+			Log.e(TAG, e.getMessage(),e);
+			loginCode = R.string.login_error_message;
 		}catch(Exception e){
 			Log.e(TAG, e.getMessage(),e);
 			loginCode = R.string.login_error_connection_error;
@@ -131,7 +134,7 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	private void getUserData() throws ClientProtocolException, IOException, 
 			TRCardManagerDataException, TRCardManagerSessionException{
         if(!isDataReady(userDao)){
-        	loadAndSaveUserData();
+        	new UserDataAction().loadAndSaveUserData(userDao);
         }else{
         	loginCode = R.string.login_error_message;
         }
@@ -141,27 +144,6 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
     	return (user!=null && user.getActualCard()!=null);
     }
     
-    
-    private void loadAndSaveUserData() throws ClientProtocolException, IOException,
-    		TRCardManagerDataException, TRCardManagerSessionException{
-		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-        TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(activity);
-    	//http actions
-		httpAction.getActualCard(userDao);
-		httpAction.getActualCardBalanceAndMovements(userDao);
-		
-		CardDao card = userDao.getActualCard();
-		if( card == null || card.getMovementsData() == null ||
-				card.getMovementsData().getMovements() ==null){
-			loginCode = R.string.login_error_message;
-		}else{
-			//db actions
-			dbHelper.addCard(userDao.getRowId(), userDao.getActualCard());
-			dbHelper.updateCardBalance(userDao.getActualCard());
-			dbHelper.findUserCards(userDao);
-		}   	
-    }
-	
 	
 	private void updateViewErrorLogin(){
 		TextView errorTextView = (TextView)activity.findViewById(R.id.error_login_text_view);

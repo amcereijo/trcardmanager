@@ -11,14 +11,12 @@
     <application
         android:icon="@drawable/application_icon"
         android:label="@string/app_name"
-        android:name=".application.TRCardManagerApplication"
-        
-        >
+        android:name=".application.TRCardManagerApplication">
         <activity
             android:label="@string/app_name"
             android:name=".login.TRCardManagerLoginActivity" 
             android:configChanges="keyboardHidden|orientation"
-            ><!-- android:screenOrientation="portrait" -->
+            >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,13 +25,16 @@
         <activity
             android:name=".TRCardManagerActivity" 
             android:configChanges="keyboardHidden|orientation"
-            ><!-- android:screenOrientation="portrait" -->
+            >
         </activity>
          <activity
             android:name=".about.TRCardManagerAboutActivity" 
             android:configChanges="keyboardHidden|orientation" 
             >
         </activity>
+        <activity
+            android:name=".updatecard.TRCardManagerUpdateCardActivity" 
+            android:configChanges="keyboardHidden|orientation" />
     </application>
 
 </manifest>
