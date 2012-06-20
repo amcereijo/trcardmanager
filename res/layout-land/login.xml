@@ -4,16 +4,14 @@
     android:layout_height="fill_parent"
     android:background="#18376C" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="0sp" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/login_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_marginBottom="8sp"
             android:gravity="center_horizontal"
             android:text="@string/app_name"
@@ -22,124 +20,99 @@
             android:textStyle="bold"
             android:typeface="serif" />
 
-        <LinearLayout
-            android:id="@+id/login_email_layout"
+        <!-- Email Label -->
+        <!--
+         <TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/white"
+	        android:text="@string/login_email_title"/>
+        -->
+
+        <EditText
+            android:id="@+id/login_email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/login_title"
-            android:background="#18376C"
-            android:orientation="horizontal"
-            android:paddingLeft="4sp"
-            android:paddingRight="4sp"
-            android:weightSum="1.0" >
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:layout_marginTop="5sp"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/login_email_hint"
+            android:singleLine="true"
+            android:textColor="#18376C" />
 
-            <!-- Email Label -->
+        <!-- Password Label -->
+        <!--
+         <TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/white"
+	        android:text="@string/login_password_title"/>
+        -->
 
-            <TextView
-                android:id="@+id/login_email_title"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight=".25"
-                android:text="@string/login_email_title"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/login_email"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".75"
-                android:hint="@string/login_email_hint"
-                android:singleLine="true" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/login_password_layout"
+        <EditText
+            android:id="@+id/login_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/login_email_layout"
-            android:background="#18376C"
-            android:orientation="horizontal"
-            android:paddingLeft="4sp"
-            android:paddingRight="4sp"
-            android:weightSum="1.0" >
-
-            <!-- Password Label -->
-
-            <TextView
-                android:id="@+id/login_password_title"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight=".25"
-                android:text="@string/login_password_title"
-                android:textColor="@android:color/white" />
-
-            <EditText
-                android:id="@+id/login_password"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".75"
-                android:hint="@string/login_password_hint"
-                android:inputType="textPassword"
-                android:singleLine="true" />
-        </LinearLayout>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:layout_marginTop="5sp"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/login_password_hint"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColor="#18376C" />
 
         <LinearLayout
-            android:id="@+id/login_checkbox_enter_layout"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/login_password_layout"
+            android:layout_marginLeft="30sp"
+            android:layout_marginTop="5sp"
             android:background="#18376C"
             android:orientation="horizontal"
-            android:paddingLeft="4sp"
-            android:paddingRight="4sp"
-            android:weightSum="1.0" >
+            android:padding="0sp" >
 
             <CheckBox
                 android:id="@+id/login_rememberme"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".08" />
-
-            <TextView
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".17"
-                android:text="@string/login_rememberme"
-                android:textColor="@android:color/white" />
-            <!-- Login button -->
-
-            <Button
-                android:id="@+id/login_btn_enter"
-                android:layout_width="0sp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".75"
-                android:clickable="true"
-                android:onClick="doLogin"
-                android:text="@string/login_btn_enter" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/error_login_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/login_checkbox_enter_layout"
-            android:background="@drawable/login_error_border"
-            android:visibility="invisible" >
-
-            <TextView
-                android:id="@+id/error_login_text_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#819FF7"
-                android:gravity="center_vertical|center_horizontal"
+                android:padding="0sp" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login_rememberme"
                 android:textColor="@android:color/white" />
         </LinearLayout>
-    </RelativeLayout>
+        <!-- Login button -->
+
+        <Button
+            android:id="@+id/btn_login_enter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30sp"
+            android:layout_marginRight="30sp"
+            android:layout_marginTop="6sp"
+            android:background="@drawable/login_btn_border"
+            android:clickable="true"
+            android:onClick="doLogin"
+            android:text="@string/login_btn_enter"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <TextView android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:gravity="center_horizontal"
+	        android:layout_marginTop="8sp"
+	        android:textColor="#FFFFFF"
+	        android:layout_marginLeft="30sp"
+	        android:layout_marginRight="30sp"
+	        android:id="@+id/error_login_text_view"
+	        android:visibility="gone"/>
+    </LinearLayout>
 
 </ScrollView>

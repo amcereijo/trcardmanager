@@ -46,7 +46,6 @@ public class TRCardManagerLoginActivity extends Activity {
 		findActualUser();
 		setContentView(R.layout.login);    
 		fillUserFields();
-		Log.d(TAG, "--- Rotate...");
 		super.onConfigurationChanged(newConfig);
 	}
 	

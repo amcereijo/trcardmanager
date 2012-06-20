@@ -148,6 +148,6 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	private void updateViewErrorLogin(){
 		TextView errorTextView = (TextView)activity.findViewById(R.id.error_login_text_view);
 		errorTextView.setText(loginCode);
-		((LinearLayout) activity.findViewById(R.id.error_login_layout)).setVisibility(View.VISIBLE);
+		errorTextView.setVisibility(View.VISIBLE);
 	}
 }

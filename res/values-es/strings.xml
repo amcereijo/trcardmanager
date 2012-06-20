@@ -9,7 +9,7 @@
     <string name="login_password_title">Contraseña:</string>
     <string name="login_password_hint">contraseña</string>
     <string name="login_btn_enter">Entrar</string>
-    <string name="login_error_message">Email and/or contraseña incorrecto</string>
+    <string name="login_error_message">Email y/o contraseña incorrecto</string>
     <string name="login_error_connection_message">Error de red</string>
     <string name="login_error_connection_error">Error de conexión</string>
     <string name="login_rememberme">Recuerdame</string>
