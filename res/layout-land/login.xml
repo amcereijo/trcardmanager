@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#18376C" >
+    android:background="#2A4678" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
@@ -19,15 +19,6 @@
             android:textSize="32sp"
             android:textStyle="bold"
             android:typeface="serif" />
-
-        <!-- Email Label -->
-        <!--
-         <TextView android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/white"
-	        android:text="@string/login_email_title"/>
-        -->
-
         <EditText
             android:id="@+id/login_email"
             android:layout_width="fill_parent"
@@ -40,15 +31,7 @@
             android:background="@drawable/login_text_border"
             android:hint="@string/login_email_hint"
             android:singleLine="true"
-            android:textColor="#18376C" />
-
-        <!-- Password Label -->
-        <!--
-         <TextView android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:textColor="@android:color/white"
-	        android:text="@string/login_password_title"/>
-        -->
+            android:textColor="#2A4678" />
 
         <EditText
             android:id="@+id/login_password"
@@ -62,14 +45,14 @@
             android:hint="@string/login_password_hint"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColor="#18376C" />
+            android:textColor="#2A4678" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30sp"
             android:layout_marginTop="5sp"
-            android:background="#18376C"
+            android:background="#2A4678"
             android:orientation="horizontal"
             android:padding="0sp" >
 

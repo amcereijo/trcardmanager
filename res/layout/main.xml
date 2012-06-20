@@ -8,7 +8,7 @@
     <RelativeLayout 
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
-	    android:background="#18376C"
+	    android:background="#2A4678"
 	    android:padding="4sp"
 	    android:id="@+id/layout_card_information"
 	    >
@@ -16,7 +16,7 @@
         <RelativeLayout 
 	    android:layout_height="wrap_content"
 	    android:layout_width="wrap_content"
-	    android:background="#18376C"
+	    android:background="#2A4678"
 	    android:padding="4sp"
 	    android:id="@+id/layout_image_button_icon"
 	    android:layout_alignParentLeft="true"
@@ -36,7 +36,7 @@
          <RelativeLayout 
 		    android:layout_height="wrap_content"
 		    android:layout_width="wrap_content"
-		    android:background="#18376C"
+		    android:background="#2A4678"
 		    android:padding="4sp"
 		    android:id="@+id/layout_card_number_balance"
 		    android:layout_toRightOf="@id/layout_image_button_icon"

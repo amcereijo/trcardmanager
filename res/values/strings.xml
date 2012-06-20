@@ -6,9 +6,7 @@
     <string name="deveolper_email1">amcereijo@gmail.com</string>
     
      <!-- login -->
-	<string name="login_email_title">Email:</string>
 	<string name="login_email_hint">email</string>
-	<string name="login_password_title">Password:</string>
 	<string name="login_password_hint">password</string>
 	<string name="login_btn_enter">Enter</string>
 	<string name="login_error_message">Email and/or password incorrect</string>

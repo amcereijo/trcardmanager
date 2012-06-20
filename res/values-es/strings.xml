@@ -4,9 +4,7 @@
     <string name="app_name">TRCardManager</string>
 
     <!-- login -->
-    <string name="login_email_title">Correo electrónico:</string>
     <string name="login_email_hint">dirección de correo electrónico</string>
-    <string name="login_password_title">Contraseña:</string>
     <string name="login_password_hint">contraseña</string>
     <string name="login_btn_enter">Entrar</string>
     <string name="login_error_message">Email y/o contraseña incorrecto</string>
