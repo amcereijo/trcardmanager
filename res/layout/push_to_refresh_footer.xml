@@ -31,7 +31,7 @@
         />
     <TextView
         android:id="@+id/pull_to_refresh_text"
-        android:text="@string/push_to_refresh_tap_label"
+        android:text="@string/pull_to_refresh_tap_label"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
         android:paddingTop="5dip"

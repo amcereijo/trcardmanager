@@ -117,7 +117,7 @@ public class TRCardManagerListView extends ListView implements
 		mRefreshTopView = (RelativeLayout) mInflater.inflate(
 				R.layout.pull_to_refresh_header, this, false);
 		mRefreshBottomView = (RelativeLayout) mInflater.inflate(
-				R.layout.pull_to_refresh_header, this, false);
+				R.layout.push_to_refresh_footer, this, false);
 		
         mRefreshTopViewText =
             (TextView) mRefreshTopView.findViewById(R.id.pull_to_refresh_text);

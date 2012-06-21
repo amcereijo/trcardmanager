@@ -1,23 +1,16 @@
 package com.trcardmanager.http;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -36,7 +29,6 @@ import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
-import com.trcardmanager.string.TRCardManagerStringHelper;
 
 /**
  * 
@@ -246,6 +238,16 @@ public class TRCardManagerHttpAction {
     	
     }
     
+    private String getLastDate(List<MovementDao> movements){
+    	String lastDate;
+    	if(movements==null || movements.size()==0){
+    		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    		lastDate = sdf.format(Calendar.getInstance().getTime());
+    	}else{
+    		lastDate = movements.get(movements.size()-1).getDate();
+    	}
+    	return lastDate;
+    }
     
     private List<MovementDao> getNextHistoricalMovements(UserDao user) throws IOException, 
 			TRCardManagerSessionException,TRCardManagerDataException{
@@ -253,7 +255,8 @@ public class TRCardManagerHttpAction {
 		MovementsDao movementsDao = user.getActualCard().getMovementsData();
 		int actualPage = movementsDao.getHistoricalActualPage();
 		
-		String lastDate = movementsDao.getMovements().get(movementsDao.getMovements().size()-1).getDate();
+		String lastDate = getLastDate(movementsDao.getMovements());
+		
 		StringBuilder strb = new StringBuilder().append("?pag=").append(actualPage).append("&fromdate=")
 			.append(HISTORICAL_SEARCH_DATE_FROM).append("&todate=").append(lastDate).append("&consultamov=ALL");
 		
@@ -297,9 +300,9 @@ public class TRCardManagerHttpAction {
 			Element actualTr) {
 		Elements tdListData = actualTr.getElementsByTag("td");
 		String date = tdListData.get(0).html();
-		String hour = getAtFirstWhiteSpace(tdListData.get(1).html());
+		String hour = getWhitOutHtmlWhiteSpaceTag(tdListData.get(1).html());
 		String operationType = tdListData.get(2).html();
-		String amount = getAtFirstWhiteSpace(tdListData.get(3).html());
+		String amount = getWhitOutHtmlWhiteSpaceTag(tdListData.get(3).html());
 		String trade = tdListData.get(4).html();
 		//generate an id
 		String operationId = new StringBuilder().append(actualPage)
@@ -331,6 +334,7 @@ public class TRCardManagerHttpAction {
     
 	
     private Document getHttpPage(String httpPage, String cookieValue) throws IOException,TRCardManagerSessionException{
+
     	Connection connection = Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT);
     	Response response = connection.execute();
     	String url = response.url().toString();
@@ -338,7 +342,11 @@ public class TRCardManagerHttpAction {
     	if(!logedIn){
     		throw new TRCardManagerSessionException();
     	}
-    	return connection.get();
+    	//Document document = Jsoup.parse(new URL(URL_BASE+httpPage).openStream(), "ISO-8859-1", url);
+    	//return connection.get();
+    	Document d = Jsoup.parse(new String(response.bodyAsBytes(),"ISO-8859-1"));
+    	return d;
+    	//return response.parse();
     }
     
    
@@ -369,10 +377,10 @@ public class TRCardManagerHttpAction {
     	String state = dataCells.get(6).html();
     	
     	movement.setOperationId(operationId);
-    	movement.setDate(getAtFirstWhiteSpace(date));
-    	movement.setHour(getAtFirstWhiteSpace(hour));
+    	movement.setDate(getWhitOutHtmlWhiteSpaceTag(date));
+    	movement.setHour(getWhitOutHtmlWhiteSpaceTag(hour));
     	movement.setOperationType(operationType);
-    	movement.setAmount(getAtFirstWhiteSpace(amount));
+    	movement.setAmount(getWhitOutHtmlWhiteSpaceTag(amount));
     	movement.setTrade(trade);
     	movement.setState(state);
     	
@@ -429,10 +437,8 @@ public class TRCardManagerHttpAction {
 		return id;
 	}
     
-    private String getAtFirstWhiteSpace(String value){
-    	int pos = value.indexOf(" ");
-    	pos = pos == -1? value.length() : pos;
-    	return value.substring(0,pos);
+    private String getWhitOutHtmlWhiteSpaceTag(String value){
+    	return value.replaceAll("&nbsp;", " ");
     }
 
 }
