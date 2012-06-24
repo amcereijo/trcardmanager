@@ -140,7 +140,6 @@ public class TRCardManagerActivity extends Activity {
     
     @Override
     protected void onRestart() {
-    	Log.d(TAG, "On restart application");
     	super.onRestart();
     	if(isDataStillReady()){
     		TRCardManagerApplication.setActualActivity(this);

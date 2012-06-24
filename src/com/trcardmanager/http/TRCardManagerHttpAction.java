@@ -93,7 +93,6 @@ public class TRCardManagerHttpAction {
         Document htmlDocument = getHttpPage(URL_MY_ACCOUNT,user.getCookieValue());
         Element elNumCard = htmlDocument.getElementById(ID_TO_SEARCH_CARD_NUMBER);
         String numCardValue = elNumCard.attr(ATTRIBUTE_TO_GET_PROPERTY_VALUE);
-        Log.d(TAG, "Query actual card: " + numCardValue);
         CardDao card = new CardDao(numCardValue);
         user.setActualCard(card);
     }
@@ -180,7 +179,6 @@ public class TRCardManagerHttpAction {
     	Elements elementsResult = htmlDocument.getElementsByClass(CLASS_TO_SEARH_ACTUAL_BALANCE);
         Element elBalance = elementsResult.first();
         String balance = elBalance.html();
-        Log.d(TAG, "consulta saldo get: " + balance);
         int substringposition = balance.indexOf(" ");
         return balance.substring(0,
         		substringposition>0?substringposition:balance.length()-1);
@@ -359,7 +357,6 @@ public class TRCardManagerHttpAction {
     	int firstDataRow = 2;
     	for(int cont=firstDataRow;cont<tableRows.size();cont++){
     		MovementDao movement = getMovement(tableRows.get(cont));
-    		Log.d(TAG, "Movement found: "+movement.getTrade()+" --> "+movement.getAmount());
     		movementsList.add(movement);
     	}
     	return movementsList;

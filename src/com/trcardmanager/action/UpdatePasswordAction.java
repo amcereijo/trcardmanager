@@ -30,10 +30,12 @@ public class UpdatePasswordAction extends AsyncTask<String, Void, Integer> {
 	
 	private final static String TAG = UpdatePasswordAction.class.getName();
 	
+	private static final int OK_RESULT_CODE = -1;
+	
 	private ProgressDialog loadingDialog;
 	private Activity activity;
 	private UserDao userDao;
-	private int resultCode = -1;
+	private int resultCode = OK_RESULT_CODE;
 	
 	
 	public UpdatePasswordAction() {
@@ -112,7 +114,7 @@ public class UpdatePasswordAction extends AsyncTask<String, Void, Integer> {
 	@Override
 	protected void onPostExecute(Integer result) {
 		loadingDialog.cancel();
-		if(result!=-1){
+		if(result!=OK_RESULT_CODE){
 			showErrorDialog(result);
 		}
 		
