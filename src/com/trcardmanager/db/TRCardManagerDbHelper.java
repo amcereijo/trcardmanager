@@ -35,6 +35,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		CARD_TABLE_NAME+" (userid integer, cardnumber text, balance text, " +
 				"primary key(cardnumber))";
 	
+	/**
+	 * 
+	 * @param context
+	 */
 	public TRCardManagerDbHelper(Context context){
 		this(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -49,7 +53,7 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_USER);
 		db.execSQL(CREATE_TABLE_CARD);
 	}
-
+	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
@@ -58,7 +62,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TABLE_CARD);
 	}
 	
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public UserDao findRemeberedUser(){
 		UserDao user = null;
 		SQLiteDatabase db = getReadableDatabase();
@@ -74,6 +81,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		return user;
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 */
 	public void findUser(UserDao user){
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cursor = db.query(USER_TABLE_NAME, new String[]{"rowid","rememberme"}, "email=? and password=?",
@@ -86,6 +97,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 */
 	public void createUser(UserDao user){
 		if(user.isRememberme()){
 			clearRemeberMeUsers();
@@ -100,6 +115,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 */
 	public void updateUserRemeberMe(UserDao user){
 		if(user.isRememberme()){
 			clearRemeberMeUsers();
@@ -112,6 +131,24 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @param newPassword
+	 */
+	public void updateUserPassword(UserDao user, String newPassword){
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("password",newPassword);
+		String where = "rowid=?";
+		db.update(USER_TABLE_NAME, values, where, new String[]{String.valueOf(user.getRowId())});
+		db.close();
+	}
+	
+	/**
+	 * 
+	 * @param user
+	 */
 	public void findUserCards(UserDao user){
 		String whereClausule = "";
 		String[] whereParams = null;
@@ -141,7 +178,11 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @param userId
+	 * @param card
+	 */
 	public void addCard(long userId, CardDao card){
 		CardDao cardFound = findCard(card.getCardNumber());
 		if(cardFound==null){
@@ -158,6 +199,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		
 	}
 	
+	/**
+	 * 
+	 * @param card
+	 */
 	public void updateCardBalance(CardDao card){
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -166,6 +211,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * 
+	 * @param cardId
+	 */
 	public void deleteCard(long cardId){
 		SQLiteDatabase db = getWritableDatabase();
 		db.delete(CARD_TABLE_NAME, "rowid=?", new String[]{String.valueOf(cardId)});

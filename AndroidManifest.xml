@@ -33,7 +33,14 @@
             >
         </activity>
         <activity
+            android:name=".myaccount.TRCardManagerMyAccountActivity" 
+            android:configChanges="keyboardHidden|orientation"
+            />
+        <activity
             android:name=".updatecard.TRCardManagerUpdateCardActivity" 
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name=".updatepassword.TRCardManagerUpdatePasswordActivity" 
             android:configChanges="keyboardHidden|orientation" />
     </application>
 

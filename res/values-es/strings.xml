@@ -54,38 +54,63 @@
     <string name="separator_text">Histórico</string>
 
     <!-- principal menu -->
-    <string name="principal_menu_update_card">Actualizar tarjeta</string>
+    <string name="principal_menu_my_account">Mi Cuenta</string>
     <string name="principal_menu_about">Acerca de</string>
 
     <!-- About layout -->
     <string name="about_version_title">Acerca de</string>
     <string name="about_version">Versión</string>
-    <string name="about_developer">amcereijo@gmail.com</string>
-    <string name="about_application">La aplicación permite consultar el saldo de su tarjeta ticketrestaurant del mismo modo que se podría hacer en la web.\n 
+    <string name="about_developer">XilvirSoft</string>
+    <string name="about_application">\nLa aplicación permite consultar el saldo de su tarjeta ticketrestaurant del mismo modo que se podría hacer en la web.\n 
 		Permite visualizar el saldo actual de la tarjeta, los movimientos de últimos 45 días y el histórico de movimientos hasta el 1 de enero del año anterior.\n
 		Para visualizar más movimientos en la lista sólo debe arrastrar hacia arriba la lista actual y automáticamente se cargarán mas movimientos.\n
-		Si tiene la aplicación abierta y realiza un pago, basta con arrastrar hacía abajo la lista de movimientos para que aparezca el que acaba de realizar.\n\n
+		Si tiene la aplicación abierta y realiza un pago, basta con arrastrar hacía abajo la lista de movimientos para que aparezca el que acaba de realizar.\n
+		A través del menú contextual también puede gestionar su número de tarjeta y contraseña de acceso.\n\n
 		Espero que le sea de utilidad y disfrute de su uso.\n\n</string>
     <string name="about_application_icon">Icono de aplicación</string>
     <string name="about_button_feedback_text"><u>Envía una opinión</u></string>
 
-    <!-- feedback layout and action -->
-    <string name="feed_back_title">Envía una opinión:</string>
-    <string name="feed_back_text_hint">Escribe una opinión/sugerencia/queja/mensaje...</string>
-    <string name="feed_back_send_button">Enviar</string>
-    <string name="feed_back_close_button">Cerrar</string>
-    <string name="feed_back_intention_text">Selecciona un programa:</string>
+    <!-- feedback -->
     <string name="feed_back_no_intention_found">No hay un cliente de correo electrónico instalado.</string>
 
     <!-- Update card laytout -->
     <string name="update_card_title">Actualizar tarjeta</string>
     <string name="update_card_cardnumber_actual_title">Tarjeta actual:</string>
     <string name="update_card_cardnumber_title">Nueva tarjeta:</string>
-    <string name="update_card_cardnumber_text">numero de tarjeta</string>
+    <string name="update_card_cardnumber_text">nuevo numero de tarjeta</string>
     <string name="update_card_btn_update">Actualizar</string>
     <string name="update_card_error_card_size">El número de la tarjeta debe ser de 16 dígitos</string>
     <string name="update_card_loading_message_title">Actualizar tarjeta</string>
     <string name="update_card_loading_message_message">Actualizando información de tarjeta</string>
     <string name="update_card_dialog_error_button">Cerrar</string>
 
+     <!-- my account tab -->
+     <string name="myaccount_tab_title">Mi Cuenta</string>
+     <string name="myaccount_tab_update_car_tab_title">Actualizar Tarjeta</string>
+     <string name="myaccount_tab_update_password_tab_title">Cambiar Contraseña</string>
+     
+     <!-- update data errors -->
+      <string name="update_data_errors_user_not_exists">El usuario no existe o dado de baja </string>
+      <string name="update_data_errors_card_not_exist">La rarjeta no existe</string>
+      <string name="update_data_errors_card_associated">La Tarjeta está asociada a otro usuario</string>
+      <string name="update_data_errors_card_different_profile">La tarjeta tiene un perfil diferente al del usuario</string>
+      
+      <!-- update password -->
+      <string name="update_password_error">No se ha podido cambiar la contraseña</string>
+     
+       <!-- update password layout -->
+      <string name="update_password_title">Cambiar Contraseña</string>
+      <string name="update_password_hint">nueva contraseña</string>
+      <string name="update_password_confirm_hint">confirma nueva contraseña</string>
+      <string name="update_password_btn_update">Actualizar</string>
+      <string name="update_password_savedb_text">Guardar nueva contraseña (si ha marcado "Recuerdame")</string>
+      <string name="update_password_error_pass">Debe introducir una nueva contraseña</string>
+      <string name="update_password_error_pass_confirm">Debe introducir la confirmación de la contraseña</string>
+      <string name="update_password_error_equal_passs">Las contraseñas no coinciden</string>
+      <string name="update_password_dialog_title">Cambiar contraseña</string>
+      <string name="update_password_dialog_update_http">Actualizando datos</string>
+      <string name="update_password_dialog_update_db">Guardando datos</string>
+      <string name="update_password_dialog_error_button">Cerrar</string>
+      <string name="update_password_changed">La contraseña se ha actualizado correctamente.</string>
+      
 </resources>

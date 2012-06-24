@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.MovementDao;
-import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.http.TRCardManagerHttpAction;

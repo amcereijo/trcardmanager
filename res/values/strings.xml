@@ -62,38 +62,64 @@
     <string name="separator_text">Historical</string>
     
     <!-- principal menu -->
-    <string name="principal_menu_update_card">Update card</string>
+    <string name="principal_menu_my_account">My Account</string>
     <string name="principal_menu_about">About</string>
     
     <!-- About layout -->
     <string name="about_version_title">About</string>
     <string name="about_version">Version</string>
-    <string name="about_developer">amcereijo@gmail.com</string>
-    <string name="about_application">The application allows you to check the balance on your ticketrestaurant card in the same way that could be done on the web.\n
+    <string name="about_developer">XilvirSoft</string>
+    <string name="about_application">\nThe application allows you to check the balance on your ticketrestaurant card in the same way that could be done on the web.\n
 		It displays the current balance of the card, last 45 days movements and historical movements until 1 January of the previous year.\n
 		To view more entries in the list, you only must drag the current list upwards and automatically more movements will be loaded.\n
-		If you have the application open and make a payment, simply drag the list of movements down to load the recent payment.\n\n
+		If you have the application open and make a payment, simply drag the list of movements down to load the recent payment.\n
+		In the context menu you can also manage your card number and access password.
 		I hope this is useful and you can enjoy its use.\n\n</string>
     <string name="about_application_icon">Application icon</string>
     <string name="about_button_feedback_text"><u>Send opinion</u></string>
     
-    <!-- feedback layout -->
-    <string name="feed_back_title">Send opinion:</string>
-    <string name="feed_back_text_hint">Write a opinion/suggestion/complaint/message...</string>
-    <string name="feed_back_send_button">Send</string>
-    <string name="feed_back_close_button">Close</string>
-     <string name="feed_back_intention_text">Select an application</string>
+    <!-- feedback -->
      <string name="feed_back_no_intention_found">There are no email clients installed.</string>
     
      <!-- Update card laytout -->
      <string name="update_card_title">Update card</string>
      <string name="update_card_cardnumber_actual_title">Actual card:</string>
      <string name="update_card_cardnumber_title">New card:</string>
-     <string name="update_card_cardnumber_text">card number</string>
+     <string name="update_card_cardnumber_text">new card number</string>
      <string name="update_card_btn_update">Update</string>
      <string name="update_card_error_card_size">The card number must be 16 digits</string>
      <string name="update_card_loading_message_title">Update card</string>
      <string name="update_card_loading_message_message">Updating card information</string>
      <string name="update_card_dialog_error_button">Close</string>
+     
+     <!-- my account tab -->
+     <string name="myaccount_tab_title">My Account</string>
+     <string name="myaccount_tab_update_car_tab_title">Update Card</string>
+     <string name="myaccount_tab_update_password_tab_title">Change Password</string>
+     
+     
+     <!-- update data errors -->
+      <string name="update_data_errors_user_not_exists">The user not exist or user given low</string>
+      <string name="update_data_errors_card_not_exist">The card not exist</string>
+      <string name="update_data_errors_card_associated">The card is associated with another user</string>
+      <string name="update_data_errors_card_different_profile">Card with different to the user profile</string>
+     
+      <!-- update password -->
+      <string name="update_password_error">The password could not be changed</string>
+      
+      <!-- update password layout -->
+      <string name="update_password_title">Change Password</string>
+      <string name="update_password_hint">new password</string>
+      <string name="update_password_confirm_hint">confirm new password</string>
+      <string name="update_password_btn_update">Change</string>
+      <string name="update_password_savedb_text">Save new password (if "Remember me" is checked)</string>
+      <string name="update_password_error_pass">You must enter a new password</string>
+      <string name="update_password_error_pass_confirm">You must enter a password confirmation</string>
+      <string name="update_password_error_equal_passs">The passwords don\'t match</string>
+      <string name="update_password_dialog_title">Change password</string>
+      <string name="update_password_dialog_update_http">Updating data</string>
+      <string name="update_password_dialog_update_db">Saving data</string>
+      <string name="update_password_dialog_error_button">Close</string>
+      <string name="update_password_changed">The password has been successfully updated.</string>
      
 </resources>

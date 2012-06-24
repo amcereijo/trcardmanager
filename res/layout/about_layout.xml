@@ -12,7 +12,9 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="6sp" >
+            android:paddingBottom="6sp" 
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal">
 
             <ImageButton
                 android:id="@+id/about_icon_layout"
@@ -25,48 +27,51 @@
                 android:contentDescription="@string/about_application_icon"
                 android:maxHeight="120sp"
                 android:maxWidth="160sp"
+                android:clickable="false"
                 android:src="@drawable/about_application_icon" />
-
-            <TextView
-                android:id="@+id/about_version_text"
-                android:layout_width="wrap_content"
+	
+            <LinearLayout android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/about_icon_layout"
                 android:layout_centerInParent="true"
-                android:gravity="center_horizontal|center_vertical"
-                android:paddingTop="4sp"
-                android:text="@string/about_version"
-                android:textColor="@android:color/white" />
-
-            <TextView
-                android:id="@+id/about_version_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:layout_below="@id/about_icon_layout"
-                android:layout_toRightOf="@id/about_version_text"
-                android:paddingLeft="2sp"
-                android:paddingTop="4sp"
-                android:textColor="@android:color/white" />
+                android:id="@+id/about_version_layout">
+                <TextView
+	                android:id="@+id/about_version_text"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:paddingTop="4sp"
+	                android:text="@string/about_version"
+	                android:textColor="@android:color/white" />
 
+	            <TextView
+	                android:id="@+id/about_version_value"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:paddingLeft="2sp"
+	                android:paddingTop="4sp"
+	                android:textColor="@android:color/white" />
+            </LinearLayout>
+            
             <TextView
                 android:id="@+id/about_developer_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/about_version_text"
                 android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
+                android:layout_below="@id/about_version_layout"
                 android:paddingTop="4sp"
                 android:text="@string/about_developer"
                 android:textColor="@android:color/white" />
             
             <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:text="@string/about_button_feedback_text"
                 android:layout_marginTop="4sp"
                 android:id="@+id/about_button_opinon"
                 android:onClick="showFeedBackInput"
                 android:layout_below="@id/about_developer_text"
-                android:layout_centerInParent="true"
                 android:background="@null"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"/>
@@ -83,7 +88,7 @@
             android:id="@+id/about_application_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="0sp"
             android:paddingLeft="6sp"
             android:paddingRight="6sp"
             android:gravity="left"

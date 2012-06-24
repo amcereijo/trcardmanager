@@ -2,15 +2,12 @@ package com.trcardmanager.action;
 
 import java.io.IOException;
 
-import org.jsoup.helper.StringUtil;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.application.TRCardManagerApplication;
@@ -45,17 +42,15 @@ public class UpdateCardAction extends AsyncTask<String, Void, Integer> {
 	@Override
 	protected Integer doInBackground(String...cardsNumber) {
 		updateCard(cardsNumber[0]);
-		
 		return resultCode;
 	}
 	
 	
 	private void updateCard(String cardNumber){
 		CardDao cardDao = addNewCardInDb(cardNumber);
-
-    	//http active card
     	try {
     		if(cardDao != null){
+    			//http active card
 	    		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 				httpAction.activateCard(userDao, cardDao);
 				
@@ -65,28 +60,28 @@ public class UpdateCardAction extends AsyncTask<String, Void, Integer> {
 				new UserDataAction().loadAndSaveUserData(userDao);
 				
 				//TODO return a code to principal activity to repaint screen
-				Activity act = TRCardManagerApplication.getActualActivity();
-				act.setResult(TRCardManagerApplication.CARD_UPDATED);
-				act.finish();
+				finalizeWithState(TRCardManagerApplication.CARD_UPDATED);
     		}
 		} catch (IOException e) {
 			Log.e(TAG,"Error updating card: "+e.getMessage(),e);
 			resultCode = R.string.activate_card_error;
 		} catch (TRCardManagerUpdateCardException e) {
 			Log.e(TAG,"Error updating card: "+e.getMessage(),e);
-			resultCode = R.string.activate_card_error;
+			resultCode = e.getResourceIdError();
 		} catch (TRCardManagerDataException e) {
 			Log.e(TAG,"Error updating card: "+e.getMessage(),e);
-			//TODO change message
 			resultCode = R.string.activate_card_error;
 		}catch(TRCardManagerSessionException e){
 			Log.e(TAG,"Error updating card: "+e.getMessage(),e);
-			Activity act = TRCardManagerApplication.getActualActivity();
-			act.setResult(TRCardManagerApplication.SESSION_EXPIRED_APPLICATION);
-			act.finish();
+			finalizeWithState(TRCardManagerApplication.SESSION_EXPIRED_APPLICATION);
 		}
 	}
 	
+	private void finalizeWithState(int endState){
+		Activity act = TRCardManagerApplication.getActualActivity();
+		act.getParent().setResult(endState);
+		act.getParent().finish();
+	}
 	
 	@Override
 	protected void onProgressUpdate(Void... values) {		

@@ -6,12 +6,13 @@ import java.util.List;
 import org.jsoup.helper.StringUtil;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
@@ -37,11 +38,25 @@ public class TRCardManagerUpdateCardActivity extends Activity {
 		setTitle(R.string.update_card_title);
 		setContentView(R.layout.update_card_layout);
 		userDao = TRCardManagerApplication.getUser();
-		fillActualCard();
 		fillOtherCardList();
 		TRCardManagerApplication.setActualActivity(this);
 	}
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		TRCardManagerApplication.setActualActivity(this);
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		String textCard = ((TextView) findViewById(R.id.update_card_cardnumber_text)).getText().toString();
+		setContentView(R.layout.update_card_layout);
+		((TextView) findViewById(R.id.update_card_cardnumber_text)).setText(textCard);
+		fillOtherCardList();
+		super.onConfigurationChanged(newConfig);
+		TRCardManagerApplication.setActualActivity(this);
+	}
 	
 	public void updateCard(View v){
 		String cardNumber = ((EditText)findViewById(R.id.update_card_cardnumber_text)).getText().toString();
@@ -54,16 +69,6 @@ public class TRCardManagerUpdateCardActivity extends Activity {
     	
     }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
-
-	private void fillActualCard(){
-		EditText actualCard = (EditText)findViewById(R.id.update_card_cardnumber_actual_text);
-		actualCard.setText(userDao.getActualCard().getCardNumber());
-	}
 	
 	private void fillOtherCardList(){
 		List<CardDao> cards = userDao.getCards();

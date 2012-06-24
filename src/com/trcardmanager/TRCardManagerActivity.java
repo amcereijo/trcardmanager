@@ -16,16 +16,16 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trcardmanager.about.TRCardManagerAboutActivity;
 import com.trcardmanager.action.MovementListAction;
-import com.trcardmanager.action.TRCardManagerLoginAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
-import com.trcardmanager.updatecard.TRCardManagerUpdateCardActivity;
+import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad;
 
@@ -44,7 +44,6 @@ public class TRCardManagerActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        
         setContentView(R.layout.main);
         initActivity();
     }
@@ -60,8 +59,8 @@ public class TRCardManagerActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()){
     		case R.id.principal_menu_settings:
-    			Intent settingsUpdate = new Intent(this, TRCardManagerUpdateCardActivity.class);
-    			startActivityForResult(settingsUpdate, TRCardManagerApplication.CARD_UPDATED);
+    			Intent settingsUpdate = new Intent(this, TRCardManagerMyAccountActivity.class);
+    			startActivityForResult(settingsUpdate, TRCardManagerApplication.MY_ACCOUNT_CLOSED);
     			break;
     		case R.id.principal_menu_about:
     			Intent settingsAbout = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
@@ -75,12 +74,15 @@ public class TRCardManagerActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	 super.onActivityResult(requestCode, resultCode, data);
-    	 if(requestCode == TRCardManagerApplication.CARD_UPDATED){
+    	 if(requestCode == TRCardManagerApplication.MY_ACCOUNT_CLOSED){
     		if(resultCode == TRCardManagerApplication.CARD_UPDATED){
     			initActivity();
     		}else if (resultCode == TRCardManagerApplication.SESSION_EXPIRED_APPLICATION){
     			finishWithSessionExpired();
+    		}else if (resultCode == TRCardManagerApplication.PASSWORD_UPDATED){
+    			Toast.makeText(getApplicationContext(), R.string.update_password_changed, Toast.LENGTH_LONG).show();
     		}
+    		
     	}
     	
     }

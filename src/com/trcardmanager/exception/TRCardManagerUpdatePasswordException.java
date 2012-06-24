@@ -8,17 +8,17 @@ import com.trcardmanager.application.TRCardManagerApplication;
  * @author angelcereijo
  *
  */
-public class TRCardManagerUpdateCardException extends Exception {
-	
-	private static final long serialVersionUID = -2872792677751031228L;
-	
+public class TRCardManagerUpdatePasswordException extends Exception {
+
+	private static final long serialVersionUID = 2677584450431150926L;
+
 	private String codeError = "0";
 	private int resourceIdError;
 	
-	public TRCardManagerUpdateCardException() {
+	public TRCardManagerUpdatePasswordException() {
 	}
 	
-	public TRCardManagerUpdateCardException(String codeError) {
+	public TRCardManagerUpdatePasswordException(String codeError) {
 		this.codeError = codeError;
 	}
 	
@@ -39,8 +39,8 @@ public class TRCardManagerUpdateCardException extends Exception {
 			case 4:message = getStringFromResource(R.string.update_data_errors_card_different_profile);
 				resourceIdError = R.string.update_data_errors_card_different_profile;
 				break;
-			default: message = getStringFromResource(R.string.activate_card_error);
-				resourceIdError = R.string.activate_card_error;
+			default: message = getStringFromResource(R.string.update_password_error);
+				resourceIdError = R.string.update_password_error;
 				break;
 		}
 		return message;
@@ -54,3 +54,4 @@ public class TRCardManagerUpdateCardException extends Exception {
 		return resourceIdError;
 	}
 }
+		

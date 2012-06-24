@@ -10,13 +10,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.trcardmanager.R;
 import com.trcardmanager.TRCardManagerActivity;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;

@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,6 +64,7 @@ public class TRCardManagerLoginActivity extends Activity {
 	
 	private void fillUserFields(){
 		if(user!=null){
+			this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			TextView emailTextView = (TextView)findViewById(R.id.login_email);
 			emailTextView.setText(user.getEmail());
 			TextView passTextView = (TextView)findViewById(R.id.login_password);

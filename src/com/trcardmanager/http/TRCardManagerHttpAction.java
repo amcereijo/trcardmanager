@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +28,7 @@ import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
+import com.trcardmanager.exception.TRCardManagerUpdatePasswordException;
 
 /**
  * 
@@ -62,7 +62,8 @@ public class TRCardManagerHttpAction {
     private static final String URL_UPDATE_CARD = "sendMyAccountCard.php";
     private static final String UPDATE_CARD_PROFILE_PARAMETER = "TRCU";
     private static final String UPDATE_CARD_RESPONSE_OK = "OK";
-    private static final String URL_PREPARE_UPDATE_CARD = "mi_cuenta.html";
+    private static final String URL_PREPARE_UPDATE_CARD_PASSWORD = "mi_cuenta.html";
+    private static final String URL_UPDATE_PASSWORD = "sendMyAccountPwd.php";
     
        
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
@@ -389,8 +390,17 @@ public class TRCardManagerHttpAction {
     
     
     
-    
-    public void activateCard(UserDao user, CardDao card) throws IOException, TRCardManagerUpdateCardException, TRCardManagerDataException, TRCardManagerSessionException{
+    /**
+     * 
+     * @param user
+     * @param card
+     * @throws IOException
+     * @throws TRCardManagerUpdateCardException
+     * @throws TRCardManagerDataException
+     * @throws TRCardManagerSessionException
+     */
+    public void activateCard(UserDao user, CardDao card) throws IOException, TRCardManagerUpdateCardException,
+    	TRCardManagerDataException, TRCardManagerSessionException{
         /*
     		var f = document.getElementById('updCard');
     		var _id = f.id.value;
@@ -405,7 +415,10 @@ public class TRCardManagerHttpAction {
                error: function(req, err, obj) {
         	 */
         	//TRC4e1ad6e9cc5d0
-        	
+		    	//$ret[errorcode] = "01";  // Usuario no existe o dado de baja .
+		   		//$ret[errorcode] = "02";  // Tarjeta no existe.
+		   		//$ret[errorcode] = "03";  // Tarjeta está asociada a otro usuario
+		   		//$ret[errorcode] = "04";  // Tarjeta con perfil diferente al del usuario
         	//Get 
         	//<input type="hidden" name="id" value="TRC4e1ad6e9cc5d0">
         	String id = getPrepareUpdateCard(user);
@@ -420,7 +433,7 @@ public class TRCardManagerHttpAction {
 			if(response != null){
 				String responseString = response.body();
 				if(!UPDATE_CARD_RESPONSE_OK.equals(responseString)){
-    				throw new TRCardManagerUpdateCardException(); 
+    				throw new TRCardManagerUpdateCardException(responseString); 
     			}
 			}else{
 				throw new TRCardManagerUpdateCardException();
@@ -428,10 +441,63 @@ public class TRCardManagerHttpAction {
         }
     
     
+    /**
+     * 
+     * @param user
+     * @param newPassword
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws TRCardManagerDataException
+     * @throws TRCardManagerSessionException
+     * @throws TRCardManagerUpdatePasswordException
+     */
+    public void changePassword(UserDao user,String newPassword) throws ClientProtocolException, IOException, 
+    		TRCardManagerDataException, TRCardManagerSessionException, TRCardManagerUpdatePasswordException{
+    	/* url: "sendMyAccountPwd.php",
+           type: "POST",
+           dataType: "text",
+           data: {swlang: swlang, id: _id, pwd: _pwd},	           		
+           error: function(req, err, obj) {
+           	alert('error');
+            alert(err);
+            
+            //$ret[errorcode] = "01";  // Usuario no existe o dado de baja .
+   		//$ret[errorcode] = "02";  // Tarjeta no existe.
+   		//$ret[errorcode] = "03";  // Tarjeta está asociada a otro usuario
+   		//$ret[errorcode] = "04";  // Tarjeta con perfil diferente al del usuario
+         */
+    	String id = getPrepareUpdatePasswprd(user);
+    	Map<String, String> postMap = new HashMap<String, String>();
+		postMap.put("swlang",Locale.getDefault().getCountry());
+		postMap.put("id",id);
+		postMap.put("pwd",newPassword);
+		Response response = Jsoup.connect(URL_BASE+URL_UPDATE_PASSWORD).cookie(COOKIE_NAME,user.getCookieValue())
+			.timeout(TIMEOUT).data(postMap).execute();
+		if(response != null){
+			String responseString = response.body();
+			if(!UPDATE_CARD_RESPONSE_OK.equals(responseString)){
+				throw new TRCardManagerUpdatePasswordException(responseString); 
+			}
+		}else{
+			throw new TRCardManagerUpdatePasswordException();
+		}
+    	
+    }
+    
     public String getPrepareUpdateCard(UserDao user) throws ClientProtocolException,
 			IOException, TRCardManagerDataException, TRCardManagerSessionException{
-    	Document document = getHttpPage(URL_PREPARE_UPDATE_CARD, user.getCookieValue());
+    	Document document = getHttpPage(URL_PREPARE_UPDATE_CARD_PASSWORD, user.getCookieValue());
 		Element form = document.getElementById("updCard");
+		Element inputHiddenId = form.getElementsByAttributeValue("name", "id").first();
+		String id = inputHiddenId.attr("value");
+		return id;
+	}
+    
+    
+    public String getPrepareUpdatePasswprd(UserDao user) throws ClientProtocolException,
+			IOException, TRCardManagerDataException, TRCardManagerSessionException{
+		Document document = getHttpPage(URL_PREPARE_UPDATE_CARD_PASSWORD, user.getCookieValue());
+		Element form = document.getElementById("updPwd");
 		Element inputHiddenId = form.getElementsByAttributeValue("name", "id").first();
 		String id = inputHiddenId.attr("value");
 		return id;
