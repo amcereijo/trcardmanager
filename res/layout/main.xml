@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
@@ -96,7 +97,18 @@
 		</RelativeLayout>
 	</RelativeLayout>
 	
-    <com.trcardmanager.views.TRCardManagerListView 
+    
+        <com.google.ads.AdView android:layout_width="fill_parent"
+            android:layout_height="wrap_content" ads:adUnitId="ADMOB_UID"
+            ads:adSize="BANNER" android:id="@+id/adView" ads:refreshInterval="60"
+            ads:testDevices="TEST_EMULATOR, DEVICE_ID"
+            ads:loadOnCreate="true"
+            android:layout_alignParentBottom="true"
+             android:gravity="bottom" 
+            />
+
+    
+     <com.trcardmanager.views.TRCardManagerListView 
 		android:id="@+id/layout_listview_movements"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -107,8 +119,8 @@
         android:paddingRight="0sp"
         android:paddingTop="0sp"
         android:layout_below="@id/layout_card_information"
+        android:layout_above="@id/adView"
         android:fadingEdgeLength="4sp"
         />
-    
 
 </RelativeLayout>
