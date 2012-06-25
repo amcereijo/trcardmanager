@@ -3,6 +3,8 @@
 
     <string name="app_name">TRCardManager</string>
 
+    <string name="deveolper_email1">amcereijo@gmail.com</string>
+    
     <!-- login -->
     <string name="login_email_hint">dirección de correo electrónico</string>
     <string name="login_password_hint">contraseña</string>

@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.trcardmanager.about.TRCardManagerAboutActivity;
 import com.trcardmanager.action.MovementListAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
@@ -37,7 +38,7 @@ import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad
 public class TRCardManagerActivity extends Activity {
 
 	final private static String TAG = TRCardManagerActivity.class.getName();
-	
+
 	
 	/** Called when the activity is first created. */
     @Override
@@ -45,6 +46,9 @@ public class TRCardManagerActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
+     // Look up the AdView as a resource and load a request.
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        adView.loadAd(new AdRequest());
         initActivity();
     }
     
@@ -123,6 +127,7 @@ public class TRCardManagerActivity extends Activity {
     }
         
     
+    
     private void addMovementsToView(List<MovementDao> movements){
     	List<MovementDao> movementsCopy = new ArrayList<MovementDao>();
     	movementsCopy.addAll(movements);
@@ -136,6 +141,7 @@ public class TRCardManagerActivity extends Activity {
         });
 		linearMovements.setAdapter(adapter);
     }
+    
     
     
     @Override

@@ -48,10 +48,8 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 	protected Void doInBackground(Void... params) {
 		scrollDirection = linearMovements.getScrollDirection(); 
 		if( scrollDirection == ScrollDirection.UP){
-    		Log.d(TAG,"Scroll up");
     		movements = updateMovements();
     	}else{
-    		Log.d(TAG,"Scroll down");
     		movements = findMoreMovements();
     	}
 		if(sessionActive){
