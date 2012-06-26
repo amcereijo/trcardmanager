@@ -32,7 +32,8 @@
             android:background="@drawable/login_text_border"
             android:hint="@string/login_email_hint"
             android:singleLine="true"
-            android:textColor="#2A4678" />
+            android:textColor="#2A4678"
+            android:inputType="text|textEmailAddress" />
 
         <EditText
             android:id="@+id/login_password"
