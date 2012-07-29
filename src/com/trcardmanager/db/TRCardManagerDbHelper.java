@@ -18,22 +18,33 @@ import com.trcardmanager.dao.UserDao;
  *
  */
 public class TRCardManagerDbHelper extends SQLiteOpenHelper {
+	
 	//boolean = integers 0 (false) and 1 (true).
 	private static final int VALUE_OF_TRUE = 1;
 	private static final int VALUE_OF_FALSE = 0;
 	//the rowid is like a id of user
 	
-	private static final int DATABASE_VERSION = 5;
+	private static final int DATABASE_VERSION = 6;
 	private static final String DATABASE_NAME = "trcardmanager";
 	private static final String USER_TABLE_NAME = "table_users";
 	private static final String CARD_TABLE_NAME = "table_cards";
 	
+	private static final String FIELD_BALANCE = "balance";
+	private static final String FIELD_CARDNUMBER = "cardnumber";
+	private static final String FIELD_USERID = "userid";
+	private static final String FIELD_AUTOLOGIN = "autologin";
+	private static final String FIELD_REMEMBERME = "rememberme";
+	private static final String FIELD_PASSWORD = "password";
+	private static final String FIELD_EMAIL = "email";
+	private static final String FIELD_ROWID = "rowid";
+	
 	private static final String CREATE_TABLE_USER = "create table "
-		+USER_TABLE_NAME+" (email text, password text, rememberme integer default "+VALUE_OF_FALSE+" ," +
-			"primary key (email))";
+		+USER_TABLE_NAME+" ("+FIELD_EMAIL+" text, "+FIELD_PASSWORD+" text, " +
+		FIELD_REMEMBERME+" integer default "+VALUE_OF_FALSE+" ," +
+		FIELD_AUTOLOGIN+" integer default "+VALUE_OF_FALSE+", primary key ("+FIELD_EMAIL+"))";
 	private static final String CREATE_TABLE_CARD = "create table "+
-		CARD_TABLE_NAME+" (userid integer, cardnumber text, balance text, " +
-				"primary key(cardnumber))";
+		CARD_TABLE_NAME+" ("+FIELD_USERID+" integer, "+FIELD_CARDNUMBER+" text, "+FIELD_BALANCE+" text, " +
+				"primary key("+FIELD_CARDNUMBER+"))";
 	
 	/**
 	 * 
@@ -69,11 +80,16 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	public UserDao findRemeberedUser(){
 		UserDao user = null;
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(USER_TABLE_NAME, new String[]{"rowid","email","password","rememberme"},
-				"rememberme=?",new String[]{""+VALUE_OF_TRUE}, null, null, null);
+		String[] fields = new String[]{FIELD_ROWID,FIELD_EMAIL,FIELD_PASSWORD,
+				FIELD_REMEMBERME,FIELD_AUTOLOGIN};
+		String clausule = FIELD_REMEMBERME+"=?";
+		String[] clausuleValues = new String[]{""+VALUE_OF_TRUE};
+		Cursor cursor = db.query(USER_TABLE_NAME, fields,clausule,clausuleValues,
+			null, null, null);
 		if(cursor.moveToFirst()){
 			user = new UserDao(cursor.getString(1), cursor.getString(2),
-					getBooleanValueOfInt(cursor.getInt(3)));
+					getBooleanValueOfInt(cursor.getInt(3)),
+					getBooleanValueOfInt(cursor.getInt(4)));
 			user.setRowId(cursor.getLong(0));
 		}
 		cursor.close();
@@ -87,11 +103,14 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	 */
 	public void findUser(UserDao user){
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(USER_TABLE_NAME, new String[]{"rowid","rememberme"}, "email=? and password=?",
-				new String[]{user.getEmail(),user.getPassword()}, null, null, null);
+		String[] fields = new String[]{FIELD_ROWID,FIELD_REMEMBERME,FIELD_AUTOLOGIN};
+		String clausule = FIELD_EMAIL+"=? and "+FIELD_PASSWORD+"=?";
+		String[] clausuleValues = new String[]{user.getEmail(),user.getPassword()};
+		Cursor cursor = db.query(USER_TABLE_NAME, fields, clausule,clausuleValues, null, null, null);
 		if(cursor.moveToFirst()){
 			user.setRowId(cursor.getLong(0));
 			user.setRememberme(getBooleanValueOfInt(cursor.getInt(1)));
+			user.setAutologin(getBooleanValueOfInt(cursor.getInt(2)));
 		}
 		cursor.close();
 		db.close();
@@ -107,9 +126,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		}
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("email", user.getEmail());
-		values.put("password",user.getPassword());
-		values.put("rememberme",getIntValueOfBoolean(user.isRememberme()));
+		values.put(FIELD_EMAIL, user.getEmail());
+		values.put(FIELD_PASSWORD,user.getPassword());
+		values.put(FIELD_REMEMBERME,getIntValueOfBoolean(user.isRememberme()));
+		values.put(FIELD_AUTOLOGIN,getIntValueOfBoolean(user.isRememberme()));
 		long rowId = db.insert(USER_TABLE_NAME, null, values);
 		user.setRowId(rowId);
 		db.close();
@@ -125,9 +145,30 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		}
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("rememberme",getIntValueOfBoolean(user.isRememberme()));
-		String where = "rowid=?";
-		db.update(USER_TABLE_NAME, values, where, new String[]{String.valueOf(user.getRowId())});
+		values.put(FIELD_REMEMBERME,getIntValueOfBoolean(user.isRememberme()));
+		if(!user.isRememberme()){
+			values.put(FIELD_AUTOLOGIN,VALUE_OF_FALSE);
+		}
+		String clausule = FIELD_ROWID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(user.getRowId())};
+		db.update(USER_TABLE_NAME, values, clausule, clausuleValues);
+		db.close();
+	}
+	
+	/**
+	 * 
+	 * @param user
+	 */
+	public void updateUserAutoLogin(UserDao user){
+		if(user.isRememberme()){
+			clearRemeberMeUsers();
+		}
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(FIELD_AUTOLOGIN,getIntValueOfBoolean(user.isAutologin()));
+		String clausule = FIELD_ROWID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(user.getRowId())};
+		db.update(USER_TABLE_NAME, values, clausule,clausuleValues );
 		db.close();
 	}
 	
@@ -139,9 +180,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	public void updateUserPassword(UserDao user, String newPassword){
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("password",newPassword);
-		String where = "rowid=?";
-		db.update(USER_TABLE_NAME, values, where, new String[]{String.valueOf(user.getRowId())});
+		values.put(FIELD_PASSWORD,newPassword);
+		String clausule = FIELD_ROWID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(user.getRowId())};
+		db.update(USER_TABLE_NAME, values, clausule, clausuleValues);
 		db.close();
 	}
 	
@@ -150,26 +192,24 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	 * @param user
 	 */
 	public void findUserCards(UserDao user){
-		String whereClausule = "";
-		String[] whereParams = null;
+		SQLiteDatabase db = getReadableDatabase();
+		String[] fields = new String[]{FIELD_ROWID,FIELD_CARDNUMBER,FIELD_BALANCE};
+		
 		CardDao actualCard = user.getActualCard();
-		if(actualCard==null){
-			whereClausule = "userid=?";
-			whereParams = new String[]{String.valueOf(user.getRowId())};
-		}else{
-			whereClausule = "userid=? and cardnumber!=?";
-			whereParams = new String[]{String.valueOf(user.getRowId()),
+		
+		String clausule = FIELD_USERID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(user.getRowId())};
+	
+		if(actualCard!=null){
+			clausule += " and "+FIELD_CARDNUMBER+"!=?";
+			clausuleValues = new String[]{String.valueOf(user.getRowId()),
 					actualCard.getCardNumber()};
 		}
-		
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(CARD_TABLE_NAME, new String[]{"rowid","cardnumber","balance"}, whereClausule, 
-				whereParams, null, null, null);
+		Cursor cursor = db.query(CARD_TABLE_NAME, fields, clausule, clausuleValues, null, null, null);
 		if(cursor.moveToFirst()){
 			user.setCards(new ArrayList<CardDao>()); 
 			do{
-				CardDao card = new CardDao(cursor.getLong(0),
-						cursor.getString(1),cursor.getString(2));
+				CardDao card = new CardDao(cursor.getLong(0), cursor.getString(1),cursor.getString(2));
 				user.getCards().add(card);
 			}while(cursor.moveToNext());
 		}
@@ -188,8 +228,8 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		if(cardFound==null){
 			SQLiteDatabase db = getWritableDatabase();
 			ContentValues values = new ContentValues();
-			values.put("cardnumber", card.getCardNumber());
-			values.put("userid",userId);
+			values.put(FIELD_CARDNUMBER, card.getCardNumber());
+			values.put(FIELD_USERID,userId);
 			long rowid = db.insert(CARD_TABLE_NAME, null, values);
 			card.setId(rowid);
 			db.close();
@@ -206,8 +246,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	public void updateCardBalance(CardDao card){
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("balance", card.getBalance());
-		db.update(CARD_TABLE_NAME, values, "rowid=?", new String[]{String.valueOf(card.getId())});
+		values.put(FIELD_BALANCE, card.getBalance());
+		String clausule = FIELD_ROWID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(card.getId())};
+		db.update(CARD_TABLE_NAME, values, clausule, clausuleValues);
 		db.close();
 	}
 	
@@ -217,7 +259,9 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	 */
 	public void deleteCard(long cardId){
 		SQLiteDatabase db = getWritableDatabase();
-		db.delete(CARD_TABLE_NAME, "rowid=?", new String[]{String.valueOf(cardId)});
+		String clausule = FIELD_ROWID+"=?";
+		String[] clausuleValues = new String[]{String.valueOf(cardId)};
+		db.delete(CARD_TABLE_NAME, clausule, clausuleValues);
 		db.close();
 	}
 	
@@ -225,8 +269,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	private CardDao findCard(String cardNumber){
 		CardDao card = null;
 		SQLiteDatabase db = getReadableDatabase();
-		Cursor cursor = db.query(CARD_TABLE_NAME, new String[]{"rowid"}, "cardnumber=?", 
-				new String[]{cardNumber}, null, null, null);
+		String[] fields = new String[]{FIELD_ROWID};
+		String clausule = "cardnumber=?";
+		String[] clausuleValues = new String[]{cardNumber};
+		Cursor cursor = db.query(CARD_TABLE_NAME, fields, clausule,clausuleValues , null, null, null);
 		if(cursor.moveToFirst()){
 			card = new CardDao(cursor.getLong(0),null,null);
 		}
@@ -238,7 +284,8 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	private void clearRemeberMeUsers(){
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
-		values.put("rememberme",VALUE_OF_FALSE);
+		values.put(FIELD_REMEMBERME,VALUE_OF_FALSE);
+		values.put(FIELD_AUTOLOGIN,VALUE_OF_FALSE);
 		db.update(USER_TABLE_NAME, values, null, null);
 		db.close();
 	}

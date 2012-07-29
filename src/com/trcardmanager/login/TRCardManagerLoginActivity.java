@@ -38,7 +38,7 @@ public class TRCardManagerLoginActivity extends Activity {
 		 
 		TRCardManagerApplication.setActualActivity(this);
 		findRemeberedUser();
-		fillUserFields();
+		prepareLoginView();
 	}
 	
 	@Override
@@ -62,16 +62,25 @@ public class TRCardManagerLoginActivity extends Activity {
 	}
 	
 	
-	private void fillUserFields(){
+	private void prepareLoginView(){
 		if(user!=null){
-			this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-			TextView emailTextView = (TextView)findViewById(R.id.login_email);
-			emailTextView.setText(user.getEmail());
-			TextView passTextView = (TextView)findViewById(R.id.login_password);
-			passTextView.setText(user.getPassword());
-			CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
-			checkRememberme.setChecked(user.isRememberme());
+			fillUserFields();
+			if(user.isAutologin()){
+				doLogin(null);
+			}
 		}
+	}
+	
+	
+	
+	private void fillUserFields(){
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		TextView emailTextView = (TextView)findViewById(R.id.login_email);
+		emailTextView.setText(user.getEmail());
+		TextView passTextView = (TextView)findViewById(R.id.login_password);
+		passTextView.setText(user.getPassword());
+		CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
+		checkRememberme.setChecked(user.isRememberme());
 	}
 	
 	private void findActualUser(){
@@ -80,6 +89,7 @@ public class TRCardManagerLoginActivity extends Activity {
 		CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
 		user = new UserDao(emailTextView.getText().toString(),
 				passTextView.getText().toString(),
+				checkRememberme.isChecked(),
 				checkRememberme.isChecked());
 	}
 	
@@ -104,7 +114,7 @@ public class TRCardManagerLoginActivity extends Activity {
 		String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
 		String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
 		boolean rememberme = ((CheckBox)findViewById(R.id.login_rememberme)).isChecked();
-		UserDao user = new UserDao(email, password, rememberme);
+		UserDao user = new UserDao(email, password, rememberme,rememberme);
 		return user;
 	}
 }

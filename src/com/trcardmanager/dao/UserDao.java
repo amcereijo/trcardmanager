@@ -14,15 +14,17 @@ public class UserDao {
 	private String email;
 	private String password;
 	private boolean rememberme;
+	private boolean autologin;
 	private String cookieValue;
 	
 	private List<CardDao> cards;
 	private CardDao actualCard;
 	
-	public UserDao(String email, String password, boolean rememberme) {
+	public UserDao(String email, String password, boolean rememberme, boolean autologin) {
 		setEmail(email);
 		setPassword(password);
 		setRememberme(rememberme);
+		setAutologin(autologin);
 		cards = new ArrayList<CardDao>();
 	}
 	
@@ -77,6 +79,11 @@ public class UserDao {
 	public void setRememberme(boolean rememberme) {
 		this.rememberme = rememberme;
 	}
-	
+	public void setAutologin(boolean autologin) {
+		this.autologin = autologin;
+	}
+	public boolean isAutologin() {
+		return autologin;
+	}
 	
 }
