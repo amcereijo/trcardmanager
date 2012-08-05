@@ -165,17 +165,7 @@ public class TRCardManagerListView extends ListView implements OnScrollListener 
 		mRefreshBottomViewHeight = mRefreshBottomView.getMeasuredHeight();
 
 	}
-
-	@Override
-	protected void onAttachedToWindow() {
-		setSelection(1);
-	}
-
-	@Override
-	public void setAdapter(ListAdapter adapter) {
-		super.setAdapter(adapter);
-		setSelection(1);
-	}
+	
 
 	/**
 	 * Set the listener that will receive notifications every time the list

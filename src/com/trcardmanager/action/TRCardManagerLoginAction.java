@@ -98,7 +98,6 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	}
 	
 	
-	
 	private void httpLogin() throws TRCardManagerLoginException, ClientProtocolException, IOException{
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		httpAction.getCookieLogin(userDao);

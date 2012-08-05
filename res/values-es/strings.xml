@@ -57,6 +57,7 @@
 
     <!-- principal menu -->
     <string name="principal_menu_my_account">Mi Cuenta</string>
+    <string name="principal_menu_settings">Configuración</string>
     <string name="principal_menu_about">Acerca de</string>
 
     <!-- About layout -->
@@ -114,5 +115,8 @@
       <string name="update_password_dialog_update_db">Guardando datos</string>
       <string name="update_password_dialog_error_button">Cerrar</string>
       <string name="update_password_changed">La contraseña se ha actualizado correctamente.</string>
+      
+      <!-- setting layout -->
+      <string name="settings_check_autologin">Inicio de sesión automático</string>
       
 </resources>

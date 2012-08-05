@@ -63,6 +63,7 @@
     
     <!-- principal menu -->
     <string name="principal_menu_my_account">My Account</string>
+    <string name="principal_menu_settings">Settings</string>
     <string name="principal_menu_about">About</string>
     
     <!-- About layout -->
@@ -121,5 +122,9 @@
       <string name="update_password_dialog_update_db">Saving data</string>
       <string name="update_password_dialog_error_button">Close</string>
       <string name="update_password_changed">The password has been successfully updated.</string>
+      
+      
+      <!-- setting layout -->
+      <string name="settings_check_autologin">Autologin</string>
      
 </resources>

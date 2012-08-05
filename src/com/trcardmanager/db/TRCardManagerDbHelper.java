@@ -24,7 +24,7 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	private static final int VALUE_OF_FALSE = 0;
 	//the rowid is like a id of user
 	
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 8;
 	private static final String DATABASE_NAME = "trcardmanager";
 	private static final String USER_TABLE_NAME = "table_users";
 	private static final String CARD_TABLE_NAME = "table_cards";
@@ -41,7 +41,7 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	private static final String CREATE_TABLE_USER = "create table "
 		+USER_TABLE_NAME+" ("+FIELD_EMAIL+" text, "+FIELD_PASSWORD+" text, " +
 		FIELD_REMEMBERME+" integer default "+VALUE_OF_FALSE+" ," +
-		FIELD_AUTOLOGIN+" integer default "+VALUE_OF_FALSE+", primary key ("+FIELD_EMAIL+"))";
+		FIELD_AUTOLOGIN+" integer default "+VALUE_OF_TRUE+", primary key ("+FIELD_EMAIL+"))";
 	private static final String CREATE_TABLE_CARD = "create table "+
 		CARD_TABLE_NAME+" ("+FIELD_USERID+" integer, "+FIELD_CARDNUMBER+" text, "+FIELD_BALANCE+" text, " +
 				"primary key("+FIELD_CARDNUMBER+"))";
@@ -67,10 +67,10 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS "+USER_TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS "+CARD_TABLE_NAME);
-		db.execSQL(CREATE_TABLE_USER);
-		db.execSQL(CREATE_TABLE_CARD);
+		//code in this method will be changed with each new version
+		String updateTableVersion_8 = "alter table "+USER_TABLE_NAME+" add column "+
+			FIELD_AUTOLOGIN+" integer default "+VALUE_OF_TRUE;
+		db.execSQL(updateTableVersion_8);
 	}
 	
 	/**
@@ -129,7 +129,6 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		values.put(FIELD_EMAIL, user.getEmail());
 		values.put(FIELD_PASSWORD,user.getPassword());
 		values.put(FIELD_REMEMBERME,getIntValueOfBoolean(user.isRememberme()));
-		values.put(FIELD_AUTOLOGIN,getIntValueOfBoolean(user.isRememberme()));
 		long rowId = db.insert(USER_TABLE_NAME, null, values);
 		user.setRowId(rowId);
 		db.close();
@@ -160,9 +159,6 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 	 * @param user
 	 */
 	public void updateUserAutoLogin(UserDao user){
-		if(user.isRememberme()){
-			clearRemeberMeUsers();
-		}
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(FIELD_AUTOLOGIN,getIntValueOfBoolean(user.isAutologin()));

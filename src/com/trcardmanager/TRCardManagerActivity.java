@@ -27,6 +27,7 @@ import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
+import com.trcardmanager.settings.TRCardManagerSettingsActivity;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad;
 
@@ -62,9 +63,13 @@ public class TRCardManagerActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()){
+    		case R.id.principal_menu_myaccount:
+    			Intent myAccount = new Intent(this, TRCardManagerMyAccountActivity.class);
+    			startActivityForResult(myAccount, TRCardManagerApplication.MY_ACCOUNT_CLOSED);
+    			break;
     		case R.id.principal_menu_settings:
-    			Intent settingsUpdate = new Intent(this, TRCardManagerMyAccountActivity.class);
-    			startActivityForResult(settingsUpdate, TRCardManagerApplication.MY_ACCOUNT_CLOSED);
+    			Intent settingsUpdate = new Intent(this, TRCardManagerSettingsActivity.class);
+    			startActivity(settingsUpdate);
     			break;
     		case R.id.principal_menu_about:
     			Intent settingsAbout = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
@@ -140,6 +145,7 @@ public class TRCardManagerActivity extends Activity {
             }
         });
 		linearMovements.setAdapter(adapter);
+		linearMovements.setSelection(1);
     }
     
     
