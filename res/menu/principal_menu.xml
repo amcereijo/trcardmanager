@@ -9,6 +9,10 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/principal_menu_settings" />
     
+    <item android:id="@+id/principal_menu_logout"
+        android:icon="@android:drawable/ic_lock_power_off"
+        android:title="@string/principal_menu_logout" />
+    
     <item android:id="@+id/principal_menu_about"
         android:icon="@android:drawable/ic_dialog_info"
         android:title="@string/principal_menu_about"  />

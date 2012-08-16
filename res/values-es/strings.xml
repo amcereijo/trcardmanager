@@ -32,6 +32,10 @@
     <!-- dialog application exit -->
     <string name="exit_dialog_question_title">Cerrar aplicación</string>
     <string name="exit_dialog_question_message">¿Quieres salir de la aplicación?</string>
+    
+    <!-- dialog application logout -->
+    <string name="logout_dialog_question_title">Cerrar sesión</string>
+    <string name="logout_dialog_question_message">¿Quieres cerrar las sesión?</string>
 
     <!-- card relative layout -->
     <string name="card_hour_date_separator">-</string>
@@ -52,6 +56,7 @@
     <!-- principal menu -->
     <string name="principal_menu_my_account">Mi Cuenta</string>
     <string name="principal_menu_settings">Configuración</string>
+    <string name="principal_menu_logout">Cerrar sesión</string>
     <string name="principal_menu_about">Acerca de</string>
 
     <!-- About layout -->

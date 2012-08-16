@@ -53,6 +53,7 @@ public class TRCardManagerActivity extends Activity {
         initActivity();
     }
     
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -71,6 +72,9 @@ public class TRCardManagerActivity extends Activity {
     			Intent settingsUpdate = new Intent(this, TRCardManagerSettingsActivity.class);
     			startActivity(settingsUpdate);
     			break;
+    		case R.id.principal_menu_logout:
+    			logoutAction();
+    			break;	
     		case R.id.principal_menu_about:
     			Intent settingsAbout = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
     			startActivity(settingsAbout);
@@ -103,6 +107,25 @@ public class TRCardManagerActivity extends Activity {
     
     
     
+	private void logoutAction(){
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(R.string.logout_dialog_question_title);
+		alert.setMessage(R.string.logout_dialog_question_message);
+		alert.setPositiveButton(android.R.string.yes,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						doLogoutActions();
+					}
+				});
+		alert.setNegativeButton(android.R.string.no, null);
+		alert.show();
+	}
+	
+	private void doLogoutActions(){
+		this.setResult(TRCardManagerApplication.SESSION_CLOSED);
+		this.finish();
+	}
+	
     @Override
     public void onBackPressed() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);

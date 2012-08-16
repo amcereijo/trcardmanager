@@ -106,8 +106,26 @@ public class TRCardManagerLoginActivity extends Activity {
 	            finish();
 	        }else if(resultCode == TRCardManagerApplication.SESSION_EXPIRED_APPLICATION){
 	        	Toast.makeText(getApplicationContext(), R.string.session_expired, Toast.LENGTH_LONG).show();
+	        }else if(resultCode == TRCardManagerApplication.SESSION_CLOSED){
+	        	clearLoginForm();
+	        	removeRememberMe();
 	        }
 	    }
+	}
+
+	private void clearLoginForm() {
+		TextView emailTextView = (TextView)findViewById(R.id.login_email);
+		TextView passTextView = (TextView)findViewById(R.id.login_password);
+		CheckBox checkRememberme = (CheckBox)findViewById(R.id.login_rememberme);
+		emailTextView.setText("");
+		passTextView.setText("");
+		checkRememberme.setChecked(Boolean.FALSE);
+	}
+	
+	private void removeRememberMe(){
+		user.setRememberme(Boolean.FALSE);
+		TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
+		dbHelper.updateUserRemeberMe(user);
 	}
 		
 	private UserDao getUserData(){

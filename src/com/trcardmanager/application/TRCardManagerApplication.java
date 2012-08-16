@@ -18,6 +18,7 @@ public class TRCardManagerApplication extends Application {
 	public static int MY_ACCOUNT_CLOSED = 103;
 	public static int CARD_UPDATED = 105;
 	public static int PASSWORD_UPDATED = 107;
+	public static int SESSION_CLOSED = 108;
 	
 	private static UserDao user;
 	private static Activity actualActivity;
