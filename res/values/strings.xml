@@ -14,26 +14,20 @@
 	<string name="login_error_connection_error">Connection error</string>
 	<string name="login_rememberme">Remember me</string>
 	<string name="loggin_load_dialog_title">Login</string>
-    <string name="loggin_load_dialog_text">Logging in system...</string>
+    <string name="loggin_load_dialog_text">Logging in system&#8230;</string>
     <string name="session_expired">Session expired</string>
     
 	<!-- cards list -->    
-	<string name="cards_list_title">Your Cards</string>
-    <string name="cards_add_to_list">Add </string>
-    <string name="loadcards_load_dialog_title">Card</string>
-    <string name="loadcards_load_dialog_text">Loading your data...</string>
-    
+	<string name="loadcards_load_dialog_title">Card</string>
+    <string name="loadcards_load_dialog_text">Loading your data&#8230;</string>
     <string name="cards_list_card_title">Card: </string>
     <string name="cards_list_card_balance">Balance: </string>
     <string name="cards_list_card_balance_symbol">€</string>
-    
     <string name="imagen_icon_text">Menu</string>
     
     <!-- active card -->
     <string name="activate_card_error">Card can not be active. Please, check the card number and be sure the card was activated by phone.</string>
-    
-    <!-- card movements -->
-    <string name="movements.movemements">Movements:</string>    
+        
     
     <!-- dialog application exit -->
     <string name="exit_dialog_question_title">Close application</string>
@@ -43,20 +37,14 @@
     <string name="card_hour_date_separator">-</string>
     
     
-    <!-- movements foot -->
-    <string name="movements.foot.load_message">Loading more movements...</string>
-    <string name="movements.foot.load_message_no_more">No more movements to load</string>
-    
-    
-    <string name="pull_to_refresh_pull_label">Pull to load more...</string>
-    <string name="pull_to_refresh_release_label">Release to load more...</string>
-    <string name="pull_to_refresh_refreshing_label">Loading...</string>
-    <string name="pull_to_refresh_tap_label">Tap load more...</string>
-    
-    <string name="push_to_refresh_push_label">Pull to refresh...</string>
-    <string name="push_to_refresh_release_label">Release to refresh...</string>
-    <string name="push_to_refresh_refreshing_label">Loading...</string>
-    <string name="push_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="pull_to_refresh_pull_label">Pull to load more&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to load more&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Tap load more&#8230;</string>
+    <string name="push_to_refresh_push_label">Pull to refresh&#8230;</string>
+    <string name="push_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="push_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="push_to_refresh_tap_label">Tap to refresh&#8230;</string>
     
     <!-- movement separator view -->
     <string name="separator_text">Historical</string>
@@ -84,8 +72,6 @@
     
      <!-- Update card laytout -->
      <string name="update_card_title">Update card</string>
-     <string name="update_card_cardnumber_actual_title">Actual card:</string>
-     <string name="update_card_cardnumber_title">New card:</string>
      <string name="update_card_cardnumber_text">new card number</string>
      <string name="update_card_btn_update">Update</string>
      <string name="update_card_error_card_size">The card number must be 16 digits</string>

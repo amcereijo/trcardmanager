@@ -14,14 +14,12 @@
     <string name="login_error_connection_error">Error de conexión</string>
     <string name="login_rememberme">Recuerdame</string>
     <string name="loggin_load_dialog_title">Autenticar</string>
-    <string name="loggin_load_dialog_text">Autenticando en el sistema...</string>
+    <string name="loggin_load_dialog_text">Autenticando en el sistema&#8230;</string>
     <string name="session_expired">Su sessión ha caducado</string>
 
     <!-- cards list -->
-    <string name="cards_list_title">Tus tarjetas</string>
-    <string name="cards_add_to_list">Añadir </string>
     <string name="loadcards_load_dialog_title">Tarjeta</string>
-    <string name="loadcards_load_dialog_text">Cargando tus datos...</string>
+    <string name="loadcards_load_dialog_text">Cargando tus datos&#8230;</string>
     <string name="cards_list_card_title">Tarjeta: </string>
     <string name="cards_list_card_balance">Saldo: </string>
     <string name="cards_list_card_balance_symbol">€</string>
@@ -30,8 +28,6 @@
     <!-- active card -->
     <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegurate de haberla activado telefonicamente.</string>
 
-    <!-- card movements -->
-    <string name="movements.movemements">Movimientos:</string>
 
     <!-- dialog application exit -->
     <string name="exit_dialog_question_title">Cerrar aplicación</string>
@@ -41,16 +37,14 @@
     <string name="card_hour_date_separator">-</string>
 
     <!-- movements foot -->
-    <string name="movements.foot.load_message">Cargando más movimientos...</string>
-    <string name="movements.foot.load_message_no_more">No hay más movimientos que cargar</string>
-    <string name="pull_to_refresh_pull_label">Arrastra para buscar mas...</string>
-    <string name="pull_to_refresh_release_label">Suelta para buscar mas...</string>
-    <string name="pull_to_refresh_refreshing_label">Cargando...</string>
-    <string name="pull_to_refresh_tap_label">Toca para buscar mas...</string>
-    <string name="push_to_refresh_push_label">Arrastra para actualizar...</string>
-    <string name="push_to_refresh_release_label">Suelta para actualizar...</string>
-    <string name="push_to_refresh_refreshing_label">Cargando...</string>
-    <string name="push_to_refresh_tap_label">Toca para actualizar...</string>
+    <string name="pull_to_refresh_pull_label">Arrastra para buscar mas&#8230;</string>
+    <string name="pull_to_refresh_release_label">Suelta para buscar mas&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Cargando&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Toca para buscar mas&#8230;</string>
+    <string name="push_to_refresh_push_label">Arrastra para actualizar&#8230;</string>
+    <string name="push_to_refresh_release_label">Suelta para actualizar&#8230;</string>
+    <string name="push_to_refresh_refreshing_label">Cargando&#8230;</string>
+    <string name="push_to_refresh_tap_label">Toca para actualizar&#8230;</string>
 
     <!-- movement separator view -->
     <string name="separator_text">Histórico</string>
@@ -78,9 +72,7 @@
 
     <!-- Update card laytout -->
     <string name="update_card_title">Actualizar tarjeta</string>
-    <string name="update_card_cardnumber_actual_title">Tarjeta actual:</string>
-    <string name="update_card_cardnumber_title">Nueva tarjeta:</string>
-    <string name="update_card_cardnumber_text">nuevo numero de tarjeta</string>
+    <string name="update_card_cardnumber_text">nuevo número de tarjeta</string>
     <string name="update_card_btn_update">Actualizar</string>
     <string name="update_card_error_card_size">El número de la tarjeta debe ser de 16 dígitos</string>
     <string name="update_card_loading_message_title">Actualizar tarjeta</string>
