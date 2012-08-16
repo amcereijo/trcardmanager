@@ -99,12 +99,13 @@
 	
     
     <com.google.ads.AdView android:layout_width="fill_parent"
-        android:layout_height="wrap_content" ads:adUnitId="admob"
+        android:layout_height="wrap_content" ads:adUnitId="ADMOB_UID"
         ads:adSize="BANNER" android:id="@+id/adView" ads:refreshInterval="60"
-        ads:testDevices="TEST_EMULATOR, device_id"
+        ads:testDevices="TEST_EMULATOR, DEVELOP_DEVICE_ID"
         ads:loadOnCreate="true"
         android:layout_alignParentBottom="true"
-         android:gravity="bottom" 
+        android:gravity="bottom" 
+        android:background="@android:color/black"
         />
     
      <com.trcardmanager.views.TRCardManagerListView 
