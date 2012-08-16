@@ -145,9 +145,6 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(FIELD_REMEMBERME,getIntValueOfBoolean(user.isRememberme()));
-		if(!user.isRememberme()){
-			values.put(FIELD_AUTOLOGIN,VALUE_OF_FALSE);
-		}
 		String clausule = FIELD_ROWID+"=?";
 		String[] clausuleValues = new String[]{String.valueOf(user.getRowId())};
 		db.update(USER_TABLE_NAME, values, clausule, clausuleValues);
@@ -281,7 +278,6 @@ public class TRCardManagerDbHelper extends SQLiteOpenHelper {
 		SQLiteDatabase db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(FIELD_REMEMBERME,VALUE_OF_FALSE);
-		values.put(FIELD_AUTOLOGIN,VALUE_OF_FALSE);
 		db.update(USER_TABLE_NAME, values, null, null);
 		db.close();
 	}
