@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:baselineAligned="false"
+    android:background="#2A4678">
+    
+
+    
+	<LinearLayout android:id="@+id/restaurants_select_search_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical" 
+	    android:baselineAligned="false"
+	    android:gravity="center"
+	    android:layout_marginTop="80dip"
+	    android:layout_alignParentTop="true">
+	
+	    <TextView android:text="@string/restaurants_select_search_type"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:textColor="@android:color/white"
+         android:gravity="center_horizontal"
+         android:textStyle="bold"
+         android:layout_marginBottom="20dip" />
+	    
+		 <LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:orientation="vertical" 
+		    android:baselineAligned="false"
+		    android:gravity="center_horizontal|top">
+		    
+		    <LinearLayout android:id="@+id/restaurant_search_layout"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="left|center_vertical"
+		        android:background="@drawable/select_restaurant_border"
+		        android:layout_marginLeft="40dip"
+		        android:layout_marginRight="40dip"
+		        android:layout_marginBottom="8dip"
+		        android:clickable="true"
+		        android:onClick="showSearch">
+		        <TextView android:background="@android:drawable/ic_menu_search"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_marginLeft="8dip"/>
+		        <TextView android:textColor="@android:color/white"
+				    android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" 
+		            android:text="@string/restaurants_search"
+		            android:ellipsize="end"/>  
+		    </LinearLayout>
+		    
+		    <LinearLayout android:id="@+id/restaurant_location_layout"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="left|center_vertical"
+		        android:background="@drawable/select_restaurant_border"
+		        android:layout_marginLeft="40dip"
+		        android:layout_marginRight="40dip"
+		        android:clickable="true"
+		        android:onClick="findInLocation">
+				<TextView android:background="@android:drawable/ic_menu_mylocation"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_marginLeft="8dip"/>
+				<TextView android:textColor="@android:color/white"
+				    android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" 
+		            android:text="@string/restaurants_location"
+		            android:ellipsize="end"/>
+			</LinearLayout>
+			
+	    </LinearLayout>
+	    
+	</LinearLayout>
+
+	<RelativeLayout android:id="@+id/restaurants_search_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:visibility="gone"
+	    android:layout_alignParentTop="true">
+		 
+		 <EditText android:id="@+id/restaurants_search_direction_text"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		 	android:hint="@string/restaurants_search_direction" 
+		    android:layout_alignParentLeft="true"
+		    android:layout_alignParentTop="true"
+		    android:background="@drawable/login_text_border"
+		    android:layout_marginLeft="6dip"
+		    android:layout_marginRight="6dip"
+		    android:layout_marginBottom="6dip"
+		    android:layout_marginTop="30dip"/>
+		 <EditText android:id="@+id/restaurants_search_restaurant_text"
+		 	android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:hint="@string/restaurants_search_restaurant" 
+		    android:layout_below="@id/restaurants_search_direction_text"
+		    android:background="@drawable/login_text_border"
+		    android:layout_margin="6dip"/>
+
+		 <LinearLayout 
+		    android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_restaurant_text"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@drawable/select_restaurant_border">
+			 	<TextView android:background="@android:drawable/ic_search_category_default"
+				    android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:onClick="search"
+		            android:clickable="true"/>	
+	            <TextView android:textColor="@android:color/white"
+				    android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" 
+		            android:onClick="search"
+		            android:clickable="true"
+		            android:text="@string/restaurants_search_text_button"
+		            android:layout_marginRight="4dip"/>    
+		 </LinearLayout>
+		 
+		 
+
+	</RelativeLayout>
+	
+	
+	<RelativeLayout android:id="@+id/restaurants_search_minimized_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:background="#041F50"
+	    android:visibility="gone"
+	    android:layout_alignParentTop="true">
+		
+	    <TextView android:textColor="@android:color/white"
+	        android:layout_alignParentLeft="true"
+		    android:layout_alignParentTop="true"
+		    android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+	    
+	    <TextView android:background="@android:drawable/ic_search_category_default"
+	        android:layout_alignParentRight="true"
+		    android:layout_alignParentTop="true"
+		    android:layout_width="wrap_content"
+            android:layout_height="wrap_content" 
+            android:onClick="showMoreSearch"
+            android:clickable="true"/>	
+	</RelativeLayout>
+
+</RelativeLayout>

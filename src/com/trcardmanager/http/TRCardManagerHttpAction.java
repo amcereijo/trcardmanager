@@ -5,9 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.ClientProtocolException;
 import org.jsoup.Connection;
@@ -15,14 +18,18 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
+import com.trcardmanager.dao.DirectionDao;
+import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.MovementSeparatorDao;
 import com.trcardmanager.dao.MovementsDao;
+import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
@@ -64,6 +71,10 @@ public class TRCardManagerHttpAction {
     private static final String UPDATE_CARD_RESPONSE_OK = "OK";
     private static final String URL_PREPARE_UPDATE_CARD_PASSWORD = "mi_cuenta.html";
     private static final String URL_UPDATE_PASSWORD = "sendMyAccountPwd.php";
+    //private static final String URL_SEARCH_RESTAURANTS = "http://www.edenred.es/buscador-afiliados/imprimir_resultados";
+    private static final String URL_SEARCH_RESTAURANTS = "http://www.edenred.es/affiliates_search/search";
+    private static final String SEARCH_RESTAURANTS_PRODUCT = "ticket-restaurant";
+    private static final String SEARCH_RESTAURANTS_FORMAT = "tarjeta";
     
        
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
@@ -499,6 +510,167 @@ public class TRCardManagerHttpAction {
 		String id = inputHiddenId.attr("value");
 		return id;
 	}
+    
+    
+    /**
+     * 
+     * @param directionDao
+     * @return
+     * @throws IOException 
+     */
+    public List<RestaurantDao> getRestaurants(DirectionDao directionDao) throws IOException{
+    	return getRestaurants(directionDao,"");
+    }
+    
+    /**
+     * 
+     * @param directionDao
+     * @param affiliate
+     * @return
+     * @throws IOException 
+     */
+    public List<RestaurantDao> getRestaurants(DirectionDao directionDao,String affiliate) throws IOException{
+    	String addressSearch = new StringBuilder()
+    		.append(directionDao.getStreet())
+    		.append(",")
+    		.append(directionDao.getLocality())
+    		.append(",")
+    		.append(directionDao.getSubArea())
+    		.append(",")
+    		.append(directionDao.getArea())
+    		.append(",")
+    		.append(directionDao.getPostalCode())
+    		.append(",")
+    		.append(directionDao.getCountry())
+    		.toString();
+    	return getRestaurants(addressSearch,affiliate,directionDao.getLocation());
+    }
+    
+    /**
+     * 
+     * @param addressSearch
+     * @return
+     * @throws IOException 
+     */
+    public List<RestaurantDao> getRestaurants(String addressSearch,LocationDao location) throws IOException{
+    	return getRestaurants(addressSearch, "",location);
+    }
+    
+    
+    /**
+     * 
+     * @param addressSearch
+     * @param affiliate
+     * @return
+     * @throws IOException 
+     */
+    public List<RestaurantDao> getRestaurants(String addressSearch,String affiliate,LocationDao location) throws IOException{
+    	List<RestaurantDao> restaurants = new ArrayList<RestaurantDao>();
+    	int page = 1, numberOfPages = 1;
+    	/*
+    	 * http://www.edenred.es/buscador-afiliados/imprimir_resultados?address=avenida+de+manoteras%2C+Madrid&center_lat=40.487302150000005&center_lng=-3.665504950000013&especifico_producto=true&formato=tarjeta&limit_lat=40.490162&limit_lng=-3.65761510000002&producto=ticket-restaurant
+    	 * 
+
+    	 * url:http://www.edenred.es/buscador-afiliados/imprimir_resultados
+    	 * parameters: 
+    	 * producto:ticket-restaurant
+			formato:papel/tarjeta
+			affiliate: //restaurant
+			address: //country, cp, city, etc
+			center_lng:-3.7129999999999654
+			center_lat:40.2085
+			limit_lng:5.098999999999957
+			limit_lat:45.245
+			locale:es
+    	 * 
+    	 */
+    	do{
+    	Map<String, String> postMap = new LinkedHashMap<String, String>();
+		postMap.put("producto", SEARCH_RESTAURANTS_PRODUCT);
+		postMap.put("formato",SEARCH_RESTAURANTS_FORMAT);
+		postMap.put("affiliate",affiliate);
+		//postMap.put("address",addressSearch);
+		postMap.put("address","Avenida de manoteras 20, Madrid");
+		postMap.put("center_lng",String.valueOf(location.getLongitude()));
+		postMap.put("center_lng","-3.669615199999953");
+		postMap.put("center_lat",String.valueOf(location.getLatitude()));
+		postMap.put("center_lat","40.487491899999995");
+		double searchRadius = 0.001;
+		postMap.put("limit_lng",String.valueOf(location.getLongitude()+searchRadius));
+		postMap.put("limit_lng","-3.667266219708471");
+		postMap.put("limit_lat",String.valueOf(location.getLatitude()+searchRadius));
+		postMap.put("limit_lat","40.489840880291496");
+		if(page!=1){
+			postMap.put("page",String.valueOf(page));
+		}
+		postMap.put("locale", Locale.getDefault().getCountry().toLowerCase());
+				
+		Response response = Jsoup.connect(URL_SEARCH_RESTAURANTS)
+			.header("X-Requested-With","XMLHttpRequest")
+			.timeout(TIMEOUT)
+			.data(postMap).execute();
+		if(response != null){
+			/*
+			 * clase result-list
+			  bucle <li>
+				<a href="coordenadas" class="viewmap"
+				clase result
+					<a class="name">nombre</a>
+					"/"
+					<span class="phone">teléfono
+					<strong > calle, codigopostal
+					" / "
+					<span class="adores" > ciudad, comunidad
+					" / tipocomida" 
+
+			 */
+			String htmlResponse = new String(response.bodyAsBytes(),"ISO-8859-1");
+			htmlResponse = htmlResponse.replaceAll(Pattern.quote("$(\"#results\").html(\""),"")
+				.replaceAll(Pattern.quote("\\u003C"), "<")
+				.replaceAll(Pattern.quote("\\u003E"), ">")
+				.replaceAll(Pattern.quote("\")"),"")
+				.replaceAll(Pattern.quote("\\\""), "\"");
+			
+			Document d = Jsoup.parse(htmlResponse);
+			Element resultList = d.getElementsByClass("result-list").get(0);
+			Elements elementsLi = resultList.getElementsByTag("li");
+			for(Element li : elementsLi){
+				String logitudeAndLatitude = li.getElementsByClass("viewmap").get(0).attr("href");
+				StringTokenizer strk = new StringTokenizer(logitudeAndLatitude, ",");
+				double longitude = Double.parseDouble(((String)strk.nextElement()).trim());
+				double latitude = Double.parseDouble(((String)strk.nextElement()).trim());
+				Element divResult = li.getElementsByClass("result").get(0);
+				String name = divResult.getElementsByClass("name").get(0).html();
+				String phone = divResult.getElementsByClass("phone").get(0).html();
+				String streetAndPostalCode = divResult.getElementsByTag("strong").get(0).html();
+				strk = new StringTokenizer(streetAndPostalCode,",");
+				String street = (String)strk.nextElement();
+				String postalCode = ((String)strk.nextElement()).trim();
+				String cityAndSubArea = divResult.getElementsByClass("address").get(0).html();
+				strk = new StringTokenizer(cityAndSubArea,",");
+				String city = (String)strk.nextElement();
+				String subArea = ((String)strk.nextElement()).trim();
+				String totalStringResult = divResult.html();
+				int posLastBackslash = totalStringResult.lastIndexOf("/");
+				String foodType = totalStringResult.substring(posLastBackslash+1).trim();
+				
+				
+				Log.i(TAG, "Restaurant --> coordenates:"+longitude+","+latitude
+						+"  Name:"+name
+						+"  Phone:"+phone
+						+"  Street:"+street
+						+"  PostalCode:"+postalCode
+						+"  City:"+city
+						+"  SubArea:"+subArea
+						+"  FoodType:"+foodType);
+			}
+			Element elementPagination = d.getElementsByClass("pagination").get(0);
+			numberOfPages = elementPagination.getElementsByTag("a").size();
+		}
+		page++;
+    	}while(page<=numberOfPages);
+    	return restaurants;
+    }
     
     private String getWhitOutHtmlWhiteSpaceTag(String value){
     	return value.replaceAll("&nbsp;", " ");

@@ -57,6 +57,7 @@
     <string name="principal_menu_my_account">Mi Cuenta</string>
     <string name="principal_menu_settings">Configuración</string>
     <string name="principal_menu_logout">Cerrar sesión</string>
+    <string name="principal_menu_restaurant">Restaurantes</string>
     <string name="principal_menu_about">Acerca de</string>
 
     <!-- About layout -->
@@ -116,4 +117,13 @@
       <!-- setting layout -->
       <string name="settings_check_autologin">Inicio de sesión automático</string>
       
+      <!-- restaurants layout -->
+      <string name="restaurants_search">Restaurantes por dirección/nombre</string>
+      <string name="restaurants_location">Restaurantes en mi localización</string>
+      <string name="restaurants_title">Restaurantes</string>
+      <string name="restaurants_select_search_type">Selecciona tipo de búsqueda</string>
+      <string name="restaurants_search_direction">Calle, CP, Ciudad,&#8230;</string>
+      <string name="restaurants_search_restaurant">Nombre de Restaurante</string>
+      <string name="restaurants_search_text_button">Buscar</string>
+   
 </resources>

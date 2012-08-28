@@ -99,9 +99,9 @@
 	
     
     <com.google.ads.AdView android:layout_width="fill_parent"
-        android:layout_height="wrap_content" ads:adUnitId="ADMOB_UID"
+        android:layout_height="wrap_content" ads:adUnitId="a14fe7418ac35e6"
         ads:adSize="BANNER" android:id="@+id/adView" ads:refreshInterval="60"
-        ads:testDevices="TEST_EMULATOR, DEVELOP_DEVICE_ID"
+        ads:testDevices="TEST_EMULATOR, 393568DA65D500EC"
         ads:loadOnCreate="true"
         android:layout_alignParentBottom="true"
         android:gravity="bottom" 

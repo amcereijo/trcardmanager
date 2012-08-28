@@ -1,13 +1,20 @@
 package com.trcardmanager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,9 +31,14 @@ import com.trcardmanager.action.MovementListAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
+import com.trcardmanager.dao.DirectionDao;
+import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
+import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.location.TRCardManagerLocationAction;
 import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
+import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
 import com.trcardmanager.settings.TRCardManagerSettingsActivity;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad;
@@ -40,6 +52,7 @@ public class TRCardManagerActivity extends Activity {
 
 	final private static String TAG = TRCardManagerActivity.class.getName();
 
+	
 	
 	/** Called when the activity is first created. */
     @Override
@@ -75,6 +88,10 @@ public class TRCardManagerActivity extends Activity {
     		case R.id.principal_menu_logout:
     			logoutAction();
     			break;	
+    		case R.id.principal_menu_restaurant:
+    			Intent restaturants = new Intent(this,TRCardManagerRestaurantsActivity.class);
+    			startActivity(restaturants);
+    			break;
     		case R.id.principal_menu_about:
     			Intent settingsAbout = new Intent(getApplicationContext(), TRCardManagerAboutActivity.class);
     			startActivity(settingsAbout);
@@ -95,9 +112,7 @@ public class TRCardManagerActivity extends Activity {
     		}else if (resultCode == TRCardManagerApplication.PASSWORD_UPDATED){
     			Toast.makeText(getApplicationContext(), R.string.update_password_changed, Toast.LENGTH_LONG).show();
     		}
-    		
     	}
-    	
     }
 
 	private void finishWithSessionExpired() {
@@ -148,7 +163,7 @@ public class TRCardManagerActivity extends Activity {
 		TRCardManagerApplication.setActualActivity(this);
 		
     }
-    
+   
     
     private void closeApplication(){
     	this.finish();
@@ -206,5 +221,6 @@ public class TRCardManagerActivity extends Activity {
 		
     }
  
-   
+    
+    
 }
