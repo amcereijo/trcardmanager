@@ -1,6 +1,7 @@
 package com.trcardmanager.http;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.client.ClientProtocolException;
@@ -18,18 +20,17 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import android.util.Log;
 
 import com.trcardmanager.dao.CardDao;
-import com.trcardmanager.dao.DirectionDao;
 import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.MovementSeparatorDao;
 import com.trcardmanager.dao.MovementsDao;
 import com.trcardmanager.dao.RestaurantDao;
+import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
@@ -512,49 +513,6 @@ public class TRCardManagerHttpAction {
 	}
     
     
-    /**
-     * 
-     * @param directionDao
-     * @return
-     * @throws IOException 
-     */
-    public List<RestaurantDao> getRestaurants(DirectionDao directionDao) throws IOException{
-    	return getRestaurants(directionDao,"");
-    }
-    
-    /**
-     * 
-     * @param directionDao
-     * @param affiliate
-     * @return
-     * @throws IOException 
-     */
-    public List<RestaurantDao> getRestaurants(DirectionDao directionDao,String affiliate) throws IOException{
-    	String addressSearch = new StringBuilder()
-    		.append(directionDao.getStreet())
-    		.append(",")
-    		.append(directionDao.getLocality())
-    		.append(",")
-    		.append(directionDao.getSubArea())
-    		.append(",")
-    		.append(directionDao.getArea())
-    		.append(",")
-    		.append(directionDao.getPostalCode())
-    		.append(",")
-    		.append(directionDao.getCountry())
-    		.toString();
-    	return getRestaurants(addressSearch,affiliate,directionDao.getLocation());
-    }
-    
-    /**
-     * 
-     * @param addressSearch
-     * @return
-     * @throws IOException 
-     */
-    public List<RestaurantDao> getRestaurants(String addressSearch,LocationDao location) throws IOException{
-    	return getRestaurants(addressSearch, "",location);
-    }
     
     
     /**
@@ -564,9 +522,8 @@ public class TRCardManagerHttpAction {
      * @return
      * @throws IOException 
      */
-    public List<RestaurantDao> getRestaurants(String addressSearch,String affiliate,LocationDao location) throws IOException{
+    public List<RestaurantDao> getRestaurants(RestaurantSearchDao restaurantSeachDao) throws IOException{
     	List<RestaurantDao> restaurants = new ArrayList<RestaurantDao>();
-    	int page = 1, numberOfPages = 1;
     	/*
     	 * http://www.edenred.es/buscador-afiliados/imprimir_resultados?address=avenida+de+manoteras%2C+Madrid&center_lat=40.487302150000005&center_lng=-3.665504950000013&especifico_producto=true&formato=tarjeta&limit_lat=40.490162&limit_lng=-3.65761510000002&producto=ticket-restaurant
     	 * 
@@ -584,92 +541,208 @@ public class TRCardManagerHttpAction {
 			locale:es
     	 * 
     	 */
-    	do{
-    	Map<String, String> postMap = new LinkedHashMap<String, String>();
+    	//do{
+	    	Map<String, String> postMap = createParameterPostMapper(restaurantSeachDao.getAddressSearch(), 
+	    			restaurantSeachDao.getAffiliate(), restaurantSeachDao.getDirectionDao().getLocation(),
+	    			restaurantSeachDao.getCurrentPage());
+					
+			Response response = Jsoup.connect(URL_SEARCH_RESTAURANTS).header("X-Requested-With","XMLHttpRequest")
+				.timeout(TIMEOUT).data(postMap).execute();
+			if(response != null){
+				/*
+				  clase result-list
+				  bucle <li>
+					<a href="coordenadas" class="viewmap"
+					clase result
+						<a class="name">nombre</a>
+						"/"
+						<span class="phone">teléfono
+						<strong > calle, codigopostal
+						" / "
+						<span class="adores" > ciudad, comunidad
+						" / tipocomida" 
+	
+				 */
+				String htmlParsedResponse = getParsedResponse(response);
+				
+				//Document d = Jsoup.parse(htmlParsedResponse);
+				Document d = Jsoup.parse(new String(htmlParsedResponse.getBytes(),"UTF-8"));
+				
+				Element resultList = d.getElementsByClass("result-list").get(0);
+				Elements elementsLi = resultList.getElementsByTag("li");
+				for(Element li : elementsLi){
+					restaurants.add(createRestaurantDao(li));
+				}
+				
+				Elements paginationElements = d.getElementsByClass("pagination"); 
+				if(restaurantSeachDao.getCurrentPage()==1 && paginationElements.size()>0){
+					Element elementPagination = d.getElementsByClass("pagination").get(0);
+					restaurantSeachDao.setNumberOfPages(elementPagination.getElementsByTag("a").size());
+				}
+			}
+			restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
+    	//}while(restaurantSeachDao.getCurrentPage()<=restaurantSeachDao.getNumberOfPages());
+    	
+    	return restaurants;
+    }
+
+
+	private Map<String, String> createParameterPostMapper(String addressSearch,
+			String affiliate, LocationDao location, int page) {
+		Map<String, String> postMap = new LinkedHashMap<String, String>();
 		postMap.put("producto", SEARCH_RESTAURANTS_PRODUCT);
 		postMap.put("formato",SEARCH_RESTAURANTS_FORMAT);
 		postMap.put("affiliate",affiliate);
-		//postMap.put("address",addressSearch);
-		postMap.put("address","Avenida de manoteras 20, Madrid");
+		postMap.put("address",addressSearch);
 		postMap.put("center_lng",String.valueOf(location.getLongitude()));
-		postMap.put("center_lng","-3.669615199999953");
 		postMap.put("center_lat",String.valueOf(location.getLatitude()));
-		postMap.put("center_lat","40.487491899999995");
-		double searchRadius = 0.001;
+		
+		//TODO variable data
+		//More or less one kilometer 
+		double searchRadius = 0.009;
+		
 		postMap.put("limit_lng",String.valueOf(location.getLongitude()+searchRadius));
-		postMap.put("limit_lng","-3.667266219708471");
 		postMap.put("limit_lat",String.valueOf(location.getLatitude()+searchRadius));
-		postMap.put("limit_lat","40.489840880291496");
 		if(page!=1){
 			postMap.put("page",String.valueOf(page));
 		}
 		postMap.put("locale", Locale.getDefault().getCountry().toLowerCase());
-				
-		Response response = Jsoup.connect(URL_SEARCH_RESTAURANTS)
-			.header("X-Requested-With","XMLHttpRequest")
-			.timeout(TIMEOUT)
-			.data(postMap).execute();
-		if(response != null){
-			/*
-			 * clase result-list
-			  bucle <li>
-				<a href="coordenadas" class="viewmap"
-				clase result
-					<a class="name">nombre</a>
-					"/"
-					<span class="phone">teléfono
-					<strong > calle, codigopostal
-					" / "
-					<span class="adores" > ciudad, comunidad
-					" / tipocomida" 
-
-			 */
-			String htmlResponse = new String(response.bodyAsBytes(),"ISO-8859-1");
-			htmlResponse = htmlResponse.replaceAll(Pattern.quote("$(\"#results\").html(\""),"")
-				.replaceAll(Pattern.quote("\\u003C"), "<")
-				.replaceAll(Pattern.quote("\\u003E"), ">")
-				.replaceAll(Pattern.quote("\")"),"")
-				.replaceAll(Pattern.quote("\\\""), "\"");
-			
-			Document d = Jsoup.parse(htmlResponse);
-			Element resultList = d.getElementsByClass("result-list").get(0);
-			Elements elementsLi = resultList.getElementsByTag("li");
-			for(Element li : elementsLi){
-				String logitudeAndLatitude = li.getElementsByClass("viewmap").get(0).attr("href");
-				StringTokenizer strk = new StringTokenizer(logitudeAndLatitude, ",");
-				double longitude = Double.parseDouble(((String)strk.nextElement()).trim());
-				double latitude = Double.parseDouble(((String)strk.nextElement()).trim());
-				Element divResult = li.getElementsByClass("result").get(0);
-				String name = divResult.getElementsByClass("name").get(0).html();
-				String phone = divResult.getElementsByClass("phone").get(0).html();
-				String streetAndPostalCode = divResult.getElementsByTag("strong").get(0).html();
-				strk = new StringTokenizer(streetAndPostalCode,",");
-				String street = (String)strk.nextElement();
-				String postalCode = ((String)strk.nextElement()).trim();
-				String cityAndSubArea = divResult.getElementsByClass("address").get(0).html();
-				strk = new StringTokenizer(cityAndSubArea,",");
-				String city = (String)strk.nextElement();
-				String subArea = ((String)strk.nextElement()).trim();
-				String totalStringResult = divResult.html();
-				int posLastBackslash = totalStringResult.lastIndexOf("/");
-				String foodType = totalStringResult.substring(posLastBackslash+1).trim();
-				
-				
-				Log.i(TAG, "Restaurant --> coordenates:"+longitude+","+latitude
-						+"  Name:"+name
-						+"  Phone:"+phone
-						+"  Street:"+street
-						+"  PostalCode:"+postalCode
-						+"  City:"+city
-						+"  SubArea:"+subArea
-						+"  FoodType:"+foodType);
-			}
-			Element elementPagination = d.getElementsByClass("pagination").get(0);
-			numberOfPages = elementPagination.getElementsByTag("a").size();
+		return postMap;
+	}
+    
+    private String getParsedResponse(Response response)throws UnsupportedEncodingException{
+    	String htmlParsedResponse = new String(response.bodyAsBytes(),"UTF-8");
+    	htmlParsedResponse = htmlParsedResponse.replaceAll(Pattern.quote("$(\"#results\").html(\""),"")
+			.replaceAll(Pattern.quote("\\u003C"), "<")
+			.replaceAll(Pattern.quote("\\u003E"), ">")
+			.replaceAll(Pattern.quote("\")"),"")
+			.replaceAll(Pattern.quote("\\\""), "\"");
+    	//htmlParsedResponse = decode(htmlParsedResponse);
+    	//htmlParsedResponse = new String(htmlParsedResponse.getBytes("UTF-8"), "UTF-8");
+		return htmlParsedResponse;
+    }
+    
+    
+    private String htmlDecoded(Element el) {
+    	String html = el.html();
+		// On recherche tous les éléments unicode :
+		Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
+		Matcher matcher = pattern.matcher(html);
+		if (matcher.find()) {
+			// Si on en trouve au moins un, on doit créer un StringBuffer
+			// où l'on copiera la nouvelle chaine :
+			StringBuffer sb = new StringBuffer(html.length());
+			do {
+				// Puis à chaque fois que l'on trouve le bloc unicode :
+				// On récupère la valeur unicode du caractère :
+				int codePoint = Integer.parseInt(matcher.group(1), 16);
+				String value = new String(Character.toChars(codePoint));
+				matcher.appendReplacement(sb, Matcher.quoteReplacement(value));
+			} while (matcher.find());
+			// On recopie la fin de chaine :
+			matcher.appendTail(sb);
+			// Et on retourne la nouvelle chaine
+			return sb.toString();
 		}
-		page++;
-    	}while(page<=numberOfPages);
-    	return restaurants;
+		// Aucune modif à faire : on retourne la chaien tel quel :
+		return html;
+	}
+    
+	private String decode(String source) {
+		// On recherche tous les éléments unicode :
+		Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
+		Matcher matcher = pattern.matcher(source);
+		if (matcher.find()) {
+			// Si on en trouve au moins un, on doit créer un StringBuffer
+			// où l'on copiera la nouvelle chaine :
+			StringBuffer sb = new StringBuffer(source.length());
+			do {
+				// Puis à chaque fois que l'on trouve le bloc unicode :
+				// On récupère la valeur unicode du caractère :
+				int codePoint = Integer.parseInt(matcher.group(1), 16);
+				String value = new String(Character.toChars(codePoint));
+				matcher.appendReplacement(sb, Matcher.quoteReplacement(value));
+			} while (matcher.find());
+			// On recopie la fin de chaine :
+			matcher.appendTail(sb);
+			// Et on retourne la nouvelle chaine
+			return sb.toString();
+		}
+		// Aucune modif à faire : on retourne la chaien tel quel :
+		return source;
+	}
+
+    private RestaurantDao createRestaurantDao(Element restaurantElement){
+    	RestaurantDao restaurant = new RestaurantDao();
+    	
+    	fillLocationDao(restaurantElement,restaurant);
+    	
+		Element divResult = restaurantElement.getElementsByClass("result").get(0);
+		fillPhone(divResult,restaurant);
+		fillRestaurantName(divResult,restaurant);
+		fillStreetAndPostalCode(divResult,restaurant);
+		fillCityAndSubArea(divResult,restaurant);
+		fillFoodType(divResult,restaurant);
+		
+		Log.i(TAG, "Restaurant --> coordenates:"+restaurant.getLocation().getLongitude()
+				+","+restaurant.getLocation().getLatitude()
+				+"  Name:"+restaurant.getRetaurantName()
+				+"  Phone:"+restaurant.getPhoneNumber()
+				+"  Street:"+restaurant.getStreet()
+				+"  PostalCode:"+restaurant.getPostalCode()
+				+"  City:"+restaurant.getLocality()
+				+"  SubArea:"+restaurant.getSubArea()
+				+"  FoodType:"+restaurant.getFoodType());
+			
+		return restaurant;
+    }
+    
+    private void fillRestaurantName(Element divResult,RestaurantDao restaurant){
+    	Element elName = divResult.getElementsByClass("name").get(0);
+    	String name = htmlDecoded(elName);
+		restaurant.setRetaurantName(name);
+    }
+    
+    private void fillPhone(Element divResult,RestaurantDao restaurant){
+    	Element elPhone = divResult.getElementsByClass("phone").get(0);
+    	String phone = htmlDecoded(elPhone);
+		restaurant.setPhoneNumber(phone);
+    }
+    
+    private void fillFoodType(Element divResult, RestaurantDao restaurant){
+	    String totalStringResult = htmlDecoded(divResult);
+		int posLastBackslash = totalStringResult.lastIndexOf("/");
+		String foodType = totalStringResult.substring(posLastBackslash+1).trim();
+		restaurant.setFoodType(foodType);
+    }
+    
+    private void fillCityAndSubArea(Element divResult, RestaurantDao restaurant){
+	    Element elAddress = divResult.getElementsByClass("address").get(0);
+	    String cityAndSubArea = htmlDecoded(elAddress);
+		StringTokenizer strk = new StringTokenizer(cityAndSubArea,",");
+		String city = (String)strk.nextElement();
+		String subArea = ((String)strk.nextElement()).trim();
+		restaurant.setLocality(city);
+		restaurant.setSubArea(subArea);
+    }
+    
+    private void fillStreetAndPostalCode(Element divResult, RestaurantDao restaurant){
+    	Element elStreetAndPostalCode = divResult.getElementsByTag("strong").get(0);
+    	String streetAndPostalCode = htmlDecoded(elStreetAndPostalCode);
+    	StringTokenizer strk = new StringTokenizer(streetAndPostalCode,",");
+		String street = (String)strk.nextElement();
+		String postalCode = ((String)strk.nextElement()).trim();
+		restaurant.setStreet(street);
+		restaurant.setPostalCode(postalCode);
+    }
+    
+    private void fillLocationDao(Element restaurantElement, RestaurantDao restaurant){
+    	String logitudeAndLatitude = restaurantElement.getElementsByClass("viewmap").get(0).attr("href");
+		StringTokenizer strk = new StringTokenizer(logitudeAndLatitude, ",");
+		double longitude = Double.parseDouble(((String)strk.nextElement()).trim());
+		double latitude = Double.parseDouble(((String)strk.nextElement()).trim());
+		LocationDao location = new LocationDao(longitude, latitude);
+		restaurant.setLocation(location);
     }
     
     private String getWhitOutHtmlWhiteSpaceTag(String value){

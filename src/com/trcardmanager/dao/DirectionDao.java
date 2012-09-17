@@ -8,12 +8,12 @@ package com.trcardmanager.dao;
 public class DirectionDao {
 
 	private LocationDao location;
-	private String street;
-	private String postalCode;
-	private String country;
-	private String area;	//In spain "Comunidad autonoma"
-	private String subArea; //In spain "provincia"
-	private String locality;
+	private String street = "";
+	private String postalCode = "";
+	private String country = "";
+	private String area = "";	//In spain "Comunidad autonoma"
+	private String subArea = ""; //In spain "provincia"
+	private String locality = "";
 	
 	public LocationDao getLocation() {
 		return location;

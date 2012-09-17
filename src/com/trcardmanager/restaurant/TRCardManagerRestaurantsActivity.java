@@ -1,28 +1,27 @@
 package com.trcardmanager.restaurant;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trcardmanager.R;
+import com.trcardmanager.action.GeoDirectionAction;
+import com.trcardmanager.action.SearchRestaurantsAction;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.DirectionDao;
-import com.trcardmanager.dao.LocationDao;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -35,6 +34,8 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	final private static String TAG = TRCardManagerRestaurantsActivity.class.getName();
 	
 	private TRCardManagerLocationAction locationAction;
+	private RestaurantSearchDao restaurantSearchDao;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +49,67 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1024){
-    		getPhisicalDirecction();
+		if (requestCode == TRCardManagerApplication.GPS_ACTIVATED){
+    		try {
+				findLocation();
+			} catch (InterruptedException e) {
+				Log.e(TAG, e.getMessage(),e);
+			} catch (ExecutionException e) {
+				Log.e(TAG, e.getMessage(),e);
+			}
 		}
 	}
 	
 	
 	public void showSearch(View v){
 		showSearchSelectLayout(false);
+		showMinimizedSearchLayout(false);
 		showSearchLayout(true);
 	}
 	
-	public void findInLocation(View v){
+	public void findInLocation(View v) throws InterruptedException, ExecutionException{
+		restaurantSearchDao = new RestaurantSearchDao();
 		showSearchSelectLayout(false);
-		findPlaces();
+		findLocation();
 		showMinimizedSearchLayout(true);
 	}
 	
-	public void search(View v){
-		showSearchLayout(false);
-		//TODO search
-		showMinimizedSearchLayout(true);
+	private void findLocation() throws InterruptedException, ExecutionException {
+		new GeoDirectionAction(restaurantSearchDao,locationAction).execute().get();
+		findRestaurants();
 	}
+
+	
+	private void findRestaurants(){
+		new SearchRestaurantsAction(restaurantSearchDao,locationAction).execute();
+	}
+
+	public void showErrorRestaurantLoading(){
+		Toast.makeText(this, R.string.restaurants_search_error, Toast.LENGTH_LONG).show();
+		showSearch(null);
+	}
+	
+	
+	public void viewMoreRestaurants(View v){
+		findRestaurants();
+	}
+	
+	public void search(View v){
+		restaurantSearchDao = new RestaurantSearchDao();
+		showSearchLayout(false);
+		restaurantSearchDao.setAddressSearch(((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString());
+		restaurantSearchDao.setAffiliate(((EditText)findViewById(R.id.restaurants_search_restaurant_text)).getText().toString());;
+		
+		findRestaurants();
+		
+		TextView textOfSearch = (TextView)findViewById(R.id.restaurant_search_minimized_text);
+		textOfSearch.setText(restaurantSearchDao.getAddressSearch());
+		showMinimizedSearchLayout(true);
+		
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_direction_text)).getWindowToken(), 0);	
+	}
+
 	
 	public void showMoreSearch(View v){
 		showMinimizedSearchLayout(false);
@@ -95,16 +135,20 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		if(show){
 			searchLayout.setVisibility(RelativeLayout.VISIBLE);
 		}else{
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			searchLayout.setVisibility(RelativeLayout.GONE);
 		}
 	}
 	
 	private void showMinimizedSearchLayout(boolean show){
 		RelativeLayout searchLayout = (RelativeLayout)findViewById(R.id.restaurants_search_minimized_layout);
+		ListView restaurantListView = (ListView)findViewById(R.id.restaurants_list_view);
 		if(show){
 			searchLayout.setVisibility(RelativeLayout.VISIBLE);
+			restaurantListView.setVisibility(RelativeLayout.VISIBLE);
 		}else{
 			searchLayout.setVisibility(RelativeLayout.GONE);
+			restaurantListView.setVisibility(RelativeLayout.GONE);
 		}
 	}
 	
@@ -117,59 +161,5 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		}
 	}
 	
-	private void findPlaces(){
-    	if(!locationAction.isGpsActive()){
-    		buildAlertMessageNoGps();
-    	}else{
-    		getPhisicalDirecction();
-    	}
-    }
     
-	 private DirectionDao getPhisicalDirecction(){
-    	DirectionDao phisicalDirecction = new DirectionDao();
-    	Location location = locationAction.getActualLocation();
-    	Log.i(TAG, "location: "+location);
-    	Geocoder gc = new Geocoder(getApplicationContext(), Locale.getDefault());
-        try {
-			List<Address> addresses = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 5);
-			phisicalDirecction = getAddressDirection(addresses.get(0));
-			TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-			httpAction.getRestaurants(phisicalDirecction);
-			
-		} catch (IOException e) {
-			Log.e(TAG, e.getMessage(),e);
-		}
-        return phisicalDirecction;
-    }
-	    
-	 private DirectionDao getAddressDirection(Address address){
-    	DirectionDao directionDao = new DirectionDao();
-    		directionDao.setCountry(address.getCountryName());
-    		directionDao.setPostalCode(address.getPostalCode());
-    		directionDao.setArea(address.getAdminArea());
-    		directionDao.setSubArea(address.getSubAdminArea());
-    		directionDao.setLocality(address.getLocality());
-    		directionDao.setStreet(address.getThoroughfare());
-    		LocationDao locationDao = new LocationDao(address.getLongitude(), address.getLatitude());
-    		directionDao.setLocation(locationDao);
-    	return directionDao;
-    }
-	
-    private void buildAlertMessageNoGps() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle("GPS");
-		alert.setMessage("Yout GPS seems to be disabled, do you want to enable it?");
-		alert.setPositiveButton(android.R.string.yes,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),1024);
-					}
-				});
-		alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				getPhisicalDirecction();
-			}
-		});
-		alert.show();
-    }
 }

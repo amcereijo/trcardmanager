@@ -7,14 +7,14 @@ package com.trcardmanager.dao;
  */
 public class RestaurantDao extends DirectionDao {
 
-	private long phoneNumber;
-	private String foodType;
-	private String retaurantName;
+	private String phoneNumber = "";
+	private String foodType = "";
+	private String retaurantName = "";
 	
-	public long getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-	public void setPhoneNumber(long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	public String getFoodType() {

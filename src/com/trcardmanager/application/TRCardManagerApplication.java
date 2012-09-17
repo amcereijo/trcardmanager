@@ -19,6 +19,8 @@ public class TRCardManagerApplication extends Application {
 	public static int CARD_UPDATED = 105;
 	public static int PASSWORD_UPDATED = 107;
 	public static int SESSION_CLOSED = 108;
+	public static int GPS_ACTIVATED = 109;
+	public static int SEARCH_RESTAURANTS_FINISHED = 110;
 	
 	private static UserDao user;
 	private static Activity actualActivity;

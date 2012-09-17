@@ -20,6 +20,7 @@ public class UserDao {
 	private List<CardDao> cards;
 	private CardDao actualCard;
 	
+	
 	public UserDao(String email, String password, boolean rememberme, boolean autologin) {
 		setEmail(email);
 		setPassword(password);

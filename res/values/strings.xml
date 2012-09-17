@@ -127,5 +127,23 @@
       <string name="restaurants_search_direction">Street,CP,City,&#8230;</string>
       <string name="restaurants_search_restaurant">Restaurant Name</string>
       <string name="restaurants_search_text_button">Search</string>
+      <string name="restaurants_no_gps_title">GPS</string>
+      <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
+      <string name="restaurants_dialog_location_title">Location</string>
+      <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
+      <string name="restaurants_dialog_search_title">Restaurants</string>
+      <string name="restaurants_dialog_search_message">Searching restaurants&#8230;</string>
+      <string name="restaurants_dialog_search_more_message">Searching more restaurants&#8230;</string>
+      <string name="restaurants_dialog_direction_title">Restaurants</string>
+      <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
+      <string name="restaurants_search_error">Error searching restaurants, please try again&#8230;</string>
+      
+      <!-- restaurant data  -->
+      <string name="restaurant_data_text_type">Food</string>
+      <string name="restaurant_data_no_restaurants">No restaurants found</string>
+      <string name="restaurant_data_info">i</string>
+      
+      <!-- more restaurant layout -->
+      <string name="more_restaurant_text">Show more restaurants</string>
 
 </resources>

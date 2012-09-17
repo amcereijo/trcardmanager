@@ -125,5 +125,23 @@
       <string name="restaurants_search_direction">Calle, CP, Ciudad,&#8230;</string>
       <string name="restaurants_search_restaurant">Nombre de Restaurante</string>
       <string name="restaurants_search_text_button">Buscar</string>
-   
+      <string name="restaurants_no_gps_title">GPS</string>
+      <string name="restaurants_no_gps_message">El GPS parece estar deshabilitado, ¿desea habilitarlo?</string>
+      <string name="restaurants_dialog_location_title">Localización</string>
+      <string name="restaurants_dialog_location_message">Esperando localización&#8230;</string>
+      <string name="restaurants_dialog_search_title">Restaurantes</string>
+      <string name="restaurants_dialog_search_message">Buscando restaurantes&#8230;</string>
+      <string name="restaurants_dialog_search_more_message">Buscando mas restaurantes&#8230;</string>
+      <string name="restaurants_dialog_direction_title">Restaurantes</string>
+      <string name="restaurants_dialog_direction_message">Localizando dirección&#8230;</string>
+      <string name="restaurants_search_error">Error buscando restaurantes, por favor prueba de nuevo&#8230;</string>
+      
+   	  <!-- restaurant data  -->
+      <string name="restaurant_data_text_type">Comida</string>
+      <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>
+      <string name="restaurant_data_info">i</string>
+      
+      <!-- more restaurant layout -->
+      <string name="more_restaurant_text">Ver mas restaurantes</string>
+      
 </resources>
