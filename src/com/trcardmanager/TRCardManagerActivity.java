@@ -1,42 +1,34 @@
 package com.trcardmanager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.trcardmanager.about.TRCardManagerAboutActivity;
 import com.trcardmanager.action.MovementListAction;
 import com.trcardmanager.adapter.MovementsListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
-import com.trcardmanager.dao.DirectionDao;
-import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
-import com.trcardmanager.http.TRCardManagerHttpAction;
-import com.trcardmanager.location.TRCardManagerLocationAction;
 import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
 import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
 import com.trcardmanager.settings.TRCardManagerSettingsActivity;
@@ -50,6 +42,7 @@ import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad
  */
 public class TRCardManagerActivity extends Activity {
 
+	private static final int POSITION_AD_VIEW_IN_PARENT = 1;
 	final private static String TAG = TRCardManagerActivity.class.getName();
 
 	
@@ -60,11 +53,34 @@ public class TRCardManagerActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
-     // Look up the AdView as a resource and load a request.
         AdView adView = (AdView)this.findViewById(R.id.adView);
         adView.loadAd(new AdRequest());
         initActivity();
     }
+    
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+    	super.onConfigurationChanged(newConfig);
+    	removeAndAddAdView();
+    }
+
+
+	private void removeAndAddAdView() {
+		AdView adView = (AdView)this.findViewById(R.id.adView);
+    	LayoutParams lp = (RelativeLayout.LayoutParams)adView.getLayoutParams();
+    	RelativeLayout rl = (RelativeLayout)this.findViewById(R.id.main_layout);
+    	rl.removeView(adView);
+    	adView = new AdView(this, AdSize.SMART_BANNER, getString(R.string.unidId));
+    	AdRequest adReq = new AdRequest();
+    	//Delete two lines to publish app
+    	adReq.addTestDevice(AdRequest.TEST_EMULATOR);              
+    	adReq.addTestDevice(getString(R.string.dev_device));
+    	
+    	adView.loadAd(adReq);
+    	adView.setId(R.id.adView);	
+    	rl.addView(adView,POSITION_AD_VIEW_IN_PARENT,lp);
+	}
     
     
     @Override
@@ -99,7 +115,7 @@ public class TRCardManagerActivity extends Activity {
     	}
     	return true;
     }
-    
+
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
