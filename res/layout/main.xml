@@ -100,7 +100,8 @@
 	
     
     <com.google.ads.AdView android:layout_width="wrap_content"
-        android:layout_height="wrap_content" ads:adUnitId="@string/unidId"
+        android:layout_height="wrap_content" 
+        ads:adUnitId="@string/unidId"
         ads:adSize="SMART_BANNER" 
         android:id="@+id/adView" 
         ads:refreshInterval="60"
