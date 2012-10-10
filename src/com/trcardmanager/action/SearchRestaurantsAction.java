@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.trcardmanager.R;
 import com.trcardmanager.adapter.RestaurantListViewAdapter;
@@ -27,7 +28,12 @@ import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
  */
 public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	
-	final private static String TAG = GeoDirectionAction.class.getName();
+	public enum SearchType{
+		DIRECTION_SEARCH,
+		LOCATION_SEARCH
+	}
+	
+	final private static String TAG = SearchRestaurantsAction.class.getName();
 	private static final int CANCEL_PROCESS = 0;
 	private static final int SEARCH_RESTAURANTS = 1;
 	private static final int SEARCH_MORE_RESTAURANTS = 2;
@@ -40,23 +46,29 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	private RestaurantSearchDao restaurantSearchDao;
 	private int lastViewPosition = 0;
 	
-	
+	private DirectionDao userDirection;
+	private SearchType searchMode;
+
 	public SearchRestaurantsAction() {
 		activity = TRCardManagerApplication.getActualActivity();
 	}
 	
-	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,TRCardManagerLocationAction locationAction) {
+	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,
+			TRCardManagerLocationAction locationAction,SearchType searchMode) {
 		this();
 		this.restaurantSearchDao = restaurantSearchDao;
 		this.locationAction = locationAction;
+		this.searchMode = searchMode;
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		loadingDialog = ProgressDialog.show(activity, activity.getText(R.string.restaurants_dialog_search_title), 
-				activity.getText(R.string.restaurants_dialog_direction_message));
+		TextView textOfSearch = (TextView)activity.findViewById(R.id.restaurant_search_minimized_text);
+		textOfSearch.setText("");
 		restaurantsListView = (ListView)activity.findViewById(R.id.restaurants_list_view);
 		restaurantsListView.removeAllViewsInLayout();
+		loadingDialog = ProgressDialog.show(activity, activity.getText(R.string.restaurants_dialog_search_title), 
+				activity.getText(R.string.restaurants_dialog_direction_message));
 	}
 	
 	@Override
@@ -75,12 +87,27 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		}
 	}
 	
+	
+	
+	private void getPhisicalDirecction() {
+		try{
+			userDirection = locationAction.getActualLocation(loadingDialog);
+			restaurantSearchDao.setDirectionDao(userDirection);
+		}catch(InterruptedException e){
+			Log.e(TAG,"",e);
+			throw new RuntimeException(e.getMessage());
+		}
+    }
+	
+	
 	private void searchLocationFromDirection() throws IOException{
 		int stateToPublish = SEARCH_MORE_RESTAURANTS;
 		if(restaurantSearchDao.getDirectionDao() == null){
+			stateToPublish = SEARCH_RESTAURANTS;
+		}
+		if(searchMode == SearchType.DIRECTION_SEARCH){
 			DirectionDao directionToSearch = locationAction.getLocationFromAddress(restaurantSearchDao.getAddressSearch());
 			restaurantSearchDao.setDirectionDao(directionToSearch);
-			stateToPublish = SEARCH_RESTAURANTS;
 		}
 		publishProgress(stateToPublish);
 	}
@@ -92,8 +119,11 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 			
 			searchLocationFromDirection();
 			
-			searchRestaurantList();
+			if(searchMode == SearchType.LOCATION_SEARCH){
+		    	getPhisicalDirecction();
+			}
 			
+			searchRestaurantList();
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage(),e);
 			cancel(true);
@@ -143,6 +173,10 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	protected void onPostExecute(Void result) {
 		publishProgress(CANCEL_PROCESS);
 		if(!isCancelled()){
+			TextView textOfSearch = (TextView)activity.findViewById(R.id.restaurant_search_minimized_text);
+			if(searchMode == SearchType.DIRECTION_SEARCH){
+				textOfSearch.setText(restaurantSearchDao.getAddressSearch());
+			}
 			createAdapterAndSetAndListView();
 		}else{
 			((TRCardManagerRestaurantsActivity)activity).showErrorRestaurantLoading();

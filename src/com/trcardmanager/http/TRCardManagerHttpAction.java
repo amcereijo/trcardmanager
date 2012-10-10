@@ -599,7 +599,7 @@ public class TRCardManagerHttpAction {
 		
 		//TODO variable data
 		//More or less one kilometer 
-		double searchRadius = 0.009;
+		double searchRadius = 0.009;//*20;
 		
 		postMap.put("limit_lng",String.valueOf(location.getLongitude()+searchRadius));
 		postMap.put("limit_lat",String.valueOf(location.getLatitude()+searchRadius));
@@ -684,15 +684,24 @@ public class TRCardManagerHttpAction {
 		fillCityAndSubArea(divResult,restaurant);
 		fillFoodType(divResult,restaurant);
 		
-		Log.i(TAG, "Restaurant --> coordenates:"+restaurant.getLocation().getLongitude()
-				+","+restaurant.getLocation().getLatitude()
-				+"  Name:"+restaurant.getRetaurantName()
-				+"  Phone:"+restaurant.getPhoneNumber()
-				+"  Street:"+restaurant.getStreet()
-				+"  PostalCode:"+restaurant.getPostalCode()
-				+"  City:"+restaurant.getLocality()
-				+"  SubArea:"+restaurant.getSubArea()
-				+"  FoodType:"+restaurant.getFoodType());
+//		Log.i(TAG, "Restaurant --> coordenates:"+restaurant.getLocation().getLongitude()
+//				+","+restaurant.getLocation().getLatitude()
+//				+"  Name:"+restaurant.getRetaurantName()
+//				+"  Phone:"+restaurant.getPhoneNumber()
+//				+"  Street:"+restaurant.getStreet()
+//				+"  PostalCode:"+restaurant.getPostalCode()
+//				+"  City:"+restaurant.getLocality()
+//				+"  SubArea:"+restaurant.getSubArea()
+//				+"  FoodType:"+restaurant.getFoodType());
+//		
+//		
+		
+		System.out.println(
+			"{\"created_at\":\"\",\"id\":,\"name\":\""+restaurant.getRetaurantName()+
+			"\",\"point\":\"POINT ("+restaurant.getLocation().getLongitude()+" "+restaurant.getLocation().getLatitude()+
+			")\",\"updated_at\":\"\",\"latitude\":"+restaurant.getLocation().getLongitude()+
+			",\"longitude\":"+restaurant.getLocation().getLatitude()+"}"
+		+"\n");
 			
 		return restaurant;
     }

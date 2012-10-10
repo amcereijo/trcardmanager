@@ -36,27 +36,10 @@ public class TRCardManagerLocationAction implements LocationListener {
 		Activity activity = TRCardManagerApplication.getActualActivity();
 		locationManager = (LocationManager)activity.getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-		checkGpsProvider();
-		
-	}
-	
-	private void checkGpsProvider(){
-		gpsActive = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-		if(gpsActive){
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		}
-	}
-	
-	private void activateGPS(){
-		gpsActive = true;
-		actualLocation = null;
-	//	getActualLocation();
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		gpsActive = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 	}
-	
-	public boolean isGpsActive(){
-		return gpsActive;
-	}
+
 	
 	public DirectionDao getLocationFromAddress(String address) throws IOException{
 		Geocoder geoCoder = new Geocoder(TRCardManagerApplication.getActualActivity());
@@ -66,11 +49,12 @@ public class TRCardManagerLocationAction implements LocationListener {
 		return phisicalDirecction;
 	}
 	
-	public DirectionDao getActualLocation(ProgressDialog processDialog){
+	
+	
+	public DirectionDao getActualLocation(ProgressDialog processDialog) throws InterruptedException{
 		do{
-			if(gpsActive){
-				actualLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			}else{
+			actualLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			if(!gpsActive || ( gpsActive && actualLocation==null)){
 				actualLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 			}
 		}while(actualLocation==null);
@@ -118,14 +102,19 @@ public class TRCardManagerLocationAction implements LocationListener {
 
 	}
 
+	
 	public void onProviderEnabled(String provider) {
 		if(LocationManager.GPS_PROVIDER.equals(provider)){
-			activateGPS();
+			gpsActive = true;
 		}
 
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+		Log.i("","");
 	}
     
+	public boolean isGpsActive(){
+		return gpsActive;
+	}
 }

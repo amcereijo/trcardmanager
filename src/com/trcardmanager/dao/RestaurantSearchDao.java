@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class RestaurantSearchDao {
 	
 	private DirectionDao directionDao;
-	private String addressSearch;
-	private String affiliate;
+	private String addressSearch = "";
+	private String affiliate = "";
 	private List<RestaurantDao> restaurantList;
 	private int numberOfPages;
 	private int currentPage = 1;
@@ -63,21 +63,25 @@ public class RestaurantSearchDao {
 	}
 	
 	private String directionDaoToString(){
-		String addressSearch = new StringBuilder()
-			.append(directionDao.getStreet())
-			.append(",")
-			.append(directionDao.getLocality())
-			.append(",")
-			.append(directionDao.getSubArea())
-			.append(",")
-			.append(directionDao.getArea())
-			.append(",")
-			.append(directionDao.getPostalCode())
-			.append(",")
-			.append(directionDao.getCountry())
-			.toString();
-		addressSearch = addressSearch.replaceAll(Pattern.quote(",null"), "");
-		addressSearch = addressSearch.replaceAll(Pattern.quote(",,"), "");
+		String addressSearch = "";
+		if(directionDao!=null){
+			addressSearch = new StringBuilder()
+				.append(directionDao.getStreet())
+				.append(",")
+				.append(directionDao.getLocality())
+				.append(",")
+				.append(directionDao.getSubArea())
+				.append(",")
+				.append(directionDao.getArea())
+				.append(",")
+				.append(directionDao.getPostalCode())
+				.append(",")
+				.append(directionDao.getCountry())
+				.toString();
+			addressSearch = addressSearch.replaceAll(Pattern.quote("null,"), "")
+				.replaceAll(Pattern.quote(",null"), "")
+				.replaceAll(Pattern.quote(",,"), "");
+		}
 		return addressSearch;
 	}
 

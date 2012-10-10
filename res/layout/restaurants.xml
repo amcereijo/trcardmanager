@@ -95,18 +95,18 @@
 		    android:layout_marginRight="6dip"
 		    android:layout_marginBottom="6dip"
 		    android:layout_marginTop="30dip"/>
-		 <EditText android:id="@+id/restaurants_search_restaurant_text"
+		 <!-- EditText android:id="@+id/restaurants_search_restaurant_text"
 		 	android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:hint="@string/restaurants_search_restaurant" 
 		    android:layout_below="@id/restaurants_search_direction_text"
 		    android:background="@drawable/login_text_border"
-		    android:layout_margin="6dip"/>
+		    android:layout_margin="6dip"/ -->
 
 		 <LinearLayout 
 		    android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/restaurants_search_restaurant_text"
+            android:layout_below="@id/restaurants_search_direction_text"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal|center_vertical"
             android:background="@drawable/select_restaurant_border"
@@ -126,6 +126,14 @@
 
 	</RelativeLayout>
 	
+	<RelativeLayout android:id="@+id/restaurants_search_results_layout"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
+	    android:background="#041F50"
+	    android:visibility="gone"
+	    android:layout_alignParentTop="true"
+	    android:gravity="center_vertical">
 	
 	<RelativeLayout android:id="@+id/restaurants_search_minimized_layout"
 	    android:layout_width="fill_parent"
@@ -160,6 +168,6 @@
         android:layout_below="@id/restaurants_search_minimized_layout"
     	android:visibility="gone">
     </ListView>
-	
+	</RelativeLayout>
 
 </RelativeLayout>
