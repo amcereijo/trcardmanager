@@ -26,6 +26,7 @@ import com.trcardmanager.dao.RestaurantDao;
  */
 public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	
+	private static final int MAPS_ICON_POSITION = 3;
 	private LayoutInflater inflater;
 	private Context context;
 	private ListView.LayoutParams linearLayoutParams;
@@ -72,7 +73,7 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 		return view;
 	}
 	
-	private View getRestaurantView(int position, RestaurantDao movement){
+	private View getRestaurantView(int position, RestaurantDao restaurant){
 		View view;
 		if(position%2!=0){
 			view = (LinearLayout)inflater.inflate(R.layout.restaurant_element, null,false);
@@ -80,18 +81,19 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 			view = (LinearLayout)inflater.inflate(R.layout.restaurant_element_odd, null,false);
 		}
 		view.setLayoutParams(linearLayoutParams);
-		((LinearLayout)view).addView(createAndFillDataMovementLayout(movement));
+		((LinearLayout)view).addView(createAndFillDataMovementLayout(restaurant,position));
 		return view;
 	}
 	
 	
-	private RelativeLayout createAndFillDataMovementLayout(RestaurantDao restaurant){
+	private RelativeLayout createAndFillDataMovementLayout(RestaurantDao restaurant, int position){
 		RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
 				R.layout.restaurant_data, null,false);
 		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
-		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_direction)).setText(getRestaurantDisplayDirection(restaurant));
+		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
 		String foodType = getFoodType(restaurant);
 		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
+		relativeMovementLayout.getChildAt(MAPS_ICON_POSITION).setId(position);
 		return relativeMovementLayout;
 	}
 
@@ -107,21 +109,6 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	private boolean foodTypeWithoutTitleWithValue(String foodTypeTitle, String foodType) {
 		return foodType != null && !"".equals(foodType) && 
 				(!foodType.toLowerCase().contains(foodTypeTitle.toLowerCase()));
-	}
-	
-	
-	private String getRestaurantDisplayDirection(RestaurantDao restaurant){
-		String displayDirection = new StringBuffer()
-			.append(restaurant.getStreet())
-			.append(", ")
-			.append(restaurant.getLocality())
-			.append(", ")
-			.append(restaurant.getSubArea())
-			.append(", ")
-			.append(restaurant.getPostalCode()).toString();
-		displayDirection = displayDirection.replaceAll(Pattern.quote(", null"), "");
-		displayDirection = displayDirection.replaceAll(Pattern.quote(", ,"), "");
-		return displayDirection;
 	}
 	
 	

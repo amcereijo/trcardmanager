@@ -1,5 +1,7 @@
 package com.trcardmanager.dao;
 
+import java.util.regex.Pattern;
+
 /**
  * 
  * @author angelcereijo
@@ -30,6 +32,19 @@ public class RestaurantDao extends DirectionDao {
 		this.retaurantName = retaurantName;
 	}
 	
+	public String getRestaurantDisplayDirection(){
+		String displayDirection = new StringBuffer()
+			.append(getStreet())
+			.append(", ")
+			.append(getLocality())
+			.append(", ")
+			.append(getSubArea())
+			.append(", ")
+			.append(getPostalCode()).toString();
+		displayDirection = displayDirection.replaceAll(Pattern.quote(", null"), "");
+		displayDirection = displayDirection.replaceAll(Pattern.quote(", ,"), "");
+		return displayDirection;
+	}
 	
 	
 }
