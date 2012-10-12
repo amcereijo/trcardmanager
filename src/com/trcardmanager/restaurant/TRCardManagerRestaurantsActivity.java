@@ -37,7 +37,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	private TRCardManagerLocationAction locationAction;
 	private RestaurantSearchDao restaurantSearchDao;
-	
+	private SearchType searchType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == TRCardManagerApplication.GPS_ACTIVATED){
     		try {
-				findRestaurants(SearchType.LOCATION_SEARCH);
+				findRestaurants();
 			} catch (RuntimeException e){
 				Log.e(TAG, e.getMessage(),e);
 				showErrorRestaurantLoading();
@@ -63,10 +63,20 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	
 	public void showSearch(View v){
-		showSearchSelectLayout(false);
+		if(v!=null){
+			searchType = SearchType.DIRECTION_SEARCH;
+		}
+		boolean showSearchSelectLayout = false;
+		boolean showSearchLayout = true;
+		if(searchType == SearchType.LOCATION_SEARCH){
+			showSearchSelectLayout = true;
+			showSearchLayout = false ;
+		}
+		showSearchSelectLayout(showSearchSelectLayout);
+		showSearchLayout(showSearchLayout);
 		showRestaurantList(false);
 		showRestaurantsSearchMinimizedLayout(false);
-		showSearchLayout(true);
+		
 	}
 	
 	/**
@@ -85,6 +95,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	private void findLocation() throws InterruptedException, ExecutionException {
 		restaurantSearchDao = new RestaurantSearchDao();
+		searchType = SearchType.LOCATION_SEARCH;
 		checkGPSLocationAndStartSearch();
 	}
 
@@ -103,7 +114,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 					});
 			alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					findRestaurants(SearchType.LOCATION_SEARCH);
+					findRestaurants();
 				}
 			});
 			runOnUiThread(new Runnable() {
@@ -112,12 +123,12 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 			    }
 			});
 		}else{
-			findRestaurants(SearchType.LOCATION_SEARCH);
+			findRestaurants();
 		}
 	}
 
 
-	private void findRestaurants(SearchType searchType){
+	private void findRestaurants(){
 		new SearchRestaurantsAction(restaurantSearchDao,locationAction,searchType).execute();
 	}
 
@@ -128,7 +139,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	
 	public void viewMoreRestaurants(View v){
-		findRestaurants(SearchType.DIRECTION_SEARCH);
+		findRestaurants();
 	}
 	
 	/**
@@ -140,8 +151,8 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		showSearchLayout(false);
 		restaurantSearchDao.setAddressSearch(((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString());
 		//restaurantSearchDao.setAffiliate(((EditText)findViewById(R.id.restaurants_search_restaurant_text)).getText().toString());;
-		
-		findRestaurants(SearchType.DIRECTION_SEARCH);
+		searchType = SearchType.DIRECTION_SEARCH;
+		findRestaurants();
 		
 		showRestaurantsSearchMinimizedLayout(true);
 		showRestaurantList(true);
