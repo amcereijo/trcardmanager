@@ -7,8 +7,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.trcardmanager.R;
@@ -19,7 +21,7 @@ import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.location.TRCardManagerLocationAction;
-import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
+import com.trcardmanager.restaurant.TRCardManagerRestaurantsListActivity;
 
 /**
  * Async action to search restaurants
@@ -52,43 +54,55 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	public SearchRestaurantsAction() {
 		activity = TRCardManagerApplication.getActualActivity();
 	}
+
 	
-	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,
-			TRCardManagerLocationAction locationAction,SearchType searchMode) {
+	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,TRCardManagerLocationAction locationAction,
+			SearchType searchMode,ArrayAdapter<RestaurantDao> adapter) {
 		this();
 		this.restaurantSearchDao = restaurantSearchDao;
 		this.locationAction = locationAction;
 		this.searchMode = searchMode;
+		this.adapter = adapter;
 	}
 	
 	@Override
 	protected void onPreExecute() {
-		restaurantsListView = (ListView)activity.findViewById(R.id.restaurants_list_view);
-		restaurantsListView.removeAllViewsInLayout();
-		
-		String messagge = activity.getText(R.string.restaurants_dialog_direction_message).toString();
-		if(restaurantSearchDao.getDirectionDao() != null){
-			messagge = activity.getText(R.string.restaurants_dialog_search_more_message).toString();
-		}else{
-			textOfSearch = (TextView)activity.findViewById(R.id.restaurant_search_minimized_text);
-			textOfSearch.setText("");
+		if(searchMode == SearchType.LOCATION_SEARCH){
+			RelativeLayout searchedLayout = (RelativeLayout)activity.findViewById(R.id.restaurants_search_minimized_layout);
+			searchedLayout.setVisibility(View.GONE);
 		}
+		
+		String message = loadStartLoadMessage();
 		loadingDialog = ProgressDialog.show(activity, activity.getText(R.string.restaurants_dialog_search_title), 
-				messagge);
+				message);
 	}
+
+
+	
 	
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
+		String message;
 		switch(progress[0]){
 			case CANCEL_PROCESS:
 				loadingDialog.cancel();
 				loadingDialog.dismiss();
 				break;
 			case SEARCH_RESTAURANTS:
-				loadingDialog.setMessage(activity.getText(R.string.restaurants_dialog_search_message));
+				if(searchMode == SearchType.DIRECTION_SEARCH){
+					message = String.format(activity.getText(R.string.restaurants_dialog_search_message).toString(), restaurantSearchDao.getAddressSearch());
+				}else{
+					message = activity.getText(R.string.restaurants_dialog_search_message_location).toString();
+				}
+				loadingDialog.setMessage(message);
 				break;
 			case SEARCH_MORE_RESTAURANTS:
-				loadingDialog.setMessage(activity.getText(R.string.restaurants_dialog_search_more_message));
+				if(searchMode == SearchType.DIRECTION_SEARCH){
+					message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message).toString(), restaurantSearchDao.getAddressSearch());
+				}else{
+					message = activity.getText(R.string.restaurants_dialog_search_more_message_location).toString();
+				}
+				loadingDialog.setMessage(message);
 				break;
 		}
 	}
@@ -97,10 +111,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-			prepareActualRestaurantList();
-			
 			searchLocation();
-			
 			searchRestaurantList();
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage(),e);
@@ -117,17 +128,32 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	protected void onPostExecute(Void result) {
 		publishProgress(CANCEL_PROCESS);
 		if(!isCancelled()){
-			if(textOfSearch!=null && searchMode == SearchType.DIRECTION_SEARCH){
-				textOfSearch.setText(restaurantSearchDao.getAddressSearch());
-			}
+			showDirectionOfSearch();
+			cleanRestaurantsView();
 			createAdapterAndSetAndListView();
 		}else{
-			((TRCardManagerRestaurantsActivity)activity).showErrorRestaurantLoading();
+			if(restaurantSearchDao.getRestaurantList() == null || restaurantSearchDao.getRestaurantList().isEmpty()){
+				((TRCardManagerRestaurantsListActivity)activity).onBackPressed();
+			}
+			((TRCardManagerRestaurantsListActivity)activity).showErrorRestaurantLoading();
+		}
+	}
+
+
+	private void cleanRestaurantsView() {
+		restaurantsListView = (ListView)activity.findViewById(R.id.restaurants_list_view);
+		restaurantsListView.removeAllViewsInLayout();
+	}
+
+
+	private void showDirectionOfSearch() {
+		if(searchMode == SearchType.DIRECTION_SEARCH){
+			textOfSearch = (TextView)activity.findViewById(R.id.restaurant_search_minimized_text);
+			textOfSearch.setText(restaurantSearchDao.getAddressSearch());
 		}
 	}
 	
 	
-
 	private void getPhisicalDirecction() {
 		try{
 			userDirection = locationAction.getActualLocation(loadingDialog);
@@ -165,13 +191,6 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		addFoundRestaurantsToList(restaurants);
 	}
 
-	private void prepareActualRestaurantList() {
-		if(restaurantSearchDao!=null && restaurantSearchDao.getRestaurantList()!=null &&
-				restaurantSearchDao.getRestaurantList().get(restaurantSearchDao.getRestaurantList().size()-1)==null){
-			restaurantSearchDao.getRestaurantList().remove(restaurantSearchDao.getRestaurantList().size()-1);
-		}
-	}
-	
 	
 	private void addFoundRestaurantsToList(List<RestaurantDao> restaurants){
 		List<RestaurantDao> actualRestaurants = restaurantSearchDao.getRestaurantList();
@@ -179,6 +198,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 			restaurantSearchDao.setRestaurantList(restaurants);
 		}else{
 			lastViewPosition = actualRestaurants.size()-1;
+			actualRestaurants.remove(actualRestaurants.size()-1);
 			actualRestaurants.addAll(restaurants);
 		}
 		if(restaurantSearchDao.getCurrentPage()<=restaurantSearchDao.getNumberOfPages()){
@@ -188,12 +208,38 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	
 	
 	private void createAdapterAndSetAndListView() {
-		adapter = new RestaurantListViewAdapter(activity,
+		if(adapter == null){
+			adapter = new RestaurantListViewAdapter(activity,
 				R.id.restaurants_list_view, restaurantSearchDao.getRestaurantList());
-		restaurantsListView.setAdapter(adapter);
-		restaurantsListView.refreshDrawableState();
+			restaurantsListView.setAdapter(adapter);
+			restaurantsListView.refreshDrawableState();
+		}else{
+			//Delete last("load more" view)
+			RestaurantDao r = adapter.getItem(adapter.getCount()-1);
+			adapter.remove(r);
+			//Add all items, "addAll" method not available
+			for(RestaurantDao res:restaurantSearchDao.getRestaurantList()){
+				adapter.add(res);
+			}
+		}
 		restaurantsListView.setSelection(lastViewPosition);
 	}
 	
+	
+	private String loadStartLoadMessage() {
+		String message = "";
+		if(restaurantSearchDao.getDirectionDao() != null){
+			if(searchMode == SearchType.DIRECTION_SEARCH){
+				message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message).toString(),
+						restaurantSearchDao.getAddressSearch());
+			}else{
+				message = activity.getText(R.string.restaurants_dialog_search_more_message_location).toString();
+			}
+		}else{
+			message = activity.getText(R.string.restaurants_dialog_direction_message).toString();
+		}
+		return message;
+	}
+
 	
 }

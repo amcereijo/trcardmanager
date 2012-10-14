@@ -7,26 +7,18 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.trcardmanager.R;
-import com.trcardmanager.action.SearchRestaurantsAction;
 import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.LocationDao;
-import com.trcardmanager.dao.RestaurantDao;
-import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -37,12 +29,9 @@ import com.trcardmanager.location.TRCardManagerLocationAction;
 public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	final private static String TAG = TRCardManagerRestaurantsActivity.class.getName();
-	private final static String URI_TO_OPEN_MAPS = "geo:%s,%s?z=%d&q=%s";
-	private final static int ZOOM_LEVEL = 18; 
 	
-	private TRCardManagerLocationAction locationAction;
-	private RestaurantSearchDao restaurantSearchDao;
 	private SearchType searchType;
+	private String directiontoSearch;
 	
 	
 	@Override
@@ -51,19 +40,19 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		setContentView(R.layout.restaurants);
 		setTitle(R.string.restaurants_title);
 		TRCardManagerApplication.setActualActivity(this);
-		locationAction = new TRCardManagerLocationAction();
-	};
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		TRCardManagerApplication.setActualActivity(this);
+	}
 	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == TRCardManagerApplication.GPS_ACTIVATED){
-    		try {
-				findRestaurants();
-			} catch (RuntimeException e){
-				Log.e(TAG, e.getMessage(),e);
-				showErrorRestaurantLoading();
-			}
+			findRestaurants();
 		}
 	}
 	
@@ -73,8 +62,6 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		LinearLayout selectSearchLayout = (LinearLayout)findViewById(R.id.restaurants_select_search_layout);
 		if(selectSearchLayout.getVisibility() == LinearLayout.GONE){
 			showSearchLayout(false);
-			showRestaurantList(false);
-			showRestaurantsSearchMinimizedLayout(false);
 			showSearchSelectLayout(true);
 		}else{
 			super.onBackPressed();
@@ -96,10 +83,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 			showSearchLayout = false ;
 		}
 		showSearchSelectLayout(showSearchSelectLayout);
-		showSearchLayout(showSearchLayout);
-		showRestaurantList(false);
-		showRestaurantsSearchMinimizedLayout(false);
-		
+		showSearchLayout(showSearchLayout);	
 	}
 	
 	/**
@@ -108,83 +92,28 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void findInLocation(View v) throws InterruptedException, ExecutionException{
-		restaurantSearchDao = new RestaurantSearchDao();
-		showSearchSelectLayout(false);		
-		findLocation();
-		showRestaurantsSearchMinimizedLayout(false);
-		showRestaurantList(true);
+	public void findInLocation(View v){
+		searchType = SearchType.LOCATION_SEARCH;
+		checkGPSLocationAndStartSearch();
 	}
 	
 	
-	/**
-	 * 
-	 */
-	public void showErrorRestaurantLoading(){
-		Toast.makeText(this, R.string.restaurants_search_error, Toast.LENGTH_LONG).show();
-		showSearch(null);
-	}
-	
-	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void viewMoreRestaurants(View v){
-		findRestaurants();
-	}
 	
 	/**
 	 * 
 	 * @param v
 	 */
 	public void search(View v){
-		restaurantSearchDao = new RestaurantSearchDao();
-		showSearchLayout(false);
-		restaurantSearchDao.setAddressSearch(((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString());
-		//restaurantSearchDao.setAffiliate(((EditText)findViewById(R.id.restaurants_search_restaurant_text)).getText().toString());;
+		directiontoSearch = ((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString();
 		searchType = SearchType.DIRECTION_SEARCH;
 		findRestaurants();
-		
-		showRestaurantsSearchMinimizedLayout(true);
-		showRestaurantList(true);
-		
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_direction_text)).getWindowToken(), 0);	
 	}
 
-	/**
-	 * 
-	 * @param v
-	 */
-	public void showMoreSearch(View v){
-		showRestaurantsSearchMinimizedLayout(false);
-		showRestaurantList(false);
-		showSearchLayout(true);
-	}
-	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void openMap(View v){
-		int restaurantPosution = v.getId();
-		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosution);
-		LocationDao location = restaurantDao.getLocation();
-		String uri = String.format(URI_TO_OPEN_MAPS,location.getLatitude(), location.getLongitude(),
-				ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
-		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-	}
-
-	
-	private void findLocation() throws InterruptedException, ExecutionException {
-		restaurantSearchDao = new RestaurantSearchDao();
-		searchType = SearchType.LOCATION_SEARCH;
-		checkGPSLocationAndStartSearch();
-	}
-
 
 	private void checkGPSLocationAndStartSearch() {
+		TRCardManagerLocationAction locationAction = new TRCardManagerLocationAction();
 		if(!locationAction.isGpsActive()){
 			final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 			alert.setTitle(R.string.restaurants_no_gps_title);
@@ -213,7 +142,12 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 
 
 	private void findRestaurants(){
-		new SearchRestaurantsAction(restaurantSearchDao,locationAction,searchType).execute();
+		Intent restaturants = new Intent(this,TRCardManagerRestaurantsListActivity.class);
+		
+		restaturants.putExtra("directiontoSearch", directiontoSearch);
+		restaturants.putExtra("searchType", searchType.name());
+		
+		startActivity(restaturants);
 	}
 	
 	
@@ -227,33 +161,13 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		}
 	}
 	
-	private void showRestaurantList(boolean show){
-		ListView restaurantListView = (ListView)findViewById(R.id.restaurants_list_view);
-		RelativeLayout searchRestaurantResultView = (RelativeLayout)findViewById(R.id.restaurants_search_results_layout);
-		if(show){
-			searchRestaurantResultView.setVisibility(View.VISIBLE);
-			restaurantListView.setVisibility(View.VISIBLE);
-		}else{
-			searchRestaurantResultView.setVisibility(View.GONE);
-			restaurantListView.setVisibility(View.GONE);
-		}
-	}
-	
+
 	private void showSearchSelectLayout(boolean show){
 		LinearLayout searchSelectLayout = (LinearLayout)findViewById(R.id.restaurants_select_search_layout);
 		if(show){
 			searchSelectLayout.setVisibility(LinearLayout.VISIBLE);
 		}else{
 			searchSelectLayout.setVisibility(LinearLayout.GONE);
-		}
-	}
-	
-	private void showRestaurantsSearchMinimizedLayout(boolean show){
-		RelativeLayout restaurantsSearchMinimizedLayout = (RelativeLayout)findViewById(R.id.restaurants_search_minimized_layout);
-		if(show){
-			restaurantsSearchMinimizedLayout.setVisibility(RelativeLayout.VISIBLE);
-		}else{
-			restaurantsSearchMinimizedLayout.setVisibility(RelativeLayout.GONE);
 		}
 	}
 	

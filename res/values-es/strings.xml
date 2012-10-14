@@ -10,12 +10,12 @@
     <string name="login_password_hint">contraseña</string>
     <string name="login_btn_enter">Entrar</string>
     <string name="login_error_message">Email y/o contraseña incorrecto</string>
-    <string name="login_error_connection_message">Error de red</string>
-    <string name="login_error_connection_error">Error de conexión</string>
+    <string name="login_error_connection_message">Problemas de red. Prueba otra vez.</string>
+    <string name="login_error_connection_error">Problemas de conexión. Prueba otra vez.</string>
     <string name="login_rememberme">Recuerdame</string>
     <string name="loggin_load_dialog_title">Autenticar</string>
     <string name="loggin_load_dialog_text">Autenticando en el sistema&#8230;</string>
-    <string name="session_expired">Su sessión ha caducado</string>
+    <string name="session_expired">Tu sessión ha caducado. Debes volver a entrar.</string>
 
     <!-- cards list -->
     <string name="loadcards_load_dialog_title">Tarjeta</string>
@@ -26,7 +26,7 @@
     <string name="imagen_icon_text">Menú</string>
 
     <!-- active card -->
-    <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegurate de haberla activado telefonicamente.</string>
+    <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegúrate de haberla activado telefonicamente.</string>
 
 
     <!-- dialog application exit -->
@@ -68,7 +68,7 @@
 		Permite visualizar el saldo actual de la tarjeta, los movimientos de últimos 45 días y el histórico de movimientos hasta el 1 de enero del año anterior.\n
 		Para visualizar más movimientos en la lista sólo debe arrastrar hacia arriba la lista actual y automáticamente se cargarán mas movimientos.\n
 		Si tiene la aplicación abierta y realiza un pago, basta con arrastrar hacía abajo la lista de movimientos para que aparezca el que acaba de realizar.\n
-		A través del menú contextual también puede gestionar su número de tarjeta y contraseña de acceso.\n\n
+		A través del menú contextual también puede gestionar su número de tarjeta y contraseña de acceso, así como buscar restaurantes o cambiar la configuración de la aplicación.\n\n
 		Espero que le sea de utilidad y disfrute de su uso.\n\n</string>
     <string name="about_application_icon">Icono de aplicación</string>
     <string name="about_button_feedback_text"><u>Envía una opinión</u></string>
@@ -91,7 +91,7 @@
      <string name="myaccount_tab_update_password_tab_title">Cambiar Contraseña</string>
      
      <!-- update data errors -->
-      <string name="update_data_errors_user_not_exists">El usuario no existe o dado de baja </string>
+      <string name="update_data_errors_user_not_exists">El usuario no existe o está dado de baja </string>
       <string name="update_data_errors_card_not_exist">La rarjeta no existe</string>
       <string name="update_data_errors_card_associated">La Tarjeta está asociada a otro usuario</string>
       <string name="update_data_errors_card_different_profile">La tarjeta tiene un perfil diferente al del usuario</string>
@@ -104,9 +104,9 @@
       <string name="update_password_hint">nueva contraseña</string>
       <string name="update_password_confirm_hint">confirma nueva contraseña</string>
       <string name="update_password_btn_update">Actualizar</string>
-      <string name="update_password_savedb_text">Guardar nueva contraseña (si ha marcado "Recuerdame")</string>
-      <string name="update_password_error_pass">Debe introducir una nueva contraseña</string>
-      <string name="update_password_error_pass_confirm">Debe introducir la confirmación de la contraseña</string>
+      <string name="update_password_savedb_text">Guardar nueva contraseña (si ha marcado \"Recuerdame\")</string>
+      <string name="update_password_error_pass">Debes introducir una nueva contraseña</string>
+      <string name="update_password_error_pass_confirm">Debes introducir la confirmación de la contraseña</string>
       <string name="update_password_error_equal_passs">Las contraseñas no coinciden</string>
       <string name="update_password_dialog_title">Cambiar contraseña</string>
       <string name="update_password_dialog_update_http">Actualizando datos</string>
@@ -126,15 +126,17 @@
       <string name="restaurants_search_restaurant">Nombre de Restaurante</string>
       <string name="restaurants_search_text_button">Buscar</string>
       <string name="restaurants_no_gps_title">GPS</string>
-      <string name="restaurants_no_gps_message">El GPS parece estar deshabilitado, ¿desea habilitarlo?</string>
+      <string name="restaurants_no_gps_message">El GPS parece estar deshabilitado, ¿deseas habilitarlo?</string>
       <string name="restaurants_dialog_location_title">Localización</string>
       <string name="restaurants_dialog_location_message">Esperando localización&#8230;</string>
       <string name="restaurants_dialog_search_title">Restaurantes</string>
-      <string name="restaurants_dialog_search_message">Buscando restaurantes&#8230;</string>
-      <string name="restaurants_dialog_search_more_message">Buscando mas restaurantes&#8230;</string>
+      <string name="restaurants_dialog_search_message">Buscando restaurantes en \"%s\"&#8230;</string>
+      <string name="restaurants_dialog_search_more_message">Buscando mas restaurantes en \"%s\"&#8230;</string>
+      <string name="restaurants_dialog_search_message_location">Buscando restaurantes en tu zona&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_location">Buscando mas restaurantes en tu zona&#8230;</string>
       <string name="restaurants_dialog_direction_title">Restaurantes</string>
       <string name="restaurants_dialog_direction_message">Localizando dirección&#8230;</string>
-      <string name="restaurants_search_error">Error buscando restaurantes, por favor prueba de nuevo&#8230;</string>
+      <string name="restaurants_search_error">Ha habído algún problema buscando restaurantes, por favor prueba de nuevo&#8230;</string>
       
    	  <!-- restaurant data  -->
       <string name="restaurant_data_text_type">Comida</string>

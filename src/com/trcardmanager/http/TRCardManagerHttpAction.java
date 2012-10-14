@@ -345,7 +345,6 @@ public class TRCardManagerHttpAction {
     
 	
     private Document getHttpPage(String httpPage, String cookieValue) throws IOException,TRCardManagerSessionException{
-
     	Connection connection = Jsoup.connect(URL_BASE+httpPage).cookie(COOKIE_NAME,cookieValue).timeout(TIMEOUT);
     	Response response = connection.execute();
     	String url = response.url().toString();
@@ -353,11 +352,8 @@ public class TRCardManagerHttpAction {
     	if(!logedIn){
     		throw new TRCardManagerSessionException();
     	}
-    	//Document document = Jsoup.parse(new URL(URL_BASE+httpPage).openStream(), "ISO-8859-1", url);
-    	//return connection.get();
     	Document d = Jsoup.parse(new String(response.bodyAsBytes(),"ISO-8859-1"));
     	return d;
-    	//return response.parse();
     }
     
    
@@ -541,7 +537,6 @@ public class TRCardManagerHttpAction {
 			locale:es
     	 * 
     	 */
-    	//do{
 	    	Map<String, String> postMap = createParameterPostMapper(restaurantSeachDao.getAddressSearch(), 
 	    			restaurantSeachDao.getAffiliate(), restaurantSeachDao.getDirectionDao().getLocation(),
 	    			restaurantSeachDao.getCurrentPage());
@@ -565,7 +560,6 @@ public class TRCardManagerHttpAction {
 				 */
 				String htmlParsedResponse = getParsedResponse(response);
 				
-				//Document d = Jsoup.parse(htmlParsedResponse);
 				Document d = Jsoup.parse(new String(htmlParsedResponse.getBytes(),"UTF-8"));
 				
 				Element resultList = d.getElementsByClass("result-list").get(0);
@@ -581,7 +575,6 @@ public class TRCardManagerHttpAction {
 				}
 			}
 			restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
-    	//}while(restaurantSeachDao.getCurrentPage()<=restaurantSeachDao.getNumberOfPages());
     	
     	return restaurants;
     }
@@ -617,60 +610,31 @@ public class TRCardManagerHttpAction {
 			.replaceAll(Pattern.quote("\\u003E"), ">")
 			.replaceAll(Pattern.quote("\")"),"")
 			.replaceAll(Pattern.quote("\\\""), "\"");
-    	//htmlParsedResponse = decode(htmlParsedResponse);
-    	//htmlParsedResponse = new String(htmlParsedResponse.getBytes("UTF-8"), "UTF-8");
 		return htmlParsedResponse;
     }
     
     
     private String htmlDecoded(Element el) {
     	String html = el.html();
-		// On recherche tous les éléments unicode :
+		// Buscar elementos unicode :
 		Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
 		Matcher matcher = pattern.matcher(html);
 		if (matcher.find()) {
-			// Si on en trouve au moins un, on doit créer un StringBuffer
-			// où l'on copiera la nouvelle chaine :
+			// Si hay creamos un StringBuffer para la nueva cadena
 			StringBuffer sb = new StringBuffer(html.length());
 			do {
-				// Puis à chaque fois que l'on trouve le bloc unicode :
-				// On récupère la valeur unicode du caractère :
+				// cada vez que se encuentre un elemento se recupera su valor unicode 
 				int codePoint = Integer.parseInt(matcher.group(1), 16);
 				String value = new String(Character.toChars(codePoint));
 				matcher.appendReplacement(sb, Matcher.quoteReplacement(value));
 			} while (matcher.find());
-			// On recopie la fin de chaine :
+			// se copia el final de la cadena
 			matcher.appendTail(sb);
-			// Et on retourne la nouvelle chaine
-			return sb.toString();
+			html = sb.toString();
 		}
-		// Aucune modif à faire : on retourne la chaien tel quel :
 		return html;
 	}
     
-	private String decode(String source) {
-		// On recherche tous les éléments unicode :
-		Pattern pattern = Pattern.compile("\\\\u([0-9a-fA-F]{4})");
-		Matcher matcher = pattern.matcher(source);
-		if (matcher.find()) {
-			// Si on en trouve au moins un, on doit créer un StringBuffer
-			// où l'on copiera la nouvelle chaine :
-			StringBuffer sb = new StringBuffer(source.length());
-			do {
-				// Puis à chaque fois que l'on trouve le bloc unicode :
-				// On récupère la valeur unicode du caractère :
-				int codePoint = Integer.parseInt(matcher.group(1), 16);
-				String value = new String(Character.toChars(codePoint));
-				matcher.appendReplacement(sb, Matcher.quoteReplacement(value));
-			} while (matcher.find());
-			// On recopie la fin de chaine :
-			matcher.appendTail(sb);
-			// Et on retourne la nouvelle chaine
-			return sb.toString();
-		}
-		// Aucune modif à faire : on retourne la chaien tel quel :
-		return source;
-	}
 
     private RestaurantDao createRestaurantDao(Element restaurantElement){
     	RestaurantDao restaurant = new RestaurantDao();
@@ -684,25 +648,16 @@ public class TRCardManagerHttpAction {
 		fillCityAndSubArea(divResult,restaurant);
 		fillFoodType(divResult,restaurant);
 		
-//		Log.i(TAG, "Restaurant --> coordenates:"+restaurant.getLocation().getLongitude()
-//				+","+restaurant.getLocation().getLatitude()
-//				+"  Name:"+restaurant.getRetaurantName()
-//				+"  Phone:"+restaurant.getPhoneNumber()
-//				+"  Street:"+restaurant.getStreet()
-//				+"  PostalCode:"+restaurant.getPostalCode()
-//				+"  City:"+restaurant.getLocality()
-//				+"  SubArea:"+restaurant.getSubArea()
-//				+"  FoodType:"+restaurant.getFoodType());
-//		
-//		
-		
-		System.out.println(
-			"{\"created_at\":\"\",\"id\":,\"name\":\""+restaurant.getRetaurantName()+
-			"\",\"point\":\"POINT ("+restaurant.getLocation().getLongitude()+" "+restaurant.getLocation().getLatitude()+
-			")\",\"updated_at\":\"\",\"latitude\":"+restaurant.getLocation().getLongitude()+
-			",\"longitude\":"+restaurant.getLocation().getLatitude()+"}"
-		+"\n");
-			
+		/*Log.i(TAG, "Restaurant --> coordenates:"+restaurant.getLocation().getLongitude()
+				+","+restaurant.getLocation().getLatitude()
+				+"  Name:"+restaurant.getRetaurantName()
+				+"  Phone:"+restaurant.getPhoneNumber()
+				+"  Street:"+restaurant.getStreet()
+				+"  PostalCode:"+restaurant.getPostalCode()
+				+"  City:"+restaurant.getLocality()
+				+"  SubArea:"+restaurant.getSubArea()
+				+"  FoodType:"+restaurant.getFoodType());
+		*/
 		return restaurant;
     }
     

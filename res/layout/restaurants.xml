@@ -125,49 +125,5 @@
 		 
 
 	</RelativeLayout>
-	
-	<RelativeLayout android:id="@+id/restaurants_search_results_layout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical"
-	    android:background="#041F50"
-	    android:visibility="gone"
-	    android:layout_alignParentTop="true"
-	    android:gravity="center_vertical">
-	
-	<RelativeLayout android:id="@+id/restaurants_search_minimized_layout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:background="#041F50"
-	    android:visibility="gone"
-	    android:layout_alignParentTop="true"
-	    android:gravity="center_vertical">
-		
-	    <TextView android:id="@+id/restaurant_search_minimized_text" 
-	        android:textColor="@android:color/white"
-	        android:layout_alignParentLeft="true"
-	        android:layout_centerVertical="true"
-		    android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" 
-            android:paddingLeft="2dip"/>
-	    
-	    <TextView android:background="@android:drawable/ic_search_category_default"
-	        android:layout_alignParentRight="true"
-		    android:layout_alignParentTop="true"
-		    android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:onClick="showMoreSearch"
-            android:clickable="true"/>	
-	</RelativeLayout>
-	
-    <ListView android:id="@+id/restaurants_list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/restaurants_search_minimized_layout"
-    	android:visibility="gone">
-    </ListView>
-	</RelativeLayout>
 
 </RelativeLayout>

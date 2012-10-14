@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	
+
     <string name="app_name">TRCardManager</string>
-    
     <string name="deveolper_email1">amcereijo@gmail.com</string>
-    
-     <!-- login -->
-	<string name="login_email_hint">email</string>
-	<string name="login_password_hint">password</string>
-	<string name="login_btn_enter">Enter</string>
-	<string name="login_error_message">Email and/or password incorrect</string>
-	<string name="login_error_connection_message">Network error</string>
-	<string name="login_error_connection_error">Connection error</string>
-	<string name="login_rememberme">Remember me</string>
-	<string name="loggin_load_dialog_title">Login</string>
+
+    <!-- login -->
+    <string name="login_email_hint">email</string>
+    <string name="login_password_hint">password</string>
+    <string name="login_btn_enter">Enter</string>
+    <string name="login_error_message">Email and/or password incorrect</string>
+    <string name="login_error_connection_message">Network problems. Try again.</string>
+    <string name="login_error_connection_error">Connection problems Try again.</string>
+    <string name="login_rememberme">Remember me</string>
+    <string name="loggin_load_dialog_title">Log in</string>
     <string name="loggin_load_dialog_text">Logging in system&#8230;</string>
-    <string name="session_expired">Session expired</string>
-    
-	<!-- cards list -->    
-	<string name="loadcards_load_dialog_title">Card</string>
+    <string name="session_expired">Session expired. You must log in again</string>
+
+    <!-- cards list -->
+    <string name="loadcards_load_dialog_title">Card</string>
     <string name="loadcards_load_dialog_text">Loading your data&#8230;</string>
     <string name="cards_list_card_title">Card: </string>
     <string name="cards_list_card_balance">Balance: </string>
     <string name="cards_list_card_balance_symbol">€</string>
     <string name="imagen_icon_text">Menu</string>
-    
+
     <!-- active card -->
     <string name="activate_card_error">Card can not be active. Please, check the card number and be sure the card was activated by phone.</string>
-        
-    
+
     <!-- dialog application exit -->
     <string name="exit_dialog_question_title">Close application</string>
     <string name="exit_dialog_question_message">Do you want close application?</string>
-    
+
     <!-- dialog application logout -->
     <string name="logout_dialog_question_title">Log out</string>
     <string name="logout_dialog_question_message">Do you want close session?</string>
-    
+
     <!-- card relative layout -->
     <string name="card_hour_date_separator">-</string>
-    
-    
     <string name="pull_to_refresh_pull_label">Pull to load more&#8230;</string>
     <string name="pull_to_refresh_release_label">Release to load more&#8230;</string>
     <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
@@ -49,17 +45,17 @@
     <string name="push_to_refresh_release_label">Release to refresh&#8230;</string>
     <string name="push_to_refresh_refreshing_label">Loading&#8230;</string>
     <string name="push_to_refresh_tap_label">Tap to refresh&#8230;</string>
-    
+
     <!-- movement separator view -->
     <string name="separator_text">Historical</string>
-    
+
     <!-- principal menu -->
     <string name="principal_menu_my_account">My Account</string>
     <string name="principal_menu_settings">Settings</string>
     <string name="principal_menu_logout">Log out</string>
     <string name="principal_menu_restaurant">Restaurants</string>
     <string name="principal_menu_about">About</string>
-    
+
     <!-- About layout -->
     <string name="about_version_title">About</string>
     <string name="about_version">Version</string>
@@ -68,82 +64,85 @@
 		It displays the current balance of the card, last 45 days movements and historical movements until 1 January of the previous year.\n
 		To view more entries in the list, you only must drag the current list upwards and automatically more movements will be loaded.\n
 		If you have the application open and make a payment, simply drag the list of movements down to load the recent payment.\n
-		In the context menu you can also manage your card number and access password.
+		In the context menu you can also manage your card number and access password, you can also search restaurants or change application preferences.
 		I hope this is useful and you can enjoy its use.\n\n</string>
     <string name="about_application_icon">Application icon</string>
     <string name="about_button_feedback_text"><u>Send opinion</u></string>
-    
+
     <!-- feedback -->
-     <string name="feed_back_no_intention_found">There are no email clients installed.</string>
-    
-     <!-- Update card laytout -->
-     <string name="update_card_title">Update card</string>
-     <string name="update_card_cardnumber_text">new card number</string>
-     <string name="update_card_btn_update">Update</string>
-     <string name="update_card_error_card_size">The card number must be 16 digits</string>
-     <string name="update_card_loading_message_title">Update card</string>
-     <string name="update_card_loading_message_message">Updating card information</string>
-     <string name="update_card_dialog_error_button">Close</string>
-     
-     <!-- my account tab -->
-     <string name="myaccount_tab_title">My Account</string>
-     <string name="myaccount_tab_update_car_tab_title">Update Card</string>
-     <string name="myaccount_tab_update_password_tab_title">Change Password</string>
-     
-     
-     <!-- update data errors -->
-      <string name="update_data_errors_user_not_exists">The user not exist or user given low</string>
-      <string name="update_data_errors_card_not_exist">The card not exist</string>
-      <string name="update_data_errors_card_associated">The card is associated with another user</string>
-      <string name="update_data_errors_card_different_profile">Card with different to the user profile</string>
-     
-      <!-- update password -->
-      <string name="update_password_error">The password could not be changed</string>
-      
-      <!-- update password layout -->
-      <string name="update_password_title">Change Password</string>
-      <string name="update_password_hint">new password</string>
-      <string name="update_password_confirm_hint">confirm new password</string>
-      <string name="update_password_btn_update">Change</string>
-      <string name="update_password_savedb_text">Save new password (if "Remember me" is checked)</string>
-      <string name="update_password_error_pass">You must enter a new password</string>
-      <string name="update_password_error_pass_confirm">You must enter a password confirmation</string>
-      <string name="update_password_error_equal_passs">The passwords don\'t match</string>
-      <string name="update_password_dialog_title">Change password</string>
-      <string name="update_password_dialog_update_http">Updating data</string>
-      <string name="update_password_dialog_update_db">Saving data</string>
-      <string name="update_password_dialog_error_button">Close</string>
-      <string name="update_password_changed">The password has been successfully updated.</string>
-      
-      
-      <!-- setting layout -->
-      <string name="settings_check_autologin">Autologin</string>
-     
-      <!-- restaurants layout -->
-      <string name="restaurants_search">Restaurants by direction/name</string>
-      <string name="restaurants_location">Restaurants in location</string>
-      <string name="restaurants_title">Restaurants</string>
-      <string name="restaurants_select_search_type">Select search type</string>
-      <string name="restaurants_search_direction">Street,CP,City,&#8230;</string>
-      <string name="restaurants_search_restaurant">Restaurant Name</string>
-      <string name="restaurants_search_text_button">Search</string>
-      <string name="restaurants_no_gps_title">GPS</string>
-      <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
-      <string name="restaurants_dialog_location_title">Location</string>
-      <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
-      <string name="restaurants_dialog_search_title">Restaurants</string>
-      <string name="restaurants_dialog_search_message">Searching restaurants&#8230;</string>
-      <string name="restaurants_dialog_search_more_message">Searching more restaurants&#8230;</string>
-      <string name="restaurants_dialog_direction_title">Restaurants</string>
-      <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
-      <string name="restaurants_search_error">Error searching restaurants, please try again&#8230;</string>
-      
-      <!-- restaurant data  -->
-      <string name="restaurant_data_text_type">Food</string>
-      <string name="restaurant_data_no_restaurants">No restaurants found</string>
-      <string name="restaurant_data_info">i</string>
-      
-      <!-- more restaurant layout -->
-      <string name="more_restaurant_text">Show more restaurants</string>
+    <string name="feed_back_no_intention_found">There are no email clients installed.</string>
+
+    <!-- Update card laytout -->
+    <string name="update_card_title">Update card</string>
+    <string name="update_card_cardnumber_text">new card number</string>
+    <string name="update_card_btn_update">Update</string>
+    <string name="update_card_error_card_size">The card number must be 16 digits</string>
+    <string name="update_card_loading_message_title">Update card</string>
+    <string name="update_card_loading_message_message">Updating card information</string>
+    <string name="update_card_dialog_error_button">Close</string>
+
+    <!-- my account tab -->
+    <string name="myaccount_tab_title">My Account</string>
+    <string name="myaccount_tab_update_car_tab_title">Update Card</string>
+    <string name="myaccount_tab_update_password_tab_title">Change Password</string>
+
+    <!-- update data errors -->
+    <string name="update_data_errors_user_not_exists">The user not exist or user given low</string>
+    <string name="update_data_errors_card_not_exist">The card not exist</string>
+    <string name="update_data_errors_card_associated">The card is associated with another user</string>
+    <string name="update_data_errors_card_different_profile">Card with different to the user profile</string>
+
+    <!-- update password -->
+    <string name="update_password_error">The password could not be changed</string>
+
+    <!-- update password layout -->
+    <string name="update_password_title">Change Password</string>
+    <string name="update_password_hint">new password</string>
+    <string name="update_password_confirm_hint">confirm new password</string>
+    <string name="update_password_btn_update">Change</string>
+    <string name="update_password_savedb_text">Save new password (if \"Remember me\" is checked)</string>
+    <string name="update_password_error_pass">You must enter a new password</string>
+    <string name="update_password_error_pass_confirm">You must enter a password confirmation</string>
+    <string name="update_password_error_equal_passs">The passwords don\'t match</string>
+    <string name="update_password_dialog_title">Change password</string>
+    <string name="update_password_dialog_update_http">Updating data</string>
+    <string name="update_password_dialog_update_db">Saving data</string>
+    <string name="update_password_dialog_error_button">Close</string>
+    <string name="update_password_changed">The password has been successfully updated.</string>
+
+    <!-- setting layout -->
+    <string name="settings_check_autologin">Autologin</string>
+
+    <!-- restaurants layout -->
+    <string name="restaurants_search">Restaurants by direction/name</string>
+    <string name="restaurants_location">Restaurants in location</string>
+    <string name="restaurants_title">Restaurants</string>
+    <string name="restaurants_select_search_type">Select search type</string>
+    <string name="restaurants_search_direction">Street,CP,City,&#8230;</string>
+    <string name="restaurants_search_restaurant">Restaurant Name</string>
+    <string name="restaurants_search_text_button">Search</string>
+    <string name="restaurants_no_gps_title">GPS</string>
+    <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
+    <string name="restaurants_dialog_location_title">Location</string>
+    <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
+    <string name="restaurants_dialog_search_title">Restaurants</string>
+    <string name="restaurants_dialog_search_message">Looking for restaurants in \"%s\"&#8230;</string>
+    <string name="restaurants_dialog_search_more_message">Looking for more restaurants in \"%s\"&#8230;</string>
+    <string name="restaurants_dialog_search_message_location">Looking for restaurants in your area&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_location">Looking for more restaurants in your area&#8230;</string>
+    <string name="restaurants_dialog_direction_title">Restaurants</string>
+    <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
+    <string name="restaurants_search_error">Some problem has happened looking for restaurants, please try again&#8230;</string>
+
+    <!-- restaurant data -->
+    <string name="restaurant_data_text_type">Food</string>
+    <string name="restaurant_data_no_restaurants">No restaurants found</string>
+    <string name="restaurant_data_info">i</string>
+
+    <!-- more restaurant layout -->
+    <string name="more_restaurant_text">Show more restaurants</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_trcard_manager_restaurants_list">TRCardManagerRestaurantsListActivity</string>
 
 </resources>
