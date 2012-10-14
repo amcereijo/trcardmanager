@@ -1,59 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.trcardmanager"
-    android:versionCode="6"
-    android:versionName="1.1.0" >
+    android:versionCode="8"
+    android:versionName="1.1.2" >
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="7" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".application.TRCardManagerApplication"
         android:icon="@drawable/application_icon"
-        android:label="@string/app_name"
-        android:name=".application.TRCardManagerApplication">
-        
+        android:label="@string/app_name" >
         <activity
-            android:label="@string/app_name"
-            android:name=".login.TRCardManagerLoginActivity" 
+            android:name=".login.TRCardManagerLoginActivity"
             android:configChanges="keyboardHidden|orientation"
-            >
-            <intent-filter >
+            android:label="@string/app_name" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".TRCardManagerActivity" 
-            android:configChanges="keyboardHidden|orientation"
-            >
-        </activity>
-         <activity
-            android:name=".about.TRCardManagerAboutActivity" 
-            android:configChanges="keyboardHidden|orientation" 
-            >
+            android:name=".TRCardManagerActivity"
+            android:configChanges="keyboardHidden|orientation" >
         </activity>
         <activity
-            android:name=".myaccount.TRCardManagerMyAccountActivity" 
-            android:configChanges="keyboardHidden|orientation"
-            />
+            android:name=".about.TRCardManagerAboutActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
         <activity
-            android:name=".updatecard.TRCardManagerUpdateCardActivity" 
+            android:name=".myaccount.TRCardManagerMyAccountActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity
-            android:name=".updatepassword.TRCardManagerUpdatePasswordActivity" 
+            android:name=".updatecard.TRCardManagerUpdateCardActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity
-            android:name=".settings.TRCardManagerSettingsActivity" 
+            android:name=".updatepassword.TRCardManagerUpdatePasswordActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity
-            android:name=".restaurant.TRCardManagerRestaurantsActivity" 
+            android:name=".settings.TRCardManagerSettingsActivity"
             android:configChanges="keyboardHidden|orientation" />
-        <activity android:name="com.google.ads.AdActivity"
-			android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity
+            android:name=".restaurant.TRCardManagerRestaurantsActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="com.google.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity 
+            android:name=".restaurant.TRCardManagerRestaurantsListActivity"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
         
-        <uses-library android:name="com.google.android.maps"/>
+        <uses-library android:name="com.google.android.maps" />
     </application>
 
 </manifest>
