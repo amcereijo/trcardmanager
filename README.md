@@ -1,0 +1,1 @@
+Small Android app to manage Ticket Restaurant Cards
