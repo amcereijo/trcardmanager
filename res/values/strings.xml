@@ -141,8 +141,5 @@
 
     <!-- more restaurant layout -->
     <string name="more_restaurant_text">Show more restaurants</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_trcard_manager_restaurants_list">TRCardManagerRestaurantsListActivity</string>
 
 </resources>

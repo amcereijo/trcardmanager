@@ -59,13 +59,6 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
         searchType = SearchType.valueOf(bundle.getString("searchType"));
 	}
 
-	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_trcard_manager_restaurants_list, menu);
-        return true;
-    }
-    
     
     /**
 	 * 
