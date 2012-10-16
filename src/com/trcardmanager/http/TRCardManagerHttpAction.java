@@ -131,6 +131,8 @@ public class TRCardManagerHttpAction {
 			
 			if(actualList!=null && actualList.size()>0 && newMovements!=null && newMovements.size()>0){
 				onlyNewMovements(newMovements, actualList);
+				//Add new movements to saved movements
+				user.getActualCard().getMovementsData().getMovements().addAll(0, newMovements);
 			}
 			
 			if(newMovements.size()>0){
@@ -710,7 +712,7 @@ public class TRCardManagerHttpAction {
     }
     
     private String getWhitOutHtmlWhiteSpaceTag(String value){
-    	return value.replaceAll("&nbsp;", " ");
+    	return value.replaceAll("&nbsp;", " ").replace("--", "+");
     }
 
 }

@@ -12,10 +12,10 @@
     <string name="login_error_message">Email y/o contraseña incorrecto</string>
     <string name="login_error_connection_message">Problemas de red. Prueba otra vez.</string>
     <string name="login_error_connection_error">Problemas de conexión. Prueba otra vez.</string>
-    <string name="login_rememberme">Recuerdame</string>
+    <string name="login_rememberme">Recuérdame</string>
     <string name="loggin_load_dialog_title">Autenticar</string>
     <string name="loggin_load_dialog_text">Autenticando en el sistema&#8230;</string>
-    <string name="session_expired">Tu sessión ha caducado. Debes volver a entrar.</string>
+    <string name="session_expired">Tu sesión ha caducado. Debes volver a entrar.</string>
 
     <!-- cards list -->
     <string name="loadcards_load_dialog_title">Tarjeta</string>
@@ -26,7 +26,7 @@
     <string name="imagen_icon_text">Menú</string>
 
     <!-- active card -->
-    <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegúrate de haberla activado telefonicamente.</string>
+    <string name="activate_card_error">La tarjeta no se puede establecer como activa. Por favor, revisa el número de la tarjeta y asegúrate de haberla activado telefónicamente.</string>
 
 
     <!-- dialog application exit -->
@@ -41,10 +41,10 @@
     <string name="card_hour_date_separator">-</string>
 
     <!-- movements foot -->
-    <string name="pull_to_refresh_pull_label">Arrastra para buscar mas&#8230;</string>
-    <string name="pull_to_refresh_release_label">Suelta para buscar mas&#8230;</string>
+    <string name="pull_to_refresh_pull_label">Arrastra para buscar más&#8230;</string>
+    <string name="pull_to_refresh_release_label">Suelta para buscar más&#8230;</string>
     <string name="pull_to_refresh_refreshing_label">Cargando&#8230;</string>
-    <string name="pull_to_refresh_tap_label">Toca para buscar mas&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Toca para buscar más&#8230;</string>
     <string name="push_to_refresh_push_label">Arrastra para actualizar&#8230;</string>
     <string name="push_to_refresh_release_label">Suelta para actualizar&#8230;</string>
     <string name="push_to_refresh_refreshing_label">Cargando&#8230;</string>
@@ -92,8 +92,8 @@
      
      <!-- update data errors -->
       <string name="update_data_errors_user_not_exists">El usuario no existe o está dado de baja </string>
-      <string name="update_data_errors_card_not_exist">La rarjeta no existe</string>
-      <string name="update_data_errors_card_associated">La Tarjeta está asociada a otro usuario</string>
+      <string name="update_data_errors_card_not_exist">La tarjeta no existe</string>
+      <string name="update_data_errors_card_associated">La tarjeta está asociada a otro usuario</string>
       <string name="update_data_errors_card_different_profile">La tarjeta tiene un perfil diferente al del usuario</string>
       
       <!-- update password -->
@@ -104,7 +104,7 @@
       <string name="update_password_hint">nueva contraseña</string>
       <string name="update_password_confirm_hint">confirma nueva contraseña</string>
       <string name="update_password_btn_update">Actualizar</string>
-      <string name="update_password_savedb_text">Guardar nueva contraseña (si ha marcado \"Recuerdame\")</string>
+      <string name="update_password_savedb_text">Guardar nueva contraseña (sí ha marcado \"Recuérdame\")</string>
       <string name="update_password_error_pass">Debes introducir una nueva contraseña</string>
       <string name="update_password_error_pass_confirm">Debes introducir la confirmación de la contraseña</string>
       <string name="update_password_error_equal_passs">Las contraseñas no coinciden</string>
@@ -131,9 +131,9 @@
       <string name="restaurants_dialog_location_message">Esperando localización&#8230;</string>
       <string name="restaurants_dialog_search_title">Restaurantes</string>
       <string name="restaurants_dialog_search_message">Buscando restaurantes en \"%s\"&#8230;</string>
-      <string name="restaurants_dialog_search_more_message">Buscando mas restaurantes en \"%s\"&#8230;</string>
+      <string name="restaurants_dialog_search_more_message">Buscando más restaurantes en \"%s\"&#8230;</string>
       <string name="restaurants_dialog_search_message_location">Buscando restaurantes en tu zona&#8230;</string>
-      <string name="restaurants_dialog_search_more_message_location">Buscando mas restaurantes en tu zona&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_location">Buscando más restaurantes en tu zona&#8230;</string>
       <string name="restaurants_dialog_direction_title">Restaurantes</string>
       <string name="restaurants_dialog_direction_message">Localizando dirección&#8230;</string>
       <string name="restaurants_search_error">Ha habído algún problema buscando restaurantes, por favor prueba de nuevo&#8230;</string>
@@ -144,6 +144,6 @@
       <string name="restaurant_data_info">i</string>
       
       <!-- more restaurant layout -->
-      <string name="more_restaurant_text">Ver mas restaurantes</string>
+      <string name="more_restaurant_text">Ver más restaurantes</string>
       
 </resources>

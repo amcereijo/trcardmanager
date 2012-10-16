@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,12 +52,18 @@ public class TRCardManagerActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main);
-        AdView adView = (AdView)this.findViewById(R.id.adView);
-        adView.loadAd(new AdRequest());
-        initActivity();
+        try{
+	        requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        setContentView(R.layout.main);
+	        AdView adView = (AdView)this.findViewById(R.id.adView);
+	        adView.loadAd(new AdRequest());
+	        initActivity();
+        }catch(Exception e){
+        	Log.e(TAG, e.getMessage(),e);
+        	this.finish();
+        }
     }
+   
     
     
     @Override
@@ -159,6 +166,7 @@ public class TRCardManagerActivity extends Activity {
 	
     @Override
     public void onBackPressed() {
+    	Log.i(TAG, "On Back pressed.......");
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(R.string.exit_dialog_question_title);
 		alert.setMessage(R.string.exit_dialog_question_message);

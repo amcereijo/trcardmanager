@@ -81,6 +81,7 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
 	}
 	
+	
 	/**
 	 * 
 	 * @param v
