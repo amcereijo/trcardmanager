@@ -1,5 +1,6 @@
 package com.trcardmanager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
+import com.trcardmanager.exception.TRCardManagerSessionException;
+import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
 import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
 import com.trcardmanager.settings.TRCardManagerSettingsActivity;
@@ -231,7 +234,7 @@ public class TRCardManagerActivity extends Activity {
     
 
     
-    private void addCardsToView(UserDao user){
+    private void addCardsToView(final UserDao user){
     	RelativeLayout cardsLayout = (RelativeLayout)findViewById(R.id.layout_card_information);
     	
     	CardDao actualCard = user.getActualCard();
@@ -242,7 +245,28 @@ public class TRCardManagerActivity extends Activity {
     	
     	
 	    addMovementsToView(actualCard.getMovementsData().getMovements());
-		
+	    
+	    //load on background
+		loadMoreMovementsBackGround(user);
+    }
+    
+    
+    private void loadMoreMovementsBackGround(final UserDao user){
+    	final TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+    	new Thread(new Runnable() {
+			public void run() {
+				try {
+					user.getActualCard().getMovementsData().setNextMovements(
+						httpAction.getNextMovements(user));
+				} catch (IOException e) {
+					Log.e(this.getClass().toString(), e.getMessage(),e);
+				}catch(TRCardManagerSessionException se){
+					Log.e(this.getClass().toString(), se.getMessage(),se);
+		    	}catch (Exception e){
+					Log.e(this.getClass().toString(), e.getMessage(),e);
+				}
+			}
+		}).start();
     }
  
     

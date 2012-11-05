@@ -87,22 +87,42 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
     
     
 	private List<MovementDao> findMoreMovements() {
-		List<MovementDao> myListItems = new ArrayList<MovementDao>();
-		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-		try {
-			myListItems = httpAction.getNextMovements(user);
-		} catch (IOException e) {
-			Log.e(this.getClass().toString(), e.getMessage(),e);
-			myListItems = new ArrayList<MovementDao>();
-		}catch(TRCardManagerSessionException se){
-			cancelAndCloseActualActivity();
-    	}catch (Exception e){
-			Log.e(this.getClass().toString(), e.getMessage(),e);
-			myListItems = new ArrayList<MovementDao>();
+		List<MovementDao> myListItems = new ArrayList<MovementDao>();	
+		if(user.getActualCard().getMovementsData().getNextMovements() != null){
+			myListItems = user.getActualCard().getMovementsData().getNextMovements();
+			user.getActualCard().getMovementsData().setNextMovements(null);
+			new Thread(new Runnable() {
+				public void run() {
+					user.getActualCard().getMovementsData()
+						.setNextMovements(callHttpFindMovements());
+				}
+			}).start();
+			//to let you see the loading message
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				Log.e(TAG, "Fake wait to work fine!!: "+e.getMessage());
+			}
 		}
 		return myListItems;
 	}
 
+	
+	private List<MovementDao> callHttpFindMovements(){
+		List<MovementDao> myListItems = new ArrayList<MovementDao>();
+		final TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+		try {
+			myListItems = httpAction.getNextMovements(user);
+		} catch (IOException e) {
+			Log.e(this.getClass().toString(), e.getMessage(),e);
+		}catch(TRCardManagerSessionException se){
+			cancelAndCloseActualActivity();
+    	}catch (Exception e){
+			Log.e(this.getClass().toString(), e.getMessage(),e);
+		}
+    	return myListItems;
+	}
+	
     
     private void cancelAndCloseActualActivity(){
 		Activity act = TRCardManagerApplication.getActualActivity();

@@ -77,7 +77,8 @@ public class TRCardManagerHttpAction {
     private static final String SEARCH_RESTAURANTS_PRODUCT = "ticket-restaurant";
     private static final String SEARCH_RESTAURANTS_FORMAT = "tarjeta";
     
-       
+      
+    
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
     		ClientProtocolException, IOException{
 		Map<String, String> postMap = new HashMap<String, String>();

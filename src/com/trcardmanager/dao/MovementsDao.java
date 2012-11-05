@@ -20,6 +20,8 @@ public class MovementsDao {
 	private int historicalNumberOfPages = -1;
 	private int historicalActualPage;
 	
+	private List<MovementDao> nextMovements;
+	
 	public void setPaginationLinks(List<String> paginationLinks) {
 		this.paginationLinks = paginationLinks;
 	}
@@ -74,6 +76,13 @@ public class MovementsDao {
 	}
 	public int getHistoricalNumberOfPages() {
 		return historicalNumberOfPages;
+	}
+	
+	public void setNextMovements(List<MovementDao> nextMovements) {
+		this.nextMovements = nextMovements;
+	}
+	public List<MovementDao> getNextMovements() {
+		return nextMovements;
 	}
 	
 }

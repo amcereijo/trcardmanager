@@ -35,7 +35,6 @@ public class TRCardManagerLoginActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
 		setContentView(R.layout.login);    
-		 
 		TRCardManagerApplication.setActualActivity(this);
 		findRemeberedUser();
 		prepareLoginView();
