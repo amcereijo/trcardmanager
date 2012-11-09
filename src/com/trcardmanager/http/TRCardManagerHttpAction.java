@@ -522,6 +522,7 @@ public class TRCardManagerHttpAction {
      * @throws IOException 
      */
     public List<RestaurantDao> getRestaurants(RestaurantSearchDao restaurantSeachDao) throws IOException{
+    	boolean doOneMoreTime;
     	List<RestaurantDao> restaurants = new ArrayList<RestaurantDao>();
     	/*
     	 * http://www.edenred.es/buscador-afiliados/imprimir_resultados?address=avenida+de+manoteras%2C+Madrid&center_lat=40.487302150000005&center_lng=-3.665504950000013&especifico_producto=true&formato=tarjeta&limit_lat=40.490162&limit_lng=-3.65761510000002&producto=ticket-restaurant
@@ -540,6 +541,8 @@ public class TRCardManagerHttpAction {
 			locale:es
     	 * 
     	 */
+    	do{
+    		doOneMoreTime = false;
 	    	Map<String, String> postMap = createParameterPostMapper(restaurantSeachDao.getAddressSearch(), 
 	    			restaurantSeachDao.getAffiliate(), restaurantSeachDao.getDirectionDao().getLocation(),
 	    			restaurantSeachDao.getCurrentPage());
@@ -575,10 +578,11 @@ public class TRCardManagerHttpAction {
 				if(restaurantSeachDao.getCurrentPage()==1 && paginationElements.size()>0){
 					Element elementPagination = d.getElementsByClass("pagination").get(0);
 					restaurantSeachDao.setNumberOfPages(elementPagination.getElementsByTag("a").size());
+					doOneMoreTime = true;
 				}
 			}
 			restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
-    	
+    	}while(doOneMoreTime);
     	return restaurants;
     }
 
