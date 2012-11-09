@@ -2,54 +2,102 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="0sp">
-    
-    <TextView android:id="@+id/restaurant_data_name"
-        android:layout_width="wrap_content"
+    android:padding="0sp" >
+
+    <RelativeLayout
+        android:id="@+id/restaurant_data_info_layout"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="2sp"
-        android:paddingLeft="2sp"
-        android:paddingRight="2sp"
-        android:paddingTop="2sp"
-        android:text=""
-        android:textColor="#2A4678"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:textStyle="bold"/>
-    
-    <TextView android:id="@+id/restaurant_data_direction"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/restaurant_data_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="2sp"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+            android:paddingTop="2sp"
+            android:text=""
+            android:textColor="#2A4678"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/restaurant_data_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_data_name"
+            android:paddingBottom="2sp"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+            android:paddingTop="2sp"
+            android:text=""
+            android:textColor="#2A4678" />
+
+        <TextView
+            android:id="@+id/restaurant_data_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurant_data_direction"
+            android:paddingBottom="2sp"
+            android:paddingLeft="2sp"
+            android:paddingRight="2sp"
+            android:paddingTop="2sp"
+            android:text=""
+            android:textColor="#2A4678" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/restaurant_data_maps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="2sp"
-        android:paddingLeft="2sp"
-        android:paddingRight="2sp"
-        android:paddingTop="2sp"
-        android:text=""
-        android:textColor="#2A4678"
-        android:layout_below="@id/restaurant_data_name"/>
-    
-    <TextView android:id="@+id/restaurant_data_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="2sp"
-        android:paddingLeft="2sp"
-        android:paddingRight="2sp"
-        android:paddingTop="2sp"
-        android:text=""
-        android:textColor="#2A4678"
-        android:layout_below="@id/restaurant_data_direction"/>
-    
-    <TextView android:background="@drawable/android_maps"
-	    android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/restaurant_data_direction"
         android:layout_alignParentRight="true"
-        android:gravity="center_vertical|center_horizontal"
+        android:layout_alignParentTop="true"
+        android:paddingTop="4sp"
+        android:layout_marginTop="4sp"
+        android:background="@drawable/android_maps"
+        android:clickable="true"
+        
+        android:onClick="openMap"
         android:textColor="#2A4678"
         android:textStyle="bold"
-        android:typeface="sans"
-        android:clickable="true"
-        android:onClick="openMap"/>	
-    
+        android:typeface="sans" />
+
+    <RelativeLayout
+        android:id="@+id/restaurant_data_waze_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/restaurant_data_info_layout"
+        android:paddingBottom="2sp"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/restaurant_data_waze_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:clickable="true"
+            android:contentDescription="@string/restaurant_data_waze_text"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="openWaze"
+            android:src="@drawable/waze" />
+
+        <TextView
+            android:id="@+id/restaurant_data_waze_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@id/restaurant_data_waze_image"
+            android:paddingRight="2sp"
+            android:text="@string/restaurant_data_waze_text"
+            android:textColor="#2A4678"/>
+        
+        
+    </RelativeLayout>
 
 </RelativeLayout>

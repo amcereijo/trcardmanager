@@ -1,16 +1,20 @@
 package com.trcardmanager.adapter;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 
 import com.trcardmanager.R;
 import com.trcardmanager.dao.RestaurantDao;
+import com.trcardmanager.dao.RestaurantSearchDao;
 
 /**
  * Adapter class to build a list of restaurants
@@ -26,10 +31,22 @@ import com.trcardmanager.dao.RestaurantDao;
  */
 public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	
+	private static final String WAZE_APP_URL = "waze://?q=Hawaii";
 	private static final int MAPS_ICON_POSITION = 3;
 	private LayoutInflater inflater;
 	private Context context;
 	private ListView.LayoutParams linearLayoutParams;
+	private int numberOfPages;
+	private int actualPage;
+	private boolean wazeInstalled;
+	
+	public RestaurantListViewAdapter(Context context, int textViewResourceId,
+			RestaurantSearchDao resturantSearchDao) {
+		this(context, textViewResourceId,resturantSearchDao.getRestaurantList());
+		this.numberOfPages = resturantSearchDao.getNumberOfPages();
+		this.actualPage = resturantSearchDao.getCurrentPage();
+		
+	}
 	
 	public RestaurantListViewAdapter(Context context, int textViewResourceId,
 			List<RestaurantDao> objects) {
@@ -37,6 +54,7 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 		inflater = LayoutInflater.from(context);
 		this.context = context;
 		this.linearLayoutParams = getDefaultLinearLayoutParams();
+		setWazeInstalled();
 	}
 	
 	@Override
@@ -48,7 +66,9 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
     		if(position==0){
     			convertView = createNoRestaurantLayout();
     		}else{
-    			convertView = showViewMoreRestaurants();
+    			if(actualPage<numberOfPages){
+    				convertView = showViewMoreRestaurants();
+    			}
     		}
     	}
 		return convertView;
@@ -89,11 +109,20 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	private RelativeLayout createAndFillDataMovementLayout(RestaurantDao restaurant, int position){
 		RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
 				R.layout.restaurant_data, null,false);
-		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
-		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
+		
+		RelativeLayout relativeMovementInfoLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_info_layout);  
+		
+		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
+		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
 		String foodType = getFoodType(restaurant);
-		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
-		relativeMovementLayout.getChildAt(MAPS_ICON_POSITION).setId(position);
+		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
+		
+		relativeMovementLayout.setId(position);
+		if(wazeInstalled){
+			RelativeLayout wazeLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_waze_layout);
+			wazeLayout.setVisibility(View.VISIBLE);
+		}
+		
 		return relativeMovementLayout;
 	}
 
@@ -115,5 +144,13 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	private ListView.LayoutParams getDefaultLinearLayoutParams(){
 		return new ListView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 
     			LinearLayout.LayoutParams.WRAP_CONTENT);
+	}
+	
+	
+	private void setWazeInstalled(){
+		 Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( WAZE_APP_URL ) );
+		 List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,     
+		            PackageManager.MATCH_DEFAULT_ONLY);
+		 wazeInstalled = (list.size()>0);  
 	}
 }

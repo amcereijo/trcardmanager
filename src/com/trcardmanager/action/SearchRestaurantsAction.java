@@ -210,7 +210,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	private void createAdapterAndSetAndListView() {
 		if(adapter == null){
 			adapter = new RestaurantListViewAdapter(activity,
-				R.id.restaurants_list_view, restaurantSearchDao.getRestaurantList());
+				R.id.restaurants_list_view, restaurantSearchDao);
 			restaurantsListView.setAdapter(adapter);
 			restaurantsListView.refreshDrawableState();
 		}else{

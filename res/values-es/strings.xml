@@ -142,6 +142,8 @@
       <string name="restaurant_data_text_type">Comida</string>
       <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>
       <string name="restaurant_data_info">i</string>
+      <string name="restaurant_data_waze_text">¿Quieres que te lleve con <b>Waze</b>?</string>
+
       
       <!-- more restaurant layout -->
       <string name="more_restaurant_text">Ver más restaurantes</string>

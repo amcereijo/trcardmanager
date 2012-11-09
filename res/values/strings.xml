@@ -133,11 +133,13 @@
     <string name="restaurants_dialog_direction_title">Restaurants</string>
     <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
     <string name="restaurants_search_error">Some problem has happened looking for restaurants, please try again&#8230;</string>
+    
 
     <!-- restaurant data -->
     <string name="restaurant_data_text_type">Food</string>
     <string name="restaurant_data_no_restaurants">No restaurants found</string>
     <string name="restaurant_data_info">i</string>
+    <string name="restaurant_data_waze_text">Do you want go with <b>Waze</b>?</string>
 
     <!-- more restaurant layout -->
     <string name="more_restaurant_text">Show more restaurants</string>

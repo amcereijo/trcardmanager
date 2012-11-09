@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
     android:background="#041F50"
-    android:gravity="center_vertical"
+    android:gravity="top"
     android:orientation="vertical" >
 
     <RelativeLayout
