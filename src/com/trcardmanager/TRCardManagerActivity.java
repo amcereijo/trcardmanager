@@ -152,13 +152,13 @@ public class TRCardManagerActivity extends Activity {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(R.string.logout_dialog_question_title);
 		alert.setMessage(R.string.logout_dialog_question_message);
-		alert.setPositiveButton(android.R.string.yes,
+		alert.setPositiveButton(R.string.logout_dialog_question_yes,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						doLogoutActions();
 					}
 				});
-		alert.setNegativeButton(android.R.string.no, null);
+		alert.setNegativeButton(R.string.logout_dialog_question_no, null);
 		alert.show();
 	}
 	
@@ -173,13 +173,13 @@ public class TRCardManagerActivity extends Activity {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(R.string.exit_dialog_question_title);
 		alert.setMessage(R.string.exit_dialog_question_message);
-		alert.setPositiveButton(android.R.string.yes,
+		alert.setPositiveButton(R.string.exit_dialog_question_yes,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						closeApplication();
 					}
 				});
-		alert.setNegativeButton(android.R.string.no, null);
+		alert.setNegativeButton(R.string.exit_dialog_question_no, null);
 		alert.show();
     }
     

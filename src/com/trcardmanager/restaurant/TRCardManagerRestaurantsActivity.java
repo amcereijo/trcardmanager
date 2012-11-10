@@ -118,14 +118,14 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 			final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 			alert.setTitle(R.string.restaurants_no_gps_title);
 			alert.setMessage(R.string.restaurants_no_gps_message);
-			alert.setPositiveButton(android.R.string.yes,
+			alert.setPositiveButton(R.string.restaurants_no_gps_yes,
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int whichButton) {
 							startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS),
 									TRCardManagerApplication.GPS_ACTIVATED);
 						}
 					});
-			alert.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+			alert.setNegativeButton(R.string.restaurants_no_gps_no, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					findRestaurants();
 				}

@@ -30,10 +30,14 @@
     <!-- dialog application exit -->
     <string name="exit_dialog_question_title">Close application</string>
     <string name="exit_dialog_question_message">Do you want close application?</string>
+    <string name="exit_dialog_question_yes">Yes</string>
+    <string name="exit_dialog_question_no">No</string>
 
     <!-- dialog application logout -->
     <string name="logout_dialog_question_title">Log out</string>
     <string name="logout_dialog_question_message">Do you want close session?</string>
+    <string name="logout_dialog_question_yes">Yes</string>
+    <string name="logout_dialog_question_no">No</string>
 
     <!-- card relative layout -->
     <string name="card_hour_date_separator">-</string>
@@ -123,6 +127,8 @@
     <string name="restaurants_search_text_button">Search</string>
     <string name="restaurants_no_gps_title">GPS</string>
     <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
+	<string name="restaurants_no_gps_yes">Yes</string>
+	<string name="restaurants_no_gps_no">No</string>
     <string name="restaurants_dialog_location_title">Location</string>
     <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
     <string name="restaurants_dialog_search_title">Restaurants</string>
