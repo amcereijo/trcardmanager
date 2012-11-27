@@ -144,6 +144,8 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	private void findRestaurants(){
 		Intent restaturants = new Intent(this,TRCardManagerRestaurantsListActivity.class);
 		
+		restaturants = new Intent(this,TRCardManagerRestaurantMapsActivity.class);
+		
 		restaturants.putExtra("directiontoSearch", directiontoSearch);
 		restaturants.putExtra("searchType", searchType.name());
 		

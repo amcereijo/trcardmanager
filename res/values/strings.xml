@@ -127,19 +127,18 @@
     <string name="restaurants_search_text_button">Search</string>
     <string name="restaurants_no_gps_title">GPS</string>
     <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
-	<string name="restaurants_no_gps_yes">Yes</string>
-	<string name="restaurants_no_gps_no">No</string>
+    <string name="restaurants_no_gps_yes">Yes</string>
+    <string name="restaurants_no_gps_no">No</string>
     <string name="restaurants_dialog_location_title">Location</string>
     <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
     <string name="restaurants_dialog_search_title">Restaurants</string>
     <string name="restaurants_dialog_search_message">Looking for restaurants in \"%s\"&#8230;</string>
     <string name="restaurants_dialog_search_more_message">Looking for more restaurants in \"%s\"&#8230;</string>
     <string name="restaurants_dialog_search_message_location">Looking for restaurants in your area&#8230;</string>
-      <string name="restaurants_dialog_search_more_message_location">Looking for more restaurants in your area&#8230;</string>
+    <string name="restaurants_dialog_search_more_message_location">Looking for more restaurants in your area&#8230;</string>
     <string name="restaurants_dialog_direction_title">Restaurants</string>
     <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
     <string name="restaurants_search_error">Some problem has happened looking for restaurants, please try again&#8230;</string>
-    
 
     <!-- restaurant data -->
     <string name="restaurant_data_text_type">Food</string>
@@ -149,5 +148,8 @@
 
     <!-- more restaurant layout -->
     <string name="more_restaurant_text">Show more restaurants</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_trcard_manager_restaurant_maps">TRCardManagerRestaurantMaps</string>
 
 </resources>

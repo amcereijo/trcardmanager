@@ -118,10 +118,10 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
 		
 		relativeMovementLayout.setId(position);
-		if(wazeInstalled){
-			RelativeLayout wazeLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_waze_layout);
-			wazeLayout.setVisibility(View.VISIBLE);
-		}
+//		if(wazeInstalled){
+//			RelativeLayout wazeLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_waze_layout);
+//			wazeLayout.setVisibility(View.VISIBLE);
+//		}
 		
 		return relativeMovementLayout;
 	}

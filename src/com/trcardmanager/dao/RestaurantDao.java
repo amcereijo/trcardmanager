@@ -12,6 +12,7 @@ public class RestaurantDao extends DirectionDao {
 	private String phoneNumber = "";
 	private String foodType = "";
 	private String retaurantName = "";
+	private String restaurantLink = "";
 	
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -30,6 +31,13 @@ public class RestaurantDao extends DirectionDao {
 	}
 	public void setRetaurantName(String retaurantName) {
 		this.retaurantName = retaurantName;
+	}
+	
+	public void setRestaurantLink(String restaurantLink) {
+		this.restaurantLink = restaurantLink;
+	}
+	public String getRestaurantLink() {
+		return restaurantLink;
 	}
 	
 	public String getRestaurantDisplayDirection(){
