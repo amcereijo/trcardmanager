@@ -17,10 +17,9 @@ public class TouchElementsListener<T extends View> implements OnTouchListener {
 	private final static String DOWN_COLOR = "#E0E0F8";
 	private T touchElement;
 	private Drawable originalState;
-	private String downColor = DOWN_COLOR;
+	private int color = Color.parseColor(DOWN_COLOR);
 	
 	public TouchElementsListener(){
-		
 	}
 	
 	/**
@@ -28,7 +27,17 @@ public class TouchElementsListener<T extends View> implements OnTouchListener {
 	 * @param downColor Supported formats are: #RRGGBB #AARRGGBB 'red', 'blue', 'green', 'black', 'white', 'gray', 'cyan', 'magenta', 'yellow', 'lightgray', 'darkgray'
 	 */
 	public TouchElementsListener(String downColor){
-		this.downColor = downColor;
+		this.color = Color.parseColor(downColor);
+	}
+	
+	
+	/**
+	 * 
+	 * @param downColor
+	 */
+	public TouchElementsListener(int downColor){
+		this.color = downColor;
+		
 	}
 	
 	
@@ -36,7 +45,7 @@ public class TouchElementsListener<T extends View> implements OnTouchListener {
 		touchElement = (T)v;
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			originalState = touchElement.getBackground();
-			touchElement.setBackgroundColor(Color.parseColor(downColor));
+			touchElement.setBackgroundColor(color);
 		}else if(event.getAction() == MotionEvent.ACTION_UP){
 			touchElement.setBackgroundDrawable(originalState);
 		}
