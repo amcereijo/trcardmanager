@@ -12,15 +12,16 @@ import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.trcardmanager.R;
+import com.trcardmanager.action.RestaurantInfoAction;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
 
@@ -106,40 +107,21 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	}
 	
 	
-	private RelativeLayout createAndFillDataMovementLayout(RestaurantDao restaurant, int position){
+	private RelativeLayout createAndFillDataMovementLayout(final RestaurantDao restaurant, final int position){
 		RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
-				R.layout.restaurant_data, null,false);
+				R.layout.restaurant_data_list_view, null,false);
 		
-		RelativeLayout relativeMovementInfoLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_info_layout);  
+		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
+		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
 		
-		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
-		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
-		String foodType = getFoodType(restaurant);
-		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
-		
-		relativeMovementLayout.setId(position);
-//		if(wazeInstalled){
-//			RelativeLayout wazeLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_waze_layout);
-//			wazeLayout.setVisibility(View.VISIBLE);
-//		}
-		
+		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_more_info))
+				.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				new RestaurantInfoAction(restaurant,position).execute();
+			}
+		});
 		return relativeMovementLayout;
 	}
-
-	private String getFoodType(RestaurantDao restaurant) {
-		String foodTypeTitle = getContext().getResources().getText(R.string.restaurant_data_text_type).toString();
-		String foodType = restaurant.getFoodType();
-		if(foodTypeWithoutTitleWithValue(foodTypeTitle, foodType) ){
-				foodType = foodTypeTitle+" "+foodType;
-		}
-		return foodType;
-	}
-
-	private boolean foodTypeWithoutTitleWithValue(String foodTypeTitle, String foodType) {
-		return foodType != null && !"".equals(foodType) && 
-				(!foodType.toLowerCase().contains(foodTypeTitle.toLowerCase()));
-	}
-	
 	
 	private ListView.LayoutParams getDefaultLinearLayoutParams(){
 		return new ListView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask.Status;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
@@ -40,17 +39,13 @@ public class RestaurantItemOverlay extends ItemizedOverlay {
     }
  
     
-    private RestaurantInfoAction rInfoAction = null;
     @Override
     protected boolean onTap(int i) {
         //when you tap on the marker this will show the informations provided by you when you create in the 
         //main class the OverlayItem
     	RestaurantOverlayItemDao item = mOverlays.get(i);
         RestaurantDao restaurant = item.getRestaurantDao();
-        if(rInfoAction == null || rInfoAction.getStatus() == Status.FINISHED){
-        	rInfoAction = new RestaurantInfoAction(restaurant,i);
-        	rInfoAction.execute();
-        }
+        new RestaurantInfoAction(restaurant,i).execute();
         
         return true;
     }

@@ -1,5 +1,6 @@
 package com.trcardmanager.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -10,12 +11,20 @@ import java.util.regex.Pattern;
  */
 public class RestaurantSearchDao {
 	
+	public enum SearchViewType{
+		MAP_VIEW,
+		LIST_VIEW
+	}
+	
 	private DirectionDao directionDao;
 	private String addressSearch = "";
 	private String affiliate = "";
 	private List<RestaurantDao> restaurantList;
 	private int numberOfPages;
 	private int currentPage = 1;
+	private SearchViewType searchViewType = SearchViewType.MAP_VIEW;
+	private boolean searchDone = Boolean.FALSE;
+	
 	
 	public DirectionDao getDirectionDao() {
 		return directionDao;
@@ -42,6 +51,9 @@ public class RestaurantSearchDao {
 	}
 	
 	public List<RestaurantDao> getRestaurantList() {
+		if(restaurantList==null){
+			restaurantList = new ArrayList<RestaurantDao>();
+		}
 		return restaurantList;
 	}
 	public void setRestaurantList(List<RestaurantDao> restaurantList) {
@@ -60,6 +72,20 @@ public class RestaurantSearchDao {
 	}
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
+	}
+	
+	public void setSearchViewType(SearchViewType searchViewType) {
+		this.searchViewType = searchViewType;
+	}
+	public SearchViewType getSearchViewType() {
+		return searchViewType;
+	}
+	
+	public void setSearchDone(boolean searchDone) {
+		this.searchDone = searchDone;
+	}
+	public boolean isSearchDone() {
+		return searchDone;
 	}
 	
 	private String directionDaoToString(){

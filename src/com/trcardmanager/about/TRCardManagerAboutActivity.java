@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * 
@@ -34,6 +37,8 @@ public class TRCardManagerAboutActivity extends Activity {
 		setContentView(R.layout.about_layout);
 		loadAppVersion();
 		TRCardManagerApplication.setActualActivity(this);
+		Button b = (Button)findViewById(R.id.about_button_opinon);
+		b.setOnTouchListener(new TouchElementsListener<Button>(Color.BLUE));
 	}
 	
 	

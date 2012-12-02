@@ -61,7 +61,8 @@
 		        android:layout_marginLeft="40dip"
 		        android:layout_marginRight="40dip"
 		        android:clickable="true"
-		        android:onClick="findInLocation">
+		        android:onClick="findInLocation"
+		        >
 				<TextView android:background="@android:drawable/ic_menu_mylocation"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
@@ -103,7 +104,7 @@
 		    android:background="@drawable/login_text_border"
 		    android:layout_margin="6dip"/ -->
 
-		 <LinearLayout 
+		 <LinearLayout android:id="@+id/restaurant_search_direction_click_layout"
 		    android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/restaurants_search_direction_text"

@@ -6,12 +6,14 @@ import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.action.UpdatePasswordAction;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * 
@@ -26,6 +28,8 @@ public class TRCardManagerUpdatePasswordActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.update_password_title);
 		setContentView(R.layout.update_password_layout);
+		Button buttonUpdate = (Button)findViewById(R.id.update_password_btn_update);
+		buttonUpdate.setOnTouchListener(new TouchElementsListener<Button>());
 		TRCardManagerApplication.setActualActivity(this);
 	}
 	

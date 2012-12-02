@@ -15,10 +15,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
+import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -40,6 +43,15 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		setContentView(R.layout.restaurants);
 		setTitle(R.string.restaurants_title);
 		TRCardManagerApplication.setActualActivity(this);
+		
+		final LinearLayout lSearch = (LinearLayout)findViewById(R.id.restaurant_search_layout);
+		lSearch.setOnTouchListener(new TouchElementsListener<LinearLayout>());
+		
+		final LinearLayout lLocation = (LinearLayout)findViewById(R.id.restaurant_location_layout);
+		lLocation.setOnTouchListener(new TouchElementsListener<LinearLayout>());
+			
+		final LinearLayout lSearchText = (LinearLayout)findViewById(R.id.restaurant_search_direction_click_layout);
+		lSearchText.setOnTouchListener(new TouchElementsListener<LinearLayout>());
 	}
 	
 	@Override
@@ -52,6 +64,12 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == TRCardManagerApplication.GPS_ACTIVATED){
+			findRestaurants();
+		}else if(requestCode == TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST && 
+				resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST_BACK_RESULT){
+			findRestaurants();
+		}else if(requestCode == TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP &&
+				resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT){
 			findRestaurants();
 		}
 	}
@@ -93,6 +111,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 * @throws ExecutionException
 	 */
 	public void findInLocation(View v){
+		
 		searchType = SearchType.LOCATION_SEARCH;
 		checkGPSLocationAndStartSearch();
 	}
@@ -105,10 +124,15 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 */
 	public void search(View v){
 		directiontoSearch = ((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString();
-		searchType = SearchType.DIRECTION_SEARCH;
-		findRestaurants();
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_direction_text)).getWindowToken(), 0);	
+		if(directiontoSearch.toString()==null || "".equals(directiontoSearch.toString())){
+			Toast.makeText(this, getText(R.string.restaurants_search_text_empty), Toast.LENGTH_LONG).show();
+		}else{
+			searchType = SearchType.DIRECTION_SEARCH;
+			TRCardManagerApplication.setRestaurantSearchDao(null);
+			findRestaurants();
+			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_direction_text)).getWindowToken(), 0);
+		}
 	}
 
 
@@ -140,16 +164,32 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		}
 	}
 
-
 	private void findRestaurants(){
+		if(TRCardManagerApplication.getRestaurantSearchDao().getSearchViewType() == 
+			SearchViewType.MAP_VIEW){
+			findRestaurantsInMap();
+		}else{
+			findRestarurantsInList();
+		}
+	}
+
+	
+	private void findRestarurantsInList(){
 		Intent restaturants = new Intent(this,TRCardManagerRestaurantsListActivity.class);
+				
+		restaturants.putExtra("directiontoSearch", directiontoSearch);
+		restaturants.putExtra("searchType", searchType.name());
 		
-		restaturants = new Intent(this,TRCardManagerRestaurantMapsActivity.class);
+		startActivityForResult(restaturants, TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP);
+	}
+	
+	private void findRestaurantsInMap(){
+		Intent restaturants = new Intent(this,TRCardManagerRestaurantMapsActivity.class);
 		
 		restaturants.putExtra("directiontoSearch", directiontoSearch);
 		restaturants.putExtra("searchType", searchType.name());
 		
-		startActivity(restaturants);
+		startActivityForResult(restaturants,TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST);
 	}
 	
 	

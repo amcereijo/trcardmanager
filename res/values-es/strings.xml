@@ -129,6 +129,7 @@
       <string name="restaurants_search_direction">Calle, CP, Ciudad,&#8230;</string>
       <string name="restaurants_search_restaurant">Nombre de Restaurante</string>
       <string name="restaurants_search_text_button">Buscar</string>
+      <string name="restaurants_search_text_empty">Debes introducir una dirección</string>
       <string name="restaurants_no_gps_title">GPS</string>
       <string name="restaurants_no_gps_message">El GPS parece estar deshabilitado, ¿deseas habilitarlo?</string>
       <string name="restaurants_no_gps_yes">Si</string>
@@ -149,9 +150,17 @@
       <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>
       <string name="restaurant_data_info">i</string>
       <string name="restaurant_data_waze_text">¿Quieres que te lleve con <b>Waze</b>?</string>
+      <string name="restaurant_data_maps_text">Quieres llegar con <b>Google Maps</b>?</string>
+      <string name="restaurant_data_view_more_info">Ver más información</string>
 
       
       <!-- more restaurant layout -->
       <string name="more_restaurant_text">Ver más restaurantes</string>
       
+      <!-- restaurant list view -->
+    <string name="restaurants_list_layout_click_map_view">Toca para ver en Mapa</string>
+    
+      <!-- restaurant maps view -->
+    <string name="restaurants_maps_layout_clik_list_view">Toca para ver en modo lista</string>
+    
 </resources>

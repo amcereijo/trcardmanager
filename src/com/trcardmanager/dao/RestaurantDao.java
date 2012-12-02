@@ -8,11 +8,13 @@ import java.util.regex.Pattern;
  *
  */
 public class RestaurantDao extends DirectionDao {
-
+	
 	private String phoneNumber = "";
 	private String foodType = "";
 	private String retaurantName = "";
 	private String restaurantLink = "";
+	
+	private boolean completeDataLoaded = Boolean.FALSE;
 	
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -38,6 +40,13 @@ public class RestaurantDao extends DirectionDao {
 	}
 	public String getRestaurantLink() {
 		return restaurantLink;
+	}
+	
+	public void setCompleteDataLoaded(boolean completeDataLoaded) {
+		this.completeDataLoaded = completeDataLoaded;
+	}
+	public boolean isCompleteDataLoaded() {
+		return completeDataLoaded;
 	}
 	
 	public String getRestaurantDisplayDirection(){

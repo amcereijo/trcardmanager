@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.trcardmanager.action.TRCardManagerLoginAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * Activity to login
@@ -36,6 +38,10 @@ public class TRCardManagerLoginActivity extends Activity {
 		
 		setContentView(R.layout.login);    
 		TRCardManagerApplication.setActualActivity(this);
+		
+		Button loginButton = (Button)findViewById(R.id.btn_login_enter);
+		loginButton.setOnTouchListener(new TouchElementsListener<Button>());
+		
 		findRemeberedUser();
 		prepareLoginView();
 	}

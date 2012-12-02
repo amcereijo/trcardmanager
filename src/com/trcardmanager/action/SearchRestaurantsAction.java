@@ -8,15 +8,16 @@ import android.app.ProgressDialog;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 import com.trcardmanager.R;
 import com.trcardmanager.adapter.RestaurantListViewAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
@@ -24,6 +25,7 @@ import com.trcardmanager.dao.DirectionDao;
 import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 import com.trcardmanager.restaurant.RestaurantItemOverlay;
@@ -69,22 +71,35 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,TRCardManagerLocationAction locationAction,
 			SearchType searchMode,ArrayAdapter<RestaurantDao> adapter) {
 		this();
-		this.restaurantSearchDao = restaurantSearchDao;
+		prepareRestaurantSearch(restaurantSearchDao);
 		this.locationAction = locationAction;
 		this.searchMode = searchMode;
 		this.adapter = adapter;
 	}
 	
+	private void prepareRestaurantSearch(RestaurantSearchDao restaurantSearchDao){
+		RestaurantSearchDao appRestaurantSearch = TRCardManagerApplication.getRestaurantSearchDao();
+		if(appRestaurantSearch != null && appRestaurantSearch.isSearchDone() ){
+			this.restaurantSearchDao = appRestaurantSearch;
+		}else{
+			this.restaurantSearchDao = restaurantSearchDao;
+		}
+	}
+	
 	@Override
 	protected void onPreExecute() {
-//		if(searchMode == SearchType.LOCATION_SEARCH){
-//			RelativeLayout searchedLayout = (RelativeLayout)activity.findViewById(R.id.restaurants_search_minimized_layout);
-//			searchedLayout.setVisibility(View.GONE);
-//		}
+		if(restaurantSearchDao.getSearchViewType() == SearchViewType.LIST_VIEW){
+			if(searchMode == SearchType.LOCATION_SEARCH){
+				RelativeLayout searchedLayout = (RelativeLayout)activity.findViewById(R.id.restaurants_search_minimized_layout);
+				searchedLayout.setVisibility(View.GONE);
+			}
+		}
 		
-		String message = loadStartLoadMessage();
-		loadingDialog = ProgressDialog.show(activity, activity.getText(R.string.restaurants_dialog_search_title), 
-				message);
+		if(!restaurantSearchDao.isSearchDone()){	
+			String message = loadStartLoadMessage();
+			loadingDialog = ProgressDialog.show(activity, activity.getText(R.string.restaurants_dialog_search_title), 
+					message);
+		}
 	}
 
 
@@ -95,8 +110,10 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		String message;
 		switch(progress[0]){
 			case CANCEL_PROCESS:
-				loadingDialog.cancel();
-				loadingDialog.dismiss();
+				if(loadingDialog!=null){
+					loadingDialog.cancel();
+					loadingDialog.dismiss();
+				}
 				break;
 			case SEARCH_RESTAURANTS:
 				if(searchMode == SearchType.DIRECTION_SEARCH){
@@ -121,8 +138,10 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected Void doInBackground(Void... arg0) {
 		try {
-			searchLocation();
-			searchRestaurantList();
+			if(!restaurantSearchDao.isSearchDone()){
+				searchLocation();
+				searchRestaurantList();
+			}
 		} catch (IOException e) {
 			Log.e(TAG, e.getMessage(),e);
 			error = Boolean.TRUE;
@@ -133,63 +152,61 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		return null;
 	}
 
-//	
-//	@Override
-//	protected void onPostExecute(Void result) {
-//		publishProgress(CANCEL_PROCESS);
-//		if(!error){
-//			showDirectionOfSearch();
-//			cleanRestaurantsView();
-//			createAdapterAndSetAndListView();
-//		}else{
-//			if(restaurantSearchDao.getRestaurantList() == null || restaurantSearchDao.getRestaurantList().isEmpty()){
-//				((TRCardManagerRestaurantsListActivity)activity).onBackPressed();
-//			}
-//			((TRCardManagerRestaurantsListActivity)activity).showErrorRestaurantLoading();
-//		}
-//	}
-
-
 	
 	@Override
 	protected void onPostExecute(Void result) {
 		publishProgress(CANCEL_PROCESS);
 		if(!error){
-			MapView mapView = (MapView) activity.findViewById(R.id.mapView);
-			
-			LocationDao myLocation = restaurantSearchDao.getDirectionDao().getLocation();
-			GeoPoint point = new GeoPoint((int)(myLocation.getLatitude() * 1E6), (int)(myLocation.getLongitude() * 1E6));
-	        //this will show you the map at the exact location you want (if you not set this you will see the map somewhere in America)
-	         mapView.getController().setCenter(point);
-	         
-	         List<RestaurantDao> restaurants = restaurantSearchDao.getRestaurantList();
-	         List<Overlay> mapOverlays = mapView.getOverlays();
-	         Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker);//ic_notification_overlay.9
-	         for(RestaurantDao r : restaurants){
-	              
-	             RestaurantItemOverlay itemizedoverlay = new RestaurantItemOverlay(drawable, activity);
-	      
-	             GeoPoint restaurantPoint = new GeoPoint(
-	            		 (int)(r.getLocation().getLatitude()*1E6),
-	            		 (int)(r.getLocation().getLongitude()*1E6));
-	             RestaurantOverlayItemDao overlayitem = new RestaurantOverlayItemDao(restaurantPoint, r.getRetaurantName(),
-	            		 r.getStreet()+", "+r.getLocality()+", "+r.getArea(), r);
-	             itemizedoverlay.addOverlay(overlayitem);
-	             mapOverlays.add(itemizedoverlay);
-	         }
-	         
-	         
+			 if(restaurantSearchDao.getSearchViewType() == SearchViewType.MAP_VIEW){
+				 printMapView();
+			 }else{
+				 showDirectionOfSearch();
+					cleanRestaurantsView();
+					createAdapterAndSetAndListView();
+			 }
+	         TRCardManagerApplication.setRestaurantSearchDao(restaurantSearchDao);
 		}else{
 			if(restaurantSearchDao.getRestaurantList() == null || restaurantSearchDao.getRestaurantList().isEmpty()){
-				//TODO change to mapactivity
-				//((TRCardManagerRestaurantsListActivity)activity).onBackPressed();
-				((TRCardManagerRestaurantMapsActivity)activity).onBackPressed();
+				if(restaurantSearchDao.getSearchViewType() == SearchViewType.MAP_VIEW){
+					((TRCardManagerRestaurantMapsActivity)activity).onBackPressed();
+				}else{
+					((TRCardManagerRestaurantsListActivity)activity).onBackPressed();
+				}
 			}
-			//((TRCardManagerRestaurantsListActivity)activity).showErrorRestaurantLoading();
 			Toast.makeText(activity, R.string.restaurants_search_error, Toast.LENGTH_LONG).show();
 		}
 	}
 
+	
+	private void printMapView(){
+		MapView mapView = (MapView) activity.findViewById(R.id.mapView);
+
+		LocationDao myLocation = restaurantSearchDao.getDirectionDao().getLocation();
+		GeoPoint point = new GeoPoint((int)(myLocation.getLatitude() * 1E6), (int)(myLocation.getLongitude() * 1E6));
+        //this will show you the map at the exact location you want (if you not set this you will see the map somewhere in America)
+         mapView.getController().setCenter(point);
+         
+         //sets the zoom to see the location closer
+         mapView.getController().setZoom(18);
+         //this will let you to zoom in or out using the controllers
+         mapView.setBuiltInZoomControls(true);
+         
+         List<RestaurantDao> restaurants = restaurantSearchDao.getRestaurantList();
+         List<Overlay> mapOverlays = mapView.getOverlays();
+         Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker);
+         for(RestaurantDao r : restaurants){
+              
+             RestaurantItemOverlay itemizedoverlay = new RestaurantItemOverlay(drawable, activity);
+      
+             GeoPoint restaurantPoint = new GeoPoint(
+            		 (int)(r.getLocation().getLatitude()*1E6),
+            		 (int)(r.getLocation().getLongitude()*1E6));
+             RestaurantOverlayItemDao overlayitem = new RestaurantOverlayItemDao(restaurantPoint, r.getRetaurantName(),
+            		 r.getStreet()+", "+r.getLocality()+", "+r.getArea(), r);
+             itemizedoverlay.addOverlay(overlayitem);
+             mapOverlays.add(itemizedoverlay);
+         }
+	}
 	
 	private void cleanRestaurantsView() {
 		restaurantsListView = (ListView)activity.findViewById(R.id.restaurants_list_view);
@@ -239,6 +256,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	private void searchRestaurantList() throws IOException {
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		List<RestaurantDao> restaurants = httpAction.getRestaurants(restaurantSearchDao);
+		//TODO remove?
 		addFoundRestaurantsToList(restaurants);
 	}
 
@@ -260,8 +278,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	
 	private void createAdapterAndSetAndListView() {
 		if(adapter == null){
-			adapter = new RestaurantListViewAdapter(activity,
-				R.id.restaurants_list_view, restaurantSearchDao);
+			adapter = new RestaurantListViewAdapter(activity,R.id.restaurants_list_view, restaurantSearchDao);
 			restaurantsListView.setAdapter(adapter);
 			restaurantsListView.refreshDrawableState();
 		}else{

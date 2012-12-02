@@ -57,12 +57,13 @@
             android:configChanges="keyboardHidden|orientation" >
         </activity>
 
+        <activity
+            android:name=".restaurant.TRCardManagerRestaurantMapsActivity">
+        </activity>
+        
         <uses-library android:name="com.google.android.maps" />
 
-        <activity
-            android:name=".restaurant.TRCardManagerRestaurantMapsActivity"
-            android:label="@string/title_activity_trcard_manager_restaurant_maps" >
-        </activity>
+        
         
     </application>
 

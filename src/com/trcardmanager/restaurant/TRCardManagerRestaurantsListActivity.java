@@ -16,6 +16,7 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -54,6 +55,12 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
     }
 
 
+	@Override
+	public void onBackPressed() {
+		setResult(TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT);
+		super.onBackPressed();
+	}
+	
 	private void getIntentParameters() {
 		Bundle bundle = getIntent().getExtras();
         restaurantSearchDao.setAddressSearch(bundle.getString("directiontoSearch"));
@@ -61,6 +68,17 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 	}
 
     
+	/**
+	 * 
+	 * @param v
+	 */
+	public void changeToMapsView(View v){
+		TRCardManagerApplication.getRestaurantSearchDao().setSearchViewType(SearchViewType.MAP_VIEW);
+		setResult(TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP);
+		finish();
+	}
+	
+	
     /**
 	 * 
 	 * @param v

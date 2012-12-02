@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:padding="0sp" 
     android:layout_margin="0sp"
-    android:background="#FFFFFF">
+    android:background="@android:color/white"
+    > 
 
     <RelativeLayout
         android:id="@+id/restaurant_data_info_layout"
@@ -21,7 +22,7 @@
             android:paddingBottom="2sp"
             android:paddingLeft="2sp"
             android:paddingRight="2sp"
-            android:paddingTop="2sp"
+            android:paddingTop="6sp"
             android:text=""
             android:textColor="#2A4678"
             android:textStyle="bold" />
@@ -69,9 +70,9 @@
             android:layout_alignParentTop="true"
             android:paddingBottom="2sp"
             android:paddingLeft="2sp"
-            android:paddingRight="4sp"
-            android:paddingTop="0sp"
-            android:text="X"
+            android:paddingRight="8sp"
+            android:paddingTop="4sp"
+            android:background="@android:drawable/btn_dialog"
             android:textColor="#2A4678"
             android:textStyle="bold"
             android:clickable="true"/>
@@ -84,7 +85,7 @@
         android:layout_below="@id/restaurant_data_info_layout"
         android:gravity="center">
         
-        <TextView
+        <!-- TextView
 	        android:id="@+id/restaurant_data_maps"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -95,7 +96,18 @@
 	        android:onClick="openMap"
 	        android:textColor="#2A4678"
 	        android:textStyle="bold"
-	        android:typeface="sans" />
+	        android:typeface="sans" /-->
+	    <ImageButton
+	        android:id="@+id/restaurant_data_maps"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingTop="4sp"
+	        android:layout_marginTop="4sp"
+	        android:background="@null"
+	        android:src="@drawable/android_maps"
+	        android:contentDescription="@string/restaurant_data_maps_text"
+            android:gravity="center_vertical|center_horizontal"
+	        android:onClick="openMap"/>
         
          <ImageButton
             android:id="@+id/restaurant_data_waze_image"

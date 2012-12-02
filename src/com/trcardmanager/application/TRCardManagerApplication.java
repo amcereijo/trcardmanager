@@ -3,6 +3,7 @@ package com.trcardmanager.application;
 import android.app.Activity;
 import android.app.Application;
 
+import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.UserDao;
 
 /**
@@ -21,11 +22,15 @@ public class TRCardManagerApplication extends Application {
 	public static int SESSION_CLOSED = 108;
 	public static int GPS_ACTIVATED = 109;
 	public static int SEARCH_RESTAURANTS_FINISHED = 110;
+	public static int SEARCH_RESTAURANTS_MAP_TO_LIST = 111;
+	public static int SEARCH_RESTAURANTS_MAP_TO_LIST_BACK_RESULT = -111;
+	public static int SEARCH_RESTAURANTS_LIST_TO_MAP = 112;
+	public static int SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT = -112;
 	
 	private static UserDao user;
 	private static Activity actualActivity;
 	private static boolean loadingInfo = Boolean.FALSE;
-	
+	private static RestaurantSearchDao restaurantSearchDao;
 	
 	public static void setUser(UserDao user) {
 		TRCardManagerApplication.user = user;
@@ -46,6 +51,17 @@ public class TRCardManagerApplication extends Application {
 	}
 	public static boolean isLoadingInfo() {
 		return loadingInfo;
+	}
+	
+	public static void setRestaurantSearchDao(
+			RestaurantSearchDao restaurantSearchDao) {
+		TRCardManagerApplication.restaurantSearchDao = restaurantSearchDao;
+	}
+	public static RestaurantSearchDao getRestaurantSearchDao() {
+		if(restaurantSearchDao == null){
+			TRCardManagerApplication.restaurantSearchDao = new RestaurantSearchDao();
+		}
+		return restaurantSearchDao;
 	}
 	
 }

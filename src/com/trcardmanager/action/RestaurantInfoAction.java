@@ -5,9 +5,8 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -26,6 +25,7 @@ import com.trcardmanager.R;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
     private LayoutInflater inflater;
     private AlertDialog dialog = null; 
     private boolean error = Boolean.FALSE;
-    boolean showInfo = Boolean.TRUE;
+    private ProgressDialog progressDialog;
     
 	public RestaurantInfoAction(RestaurantDao restaurant, int position){
 		this.restaurant = restaurant;
@@ -59,30 +59,20 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPreExecute() {
-			if(dialog!=null && dialog.isShowing()){
-				dialog.hide();
-			}
-			dialog = new AlertDialog.Builder(activity).create();
-			dialog.setInverseBackgroundForced(true);
-			dialog.setMessage("Loading....");
-	        dialog.show();
-			dialog.setOnCancelListener(new OnCancelListener() {
-				public void onCancel(DialogInterface dialog) {
-					cancelShowDialog();
-				}
-			});
-			dialog.setOnDismissListener(new OnDismissListener() {
-				public void onDismiss(DialogInterface dialog) {
-					cancelShowDialog();
-				}
-			});
+		if(!restaurant.isCompleteDataLoaded()){
+			progressDialog = ProgressDialog.show(activity, restaurant.getRetaurantName(),
+					"Recuperando información");
+			progressDialog.setInverseBackgroundForced(true);
+		}
 	}
 	
 	@Override
 	protected Void doInBackground(Void... params) {
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
         try {
-			httpAction.completeResaturantInfo(restaurant);
+        	if(!restaurant.isCompleteDataLoaded()){
+        		httpAction.completeResaturantInfo(restaurant);
+        	}
         } catch (IOException e) {
         	error = Boolean.TRUE;
 			Log.e(TAG, "Error loading restaurant info",e);
@@ -93,24 +83,25 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		
-		if(!error && showInfo){
-			dialog.hide();
+		if(progressDialog!=null){
+			progressDialog.cancel();
+		}
+		if(!error){
 			dialog = new AlertDialog.Builder(activity).create();
 			dialog.setInverseBackgroundForced(true);
 	        View view = createAndFillDataMovementLayout(restaurant,position);
-			dialog.setView(view);
+	        dialog.setView(view);
 			dialog.show();
+			dialog.setOnDismissListener(new DialogInterface.OnDismissListener(){ 				
+				public void onDismiss(DialogInterface dialog) {
+					dialog.cancel();
+				}			
+			});
 		}else if(error){
 			Toast.makeText(activity, "Error", Toast.LENGTH_LONG).show();
 		}
 	}
-	
-	private void cancelShowDialog(){
-		dialog.hide();
-		showInfo = Boolean.FALSE;
-		cancel(true);
-	}
+
 	
 	 private RelativeLayout createAndFillDataMovementLayout(RestaurantDao restaurant, int position){
 			RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
@@ -124,20 +115,28 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
 			((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_phone)).setText(restaurant.getPhoneNumber());
 			
-			relativeMovementLayout.setId(position);
-			if(wazeInstalled){
-				RelativeLayout buttonsLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_apps_layout);
+			RelativeLayout buttonsLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_apps_layout);
+			buttonsLayout.setId(position);
+			
+			if(wazeInstalled){	
 				ImageButton wazeButton = (ImageButton)buttonsLayout.findViewById(R.id.restaurant_data_waze_image);
 				wazeButton.setVisibility(View.VISIBLE);
+				wazeButton.setOnTouchListener(new TouchElementsListener<ImageButton>());
 			}
 			
 			TextView restaurantDataClose = (TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_close);
 			restaurantDataClose.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					dialog.hide();
+					dialog.cancel();
 				}
 			});
 			
+			ImageButton iButtonMaps = (ImageButton)buttonsLayout.findViewById(R.id.restaurant_data_maps);
+	        iButtonMaps.setOnTouchListener(new TouchElementsListener<ImageButton>());
+	        
+	        restaurant.setCompleteDataLoaded(Boolean.TRUE);
+	        
 			return relativeMovementLayout;
 		}
 	    

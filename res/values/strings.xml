@@ -125,6 +125,7 @@
     <string name="restaurants_search_direction">Street,CP,City,&#8230;</string>
     <string name="restaurants_search_restaurant">Restaurant Name</string>
     <string name="restaurants_search_text_button">Search</string>
+    <string name="restaurants_search_text_empty">You must type a direction</string>
     <string name="restaurants_no_gps_title">GPS</string>
     <string name="restaurants_no_gps_message">Your GPS seems to be disabled, do you want to enable it?</string>
     <string name="restaurants_no_gps_yes">Yes</string>
@@ -145,11 +146,16 @@
     <string name="restaurant_data_no_restaurants">No restaurants found</string>
     <string name="restaurant_data_info">i</string>
     <string name="restaurant_data_waze_text">Do you want go with <b>Waze</b>?</string>
+    <string name="restaurant_data_maps_text">Do you want go with <b>Google Maps</b>?</string>
+    <string name="restaurant_data_view_more_info">View More Info</string>
 
     <!-- more restaurant layout -->
     <string name="more_restaurant_text">Show more restaurants</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_trcard_manager_restaurant_maps">TRCardManagerRestaurantMaps</string>
+    
+    <!-- restaurant list view -->
+    <string name="restaurants_list_layout_click_map_view">Touch to view in map</string>
+    
+    <!-- maps view -->
+    <string name="restaurants_maps_layout_clik_list_view">Touch to view in list mode</string>
 
 </resources>

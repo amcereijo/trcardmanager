@@ -1,19 +1,21 @@
 package com.trcardmanager.restaurant;
 
-import java.util.List;
-
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
 
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
 import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction;
 import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.dao.LocationDao;
+import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -22,8 +24,11 @@ import com.trcardmanager.location.TRCardManagerLocationAction;
  *
  */
 public class TRCardManagerRestaurantMapsActivity extends MapActivity {
-
-	private MapView mapView;
+	
+	private final static String URI_TO_OPEN_MAPS = "http://maps.google.com/maps?z=%d&q=%s";
+	private final static int ZOOM_LEVEL = 18; 
+	private static final String URL_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
+	
 	private RestaurantSearchDao restaurantSearchDao;
 	private SearchType searchType;
 	private TRCardManagerLocationAction locationAction;
@@ -31,33 +36,21 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.restaurants_title);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        
         TRCardManagerApplication.setActualActivity(this);
-        setContentView(R.layout.activity_trcard_manager_restaurant_maps);
+        setContentView(R.layout.restaurants_maps_layout);
         
-        
-        if(restaurantSearchDao == null ){
-	        locationAction = new TRCardManagerLocationAction();
-	        restaurantSearchDao = new RestaurantSearchDao();
-	        
-	        getIntentParameters();
-	        
-	        mapView = (MapView) findViewById(R.id.mapView);
-	        
-	        //sets the zoom to see the location closer
-	        mapView.getController().setZoom(18);
-	 
-	        //this will let you to zoom in or out using the controllers
-	        mapView.setBuiltInZoomControls(true);
-
-	        launchSearchRestaurantAction();
-        }
-
+	    locationAction = new TRCardManagerLocationAction();
+	    restaurantSearchDao = new RestaurantSearchDao();
+	    
+	    getIntentParameters();
+	    
+	    launchSearchRestaurantAction();
     }
 
 	@Override
 	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
     
@@ -65,6 +58,50 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	
+	@Override
+	public void onBackPressed() {
+		setResult(TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST_BACK_RESULT);
+		super.onBackPressed();
+	}
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void openMap(View v){
+		int restaurantPosition = ((View)v.getParent()).getId();
+		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosition);
+		String uri = String.format(URI_TO_OPEN_MAPS,
+				ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
+		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+	}
+	
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void openWaze(View v){
+		int restaurantPosition = ((View)v.getParent()).getId();
+		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosition);
+		LocationDao location = restaurantDao.getLocation();
+		
+		String urlwaze = String.format(URL_WAZE_APP,location.getLatitude(),location.getLongitude());
+		Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlwaze ) );
+		startActivity(intent);
+	}
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void changeToListView(View v){
+		TRCardManagerApplication.getRestaurantSearchDao().setSearchViewType(SearchViewType.LIST_VIEW);
+		setResult(TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST);
+		finish();
 	}
 	
 	private void launchSearchRestaurantAction() {
@@ -76,6 +113,6 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
         restaurantSearchDao.setAddressSearch(bundle.getString("directiontoSearch"));
         searchType = SearchType.valueOf(bundle.getString("searchType"));
 	}
-    
-    
+
+	
 }

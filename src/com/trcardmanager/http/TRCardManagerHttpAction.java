@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -645,16 +644,16 @@ public class TRCardManagerHttpAction {
 					LocationDao location = new LocationDao(longitude, latitude);
 					restaurant.setLocation(location);
 					
-					StringTokenizer strk = new StringTokenizer(result.getString("description"),"\\<br/\\>");
+					StringTokenizer strk = new StringTokenizer(htmlDecoded(result.getString("description")),"\\<br/\\>");
 					try{
 						String name = strk.nextToken();
-						restaurant.setRetaurantName(htmlDecoded(name));
+						restaurant.setRetaurantName(name);
 						String street = strk.nextToken();
-						restaurant.setStreet(htmlDecoded(street));
+						restaurant.setStreet(street);
 						String city = strk.nextToken();
-						restaurant.setLocality(htmlDecoded(city));
+						restaurant.setLocality(city);
 						String area = strk.nextToken();
-						restaurant.setArea(htmlDecoded(area));
+						restaurant.setArea(area);
 						String tlf = strk.nextToken();
 						restaurant.setPhoneNumber(tlf);
 					}catch(Exception e){
@@ -674,6 +673,8 @@ public class TRCardManagerHttpAction {
 				
 			}
 			restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
+			restaurantSeachDao.getRestaurantList().addAll(restaurants);
+			restaurantSeachDao.setSearchDone(Boolean.TRUE);
     	}while(doOneMoreTime);
     	return restaurants;
     }

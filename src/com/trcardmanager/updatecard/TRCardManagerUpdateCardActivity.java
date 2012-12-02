@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.trcardmanager.action.UpdateCardAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.UserDao;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * 
@@ -37,6 +39,8 @@ public class TRCardManagerUpdateCardActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.update_card_title);
 		setContentView(R.layout.update_card_layout);
+		Button buttonUpdate = (Button)findViewById(R.id.update_card_btn_update);
+		buttonUpdate.setOnTouchListener(new TouchElementsListener<Button>());
 		userDao = TRCardManagerApplication.getUser();
 		fillOtherCardList();
 		TRCardManagerApplication.setActualActivity(this);

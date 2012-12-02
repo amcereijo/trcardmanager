@@ -1,8 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent" 
+    android:background="@android:color/white">
+	
+   
+    
    <com.google.android.maps.MapView 
         android:id="@+id/mapView"
         android:layout_width="fill_parent"
@@ -11,5 +14,20 @@
         android:clickable="true"
         android:apiKey="0KsFBXYtS_dmjBaMvvVbzcz-Rqvwp5ThdOdguUQ"
         />
-
+   
+    <TextView android:id="@+id/restaurants_maps_change_list_textView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="@string/restaurants_maps_layout_clik_list_view"
+       android:textSize="20sp"
+       android:paddingTop="5sp"
+       android:paddingBottom="5sp"
+       android:gravity="center"
+       android:textColor="#2A4678"
+       android:textStyle="bold" 
+       android:background="@android:color/white"
+       android:alpha="0.7"
+       android:clickable="true"
+       android:onClick="changeToListView"
+       />    
 </RelativeLayout>

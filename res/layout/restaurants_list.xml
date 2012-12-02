@@ -43,5 +43,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/restaurants_search_minimized_layout">
     </ListView>
+    
+    <TextView android:id="@+id/restaurants_list_maps_textView"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentBottom="true"
+       android:text="@string/restaurants_list_layout_click_map_view"
+       android:textSize="20sp"
+       android:paddingTop="5sp"
+       android:paddingBottom="5sp"
+       android:gravity="center"
+       android:textColor="#2A4678"
+       android:textStyle="bold" 
+       android:background="@android:color/white"
+       android:alpha="0.7"
+       android:clickable="true"
+       android:onClick="changeToMapsView"
+       />   
 
 </RelativeLayout>
