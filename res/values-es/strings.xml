@@ -158,9 +158,9 @@
       <string name="more_restaurant_text">Ver más restaurantes</string>
       
       <!-- restaurant list view -->
-    <string name="restaurants_list_layout_click_map_view">Toca para ver en Mapa</string>
+      <string name="restaurants_list_layout_click_map_view">Toca para ver en modo mapa</string>
     
       <!-- restaurant maps view -->
-    <string name="restaurants_maps_layout_clik_list_view">Toca para ver en modo lista</string>
+      <string name="restaurants_maps_layout_clik_list_view">Toca para ver en modo lista</string>
     
 </resources>
