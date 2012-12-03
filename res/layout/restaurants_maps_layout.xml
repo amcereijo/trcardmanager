@@ -12,7 +12,7 @@
         android:layout_height="fill_parent"
         android:enabled="true"
         android:clickable="true"
-        android:apiKey="0KsFBXYtS_dmjBaMvvVbzcz-Rqvwp5ThdOdguUQ"
+        android:apiKey="@string/MAP_ID"
         />
    
     <TextView android:id="@+id/restaurants_maps_change_list_textView"

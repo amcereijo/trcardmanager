@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.google.android.maps.MapActivity;
 import com.trcardmanager.R;
@@ -16,6 +17,7 @@ import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
+import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -44,6 +46,9 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 	    locationAction = new TRCardManagerLocationAction();
 	    restaurantSearchDao = new RestaurantSearchDao();
 	    
+	    ((TextView)findViewById(R.id.restaurants_maps_change_list_textView))
+	    	.setOnTouchListener(new TouchElementsListener<TextView>());
+	    
 	    getIntentParameters();
 	    
 	    launchSearchRestaurantAction();
@@ -67,32 +72,6 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 		super.onBackPressed();
 	}
 	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void openMap(View v){
-		int restaurantPosition = ((View)v.getParent()).getId();
-		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosition);
-		String uri = String.format(URI_TO_OPEN_MAPS,
-				ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
-		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-	}
-	
-	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void openWaze(View v){
-		int restaurantPosition = ((View)v.getParent()).getId();
-		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosition);
-		LocationDao location = restaurantDao.getLocation();
-		
-		String urlwaze = String.format(URL_WAZE_APP,location.getLatitude(),location.getLongitude());
-		Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlwaze ) );
-		startActivity(intent);
-	}
 	
 	/**
 	 * 
@@ -104,9 +83,11 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 		finish();
 	}
 	
+	
 	private void launchSearchRestaurantAction() {
 		new SearchRestaurantsAction(restaurantSearchDao,locationAction,searchType,null).execute();
 	}
+	
 
 	private void getIntentParameters() {
 		Bundle bundle = getIntent().getExtras();

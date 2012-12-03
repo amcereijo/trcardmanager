@@ -84,19 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/restaurant_data_info_layout"
         android:gravity="center">
-        
-        <!-- TextView
-	        android:id="@+id/restaurant_data_maps"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:paddingTop="4sp"
-	        android:layout_marginTop="4sp"
-	        android:background="@drawable/android_maps"
-	        android:clickable="true"
-	        android:onClick="openMap"
-	        android:textColor="#2A4678"
-	        android:textStyle="bold"
-	        android:typeface="sans" /-->
+ 
 	    <ImageButton
 	        android:id="@+id/restaurant_data_maps"
 	        android:layout_width="wrap_content"

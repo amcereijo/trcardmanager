@@ -86,6 +86,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		}
 	}
 	
+	
 	@Override
 	protected void onPreExecute() {
 		if(restaurantSearchDao.getSearchViewType() == SearchViewType.LIST_VIEW){
@@ -101,7 +102,6 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 					message);
 		}
 	}
-
 
 	
 	
@@ -182,13 +182,11 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		MapView mapView = (MapView) activity.findViewById(R.id.mapView);
 
 		LocationDao myLocation = restaurantSearchDao.getDirectionDao().getLocation();
-		GeoPoint point = new GeoPoint((int)(myLocation.getLatitude() * 1E6), (int)(myLocation.getLongitude() * 1E6));
-        //this will show you the map at the exact location you want (if you not set this you will see the map somewhere in America)
+		GeoPoint point = new GeoPoint((int)(myLocation.getLatitude() * 1E6),
+				(int)(myLocation.getLongitude() * 1E6));
          mapView.getController().setCenter(point);
          
-         //sets the zoom to see the location closer
          mapView.getController().setZoom(18);
-         //this will let you to zoom in or out using the controllers
          mapView.setBuiltInZoomControls(true);
          
          List<RestaurantDao> restaurants = restaurantSearchDao.getRestaurantList();
@@ -196,16 +194,25 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
          Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker);
          for(RestaurantDao r : restaurants){
               
-             RestaurantItemOverlay itemizedoverlay = new RestaurantItemOverlay(drawable, activity);
-      
-             GeoPoint restaurantPoint = new GeoPoint(
-            		 (int)(r.getLocation().getLatitude()*1E6),
-            		 (int)(r.getLocation().getLongitude()*1E6));
-             RestaurantOverlayItemDao overlayitem = new RestaurantOverlayItemDao(restaurantPoint, r.getRetaurantName(),
-            		 r.getStreet()+", "+r.getLocality()+", "+r.getArea(), r);
-             itemizedoverlay.addOverlay(overlayitem);
+             RestaurantItemOverlay itemizedoverlay = createOverLayItemForMap(
+					drawable, r);
              mapOverlays.add(itemizedoverlay);
          }
+	}
+
+
+	private RestaurantItemOverlay createOverLayItemForMap(Drawable drawable,
+			RestaurantDao r) {
+		RestaurantItemOverlay itemizedoverlay = new RestaurantItemOverlay(drawable);
+     
+		GeoPoint restaurantPoint = new GeoPoint((int)(r.getLocation().getLatitude()*1E6),
+				 (int)(r.getLocation().getLongitude()*1E6));
+		 
+		RestaurantOverlayItemDao overlayitem = new RestaurantOverlayItemDao(restaurantPoint, r.getRetaurantName(),
+				r.getStreet()+", "+r.getLocality()+", "+r.getArea(), r);
+		 
+		itemizedoverlay.addOverlay(overlayitem);
+		return itemizedoverlay;
 	}
 	
 	private void cleanRestaurantsView() {

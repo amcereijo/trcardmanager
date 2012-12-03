@@ -46,7 +46,7 @@ public class TouchElementsListener<T extends View> implements OnTouchListener {
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			originalState = touchElement.getBackground();
 			touchElement.setBackgroundColor(color);
-		}else if(event.getAction() == MotionEvent.ACTION_UP){
+		}else{
 			touchElement.setBackgroundDrawable(originalState);
 		}
 		return false;

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.listener.TouchElementsListener;
@@ -37,6 +38,9 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 	private final static String TAG = RestaurantInfoAction.class.toString();
 	
 	private static final String WAZE_APP_URL = "waze://?q=Hawaii";
+	private final static String URI_TO_OPEN_MAPS = "http://maps.google.com/maps?z=%d&q=%s";
+	private final static int ZOOM_LEVEL = 18; 
+	private static final String URL_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
 	
 	private RestaurantDao restaurant;
 	private int position;
@@ -122,6 +126,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 				ImageButton wazeButton = (ImageButton)buttonsLayout.findViewById(R.id.restaurant_data_waze_image);
 				wazeButton.setVisibility(View.VISIBLE);
 				wazeButton.setOnTouchListener(new TouchElementsListener<ImageButton>());
+				wazeButton.setOnClickListener(new WazeClickListener(restaurant));
 			}
 			
 			TextView restaurantDataClose = (TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_close);
@@ -134,6 +139,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			
 			ImageButton iButtonMaps = (ImageButton)buttonsLayout.findViewById(R.id.restaurant_data_maps);
 	        iButtonMaps.setOnTouchListener(new TouchElementsListener<ImageButton>());
+	        iButtonMaps.setOnClickListener(new GMapsClickListener(restaurant));
 	        
 	        restaurant.setCompleteDataLoaded(Boolean.TRUE);
 	        
@@ -149,6 +155,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			return foodType;
 		}
 
+	    
 		private boolean foodTypeWithoutTitleWithValue(String foodTypeTitle, String foodType) {
 			return foodType != null && !"".equals(foodType) && 
 					(!foodType.toLowerCase().contains(foodTypeTitle.toLowerCase()));
@@ -162,4 +169,33 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			            PackageManager.MATCH_DEFAULT_ONLY);
 			 wazeInstalled = (list.size()>0);  
 		}
+		
+		
+		
+		private class WazeClickListener implements OnClickListener{
+			private RestaurantDao restaurantDao;
+			public WazeClickListener(RestaurantDao restaurantDao){
+				this.restaurantDao = restaurantDao;
+			}
+			public void onClick(View v) {
+				LocationDao location = restaurantDao.getLocation();
+				String urlwaze = String.format(URL_WAZE_APP,location.getLatitude(),location.getLongitude());
+				Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlwaze ) );
+				activity.startActivity(intent);
+				
+			}
+		}
+
+		private class GMapsClickListener implements OnClickListener{
+			private RestaurantDao restaurantDao;
+			public GMapsClickListener(RestaurantDao restaurantDao){
+				this.restaurantDao = restaurantDao;
+			}
+			public void onClick(View v) {
+				String uri = String.format(URI_TO_OPEN_MAPS,
+						ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
+				activity.startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+			}
+		}
+		
 }

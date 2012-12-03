@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="unidId">a14fe7418ac35e6</string>
-    <!-- string name="dev_device">393568DA65D500EC</string -->
-    <string name="dev_device">353918050624655</string>
+    <string name="unidId">ADMOB_UID</string>
+    <string name="dev_device">TEST_DEVICE_ID</string>
+    <string name="MAP_ID">MAP_CERTIFICATE_KEY</string>
 </resources>

@@ -24,6 +24,7 @@ import com.trcardmanager.R;
 import com.trcardmanager.action.RestaurantInfoAction;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * Adapter class to build a list of restaurants
@@ -114,12 +115,14 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_name)).setText(restaurant.getRetaurantName());
 		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_data_direction)).setText(restaurant.getRestaurantDisplayDirection());
 		
-		((TextView)relativeMovementLayout.findViewById(R.id.restaurant_more_info))
-				.setOnClickListener(new OnClickListener() {
+		TextView moreInfo = (TextView)relativeMovementLayout.findViewById(R.id.restaurant_more_info); 
+		moreInfo.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				new RestaurantInfoAction(restaurant,position).execute();
 			}
 		});
+		moreInfo.setOnTouchListener(new TouchElementsListener<TextView>());
+		
 		return relativeMovementLayout;
 	}
 	

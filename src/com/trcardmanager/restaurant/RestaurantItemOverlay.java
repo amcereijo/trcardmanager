@@ -6,22 +6,24 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.ItemizedOverlay;
-import com.google.android.maps.OverlayItem;
 import com.trcardmanager.action.RestaurantInfoAction;
 import com.trcardmanager.dao.RestaurantDao;
 
-public class RestaurantItemOverlay extends ItemizedOverlay {
+/**
+ * 
+ * @author angelcereijo
+ *
+ */
+public class RestaurantItemOverlay extends ItemizedOverlay<RestaurantOverlayItemDao> {
 	
 	
     private ArrayList<RestaurantOverlayItemDao> mOverlays = new ArrayList< RestaurantOverlayItemDao >();
-    Context mContext;
     
  
-    public RestaurantItemOverlay(Drawable marker, Context context) {
+    public RestaurantItemOverlay(Drawable marker) {
         super(boundCenterBottom(marker));
-        mContext = context;
-        
     }
+    
  
     public void addOverlay(RestaurantOverlayItemDao overlay) {
         mOverlays.add(overlay);
@@ -29,7 +31,7 @@ public class RestaurantItemOverlay extends ItemizedOverlay {
     }
  
     @Override
-    protected OverlayItem createItem(int i) {
+    protected RestaurantOverlayItemDao createItem(int i) {
         return mOverlays.get(i);
     }
  
@@ -41,12 +43,9 @@ public class RestaurantItemOverlay extends ItemizedOverlay {
     
     @Override
     protected boolean onTap(int i) {
-        //when you tap on the marker this will show the informations provided by you when you create in the 
-        //main class the OverlayItem
     	RestaurantOverlayItemDao item = mOverlays.get(i);
         RestaurantDao restaurant = item.getRestaurantDao();
         new RestaurantInfoAction(restaurant,i).execute();
-        
         return true;
     }
 

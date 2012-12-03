@@ -1,22 +1,20 @@
 package com.trcardmanager.restaurant;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction;
 import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
+import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -28,9 +26,6 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 
 	final private static String TAG = TRCardManagerRestaurantsListActivity.class.getName();
 	
-	private final static String URI_TO_OPEN_MAPS = "http://maps.google.com/maps?z=%d&q=%s";
-	private final static int ZOOM_LEVEL = 18; 
-	private static final String URL_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
 	
 	private TRCardManagerLocationAction locationAction;
 	private RestaurantSearchDao restaurantSearchDao;
@@ -48,6 +43,9 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
         
         locationAction = new TRCardManagerLocationAction();
         restaurantSearchDao = new RestaurantSearchDao();
+        
+        ((TextView)findViewById(R.id.restaurants_list_maps_textView))
+    		.setOnTouchListener(new TouchElementsListener<TextView>());
         
         getIntentParameters();
         
@@ -87,33 +85,6 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 		onBackPressed();
 	}
 	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void openMap(View v){
-		int restaurantPosution = ((View)v.getParent()).getId();
-		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosution);
-		String uri = String.format(URI_TO_OPEN_MAPS,
-				ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
-		startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-	}
-	
-	
-	/**
-	 * 
-	 * @param v
-	 */
-	public void openWaze(View v){
-		RelativeLayout wazeLayou = (RelativeLayout)v.getParent();
-		int restaurantPosution = ((View)wazeLayou.getParent()).getId();
-		RestaurantDao restaurantDao = restaurantSearchDao.getRestaurantList().get(restaurantPosution);
-		LocationDao location = restaurantDao.getLocation();
-		
-		String urlwaze = String.format(URL_WAZE_APP,location.getLatitude(),location.getLongitude());
-		Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlwaze ) );
-		startActivity(intent);
-	}
 	
 	/**
 	 * 
