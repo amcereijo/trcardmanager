@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -77,7 +78,7 @@ public class TRCardManagerHttpAction {
     private static final String URL_PREPARE_UPDATE_CARD_PASSWORD = "mi_cuenta.html";
     private static final String URL_UPDATE_PASSWORD = "sendMyAccountPwd.php";
     //private static final String URL_SEARCH_RESTAURANTS = "http://www.edenred.es/buscador-afiliados/imprimir_resultados";
-    private static final String URL_SEARCH_RESTAURANTS = "http://www.edenred.es/affiliates_search/search";
+    private static final String URL_SEARCH_RESTAURANTS = "http://www.edenred.es/affiliates_search/search";//_locations";
     private static final String URL_INFO_RESTAURANT = "http://www.edenred.es/affiliates_search/show_affiliate/%s";
     private static final String SEARCH_RESTAURANTS_PRODUCT = "ticket-restaurant";
     private static final String SEARCH_RESTAURANTS_FORMAT = "tarjeta";
@@ -553,7 +554,6 @@ public class TRCardManagerHttpAction {
 			Element foodTypeElement = nameAndFootTypeElement.getElementsByClass("type").first();
 			restaurantDao.setFoodType(htmlDecoded(foodTypeElement.html()));
 		}
-    	
     }
     
     
@@ -565,7 +565,6 @@ public class TRCardManagerHttpAction {
      * @throws IOException 
      */
     public List<RestaurantDao> getRestaurants(RestaurantSearchDao restaurantSeachDao) throws IOException{
-    	boolean doOneMoreTime;
     	List<RestaurantDao> restaurants = new ArrayList<RestaurantDao>();
     	/*
     	 * http://www.edenred.es/buscador-afiliados/imprimir_resultados?address=avenida+de+manoteras%2C+Madrid&center_lat=40.487302150000005&center_lng=-3.665504950000013&especifico_producto=true&formato=tarjeta&limit_lat=40.490162&limit_lng=-3.65761510000002&producto=ticket-restaurant
@@ -584,36 +583,35 @@ public class TRCardManagerHttpAction {
 			locale:es
     	 * 
     	 */
-    	do{
-    		doOneMoreTime = false;
-	    	Map<String, String> postMap = createParameterPostMapper(restaurantSeachDao.getAddressSearch(), 
-	    			restaurantSeachDao.getAffiliate(), restaurantSeachDao.getDirectionDao(),
-	    			restaurantSeachDao.getCurrentPage());
-					
-			Response response = Jsoup.connect(URL_SEARCH_RESTAURANTS).header("X-Requested-With","XMLHttpRequest")
-				.timeout(TIMEOUT).data(postMap).execute();
-			if(response != null){
-				try{
-					String htmlParsedResponse = getParsedResponse(response);
-					String json = prepareJsonMessage(htmlParsedResponse);
-					JSONObject jsonObject = new JSONObject(json);
-					JSONArray results = jsonObject.getJSONArray("results");
-					for(int i=0;i<results.length();i++){
-						JSONObject result = results.getJSONObject(i);
-						RestaurantDao restaurant = createResaturant(result); 
-						if(restaurant!=null){
-							restaurants.add(restaurant);
-						}
+    	Map<String, String> postMap = createParameterPostMapper(restaurantSeachDao.getAddressSearch(), 
+    			restaurantSeachDao.getAffiliate(), restaurantSeachDao.getDirectionDao(),
+    			restaurantSeachDao.getCurrentPage());
+    	Connection con = Jsoup.connect(URL_SEARCH_RESTAURANTS)
+			.method(Method.POST)
+			.header("X-Requested-With","XMLHttpRequest")
+			.timeout(TIMEOUT).data(postMap);
+		Response response = con.execute();
+		if(response != null){
+			String htmlParsedResponse = getParsedResponse(response);
+			String json = prepareJsonMessage(htmlParsedResponse);
+			try{
+				JSONObject jsonObject = new JSONObject(json);
+				Log.i(TAG,"JSON:::: "+jsonObject.toString());
+				JSONArray results = jsonObject.getJSONArray("results");
+				for(int i=0;i<results.length();i++){
+					JSONObject result = results.getJSONObject(i);
+					RestaurantDao restaurant = createResaturant(result); 
+					if(restaurant!=null){
+						restaurants.add(restaurant);
 					}
-				}catch(JSONException e){
-					Log.e(TAG, "Error reading Json restaurants information",e);
-					e.printStackTrace();
 				}
+			}catch(JSONException e){
+				Log.e(TAG, "Error reading Json restaurants information",e);
 			}
-			restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
-			restaurantSeachDao.getRestaurantList().addAll(restaurants);
-			restaurantSeachDao.setSearchDone(Boolean.TRUE);
-    	}while(doOneMoreTime);
+		}
+		restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
+		//restaurantSeachDao.getRestaurantList().addAll(restaurants);
+		restaurantSeachDao.setSearchDone(Boolean.TRUE);
     	return restaurants;
     }
 
@@ -639,7 +637,11 @@ public class TRCardManagerHttpAction {
 			double latitude = Double.parseDouble(result.getString("lat"));
 			LocationDao location = new LocationDao(longitude, latitude);
 			restaurant.setLocation(location);
-			getRestaurantBasicInfo(result.getString("description"),restaurant);
+			String description = result.getString("description");
+			if(description.contains("establecimientos en")){
+				throw new Exception("No nos quedamos con este establecimiento porque no es concreto.");
+			}
+			getRestaurantBasicInfo(description,restaurant);
 			restaurant.setCountry("ESPAÑA");
 			restaurant.setRestaurantLink(result.getString("list_container"));
     	}catch(Exception e){
@@ -651,11 +653,13 @@ public class TRCardManagerHttpAction {
     
     
 	private String prepareJsonMessage(String htmlParsedResponse) {
-		int posI = htmlParsedResponse.indexOf("Gmaps.map.replaceMarkers([") + "Gmaps.map.replaceMarkers([".length();
-		int posF = htmlParsedResponse.indexOf("]);",posI);
-		
+		String jsonDataStart = "Gmaps.map.replaceMarkers([";
+		int posI = htmlParsedResponse.indexOf(jsonDataStart) + jsonDataStart.length();
+		int posF = htmlParsedResponse.indexOf("]);",posI);		
 		String json = htmlParsedResponse.substring(posI, posF);
 		json = "{\"results\":["+json+"]}";
+		//If get a result that represents more than one element and scape " elements
+		json = json.replaceAll("\\\\\"", "\\\"");
 		return json;
 	}
 
@@ -704,17 +708,16 @@ public class TRCardManagerHttpAction {
 		postMap.put("address",addressSearch);
 		postMap.put("center_lng",String.valueOf(location.getLongitude()));
 		postMap.put("center_lat",String.valueOf(location.getLatitude()));
-		
 		//TODO variable data
-		//More or less one kilometer 
-		double searchRadius = 0.009;//*20;
-		
+		double searchRadius = 0.007;//*20;
+
 		postMap.put("limit_lng",String.valueOf(location.getLongitude()+searchRadius));
 		postMap.put("limit_lat",String.valueOf(location.getLatitude()+searchRadius));
 		if(page!=1){
 			postMap.put("page",String.valueOf(page));
 		}
 		postMap.put("locale", Locale.getDefault().getCountry().toLowerCase());
+
 		return postMap;
 	}
     

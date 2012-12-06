@@ -111,7 +111,7 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 * @throws ExecutionException
 	 */
 	public void findInLocation(View v){
-		
+		TRCardManagerApplication.setRestaurantSearchDao(null);
 		searchType = SearchType.LOCATION_SEARCH;
 		checkGPSLocationAndStartSearch();
 	}

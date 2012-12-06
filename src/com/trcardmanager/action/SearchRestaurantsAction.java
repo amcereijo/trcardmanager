@@ -160,9 +160,9 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 			 if(restaurantSearchDao.getSearchViewType() == SearchViewType.MAP_VIEW){
 				 printMapView();
 			 }else{
-				 showDirectionOfSearch();
-					cleanRestaurantsView();
-					createAdapterAndSetAndListView();
+				showDirectionOfSearch();
+				cleanRestaurantsView();
+				createAdapterAndSetAndListView();
 			 }
 	         TRCardManagerApplication.setRestaurantSearchDao(restaurantSearchDao);
 		}else{
@@ -191,9 +191,8 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
          
          List<RestaurantDao> restaurants = restaurantSearchDao.getRestaurantList();
          List<Overlay> mapOverlays = mapView.getOverlays();
-         Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker);
+         Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker); 
          for(RestaurantDao r : restaurants){
-              
              RestaurantItemOverlay itemizedoverlay = createOverLayItemForMap(
 					drawable, r);
              mapOverlays.add(itemizedoverlay);
@@ -207,7 +206,8 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
      
 		GeoPoint restaurantPoint = new GeoPoint((int)(r.getLocation().getLatitude()*1E6),
 				 (int)(r.getLocation().getLongitude()*1E6));
-		 
+		Log.d(TAG, "---Creado restaurante "+r.getRetaurantName()+" en : "+r.getLocation().getLatitude()+","+
+				 r.getLocation().getLongitude());
 		RestaurantOverlayItemDao overlayitem = new RestaurantOverlayItemDao(restaurantPoint, r.getRetaurantName(),
 				r.getStreet()+", "+r.getLocality()+", "+r.getArea(), r);
 		 
@@ -263,7 +263,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	private void searchRestaurantList() throws IOException {
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		List<RestaurantDao> restaurants = httpAction.getRestaurants(restaurantSearchDao);
-		//TODO remove?
+		//TODO remove if do inside "httpAction.getRestaurants"
 		addFoundRestaurantsToList(restaurants);
 	}
 
@@ -274,7 +274,9 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 			restaurantSearchDao.setRestaurantList(restaurants);
 		}else{
 			lastViewPosition = actualRestaurants.size()-1;
-			actualRestaurants.remove(actualRestaurants.size()-1);
+			if(lastViewPosition>=0){
+				actualRestaurants.remove(actualRestaurants.size()-1);
+			}
 			actualRestaurants.addAll(restaurants);
 		}
 		if(restaurantSearchDao.getCurrentPage()<=restaurantSearchDao.getNumberOfPages()){
@@ -289,6 +291,7 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 			restaurantsListView.setAdapter(adapter);
 			restaurantsListView.refreshDrawableState();
 		}else{
+			//TODO delete if not implement more search
 			//Delete last("load more" view)
 			RestaurantDao r = adapter.getItem(adapter.getCount()-1);
 			adapter.remove(r);
