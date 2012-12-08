@@ -3,12 +3,8 @@ package com.trcardmanager.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,14 +29,11 @@ import com.trcardmanager.listener.TouchElementsListener;
  */
 public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	
-	private static final String WAZE_APP_URL = "waze://?q=Hawaii";
-	private static final int MAPS_ICON_POSITION = 3;
 	private LayoutInflater inflater;
 	private Context context;
 	private ListView.LayoutParams linearLayoutParams;
 	private int numberOfPages;
 	private int actualPage;
-	private boolean wazeInstalled;
 	
 	public RestaurantListViewAdapter(Context context, int textViewResourceId,
 			RestaurantSearchDao resturantSearchDao) {
@@ -56,7 +49,6 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 		inflater = LayoutInflater.from(context);
 		this.context = context;
 		this.linearLayoutParams = getDefaultLinearLayoutParams();
-		setWazeInstalled();
 	}
 	
 	@Override
@@ -131,11 +123,4 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
     			LinearLayout.LayoutParams.WRAP_CONTENT);
 	}
 	
-	
-	private void setWazeInstalled(){
-		 Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( WAZE_APP_URL ) );
-		 List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,     
-		            PackageManager.MATCH_DEFAULT_ONLY);
-		 wazeInstalled = (list.size()>0);  
-	}
 }

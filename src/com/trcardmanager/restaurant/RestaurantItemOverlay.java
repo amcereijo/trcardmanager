@@ -2,7 +2,6 @@ package com.trcardmanager.restaurant;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.ItemizedOverlay;
