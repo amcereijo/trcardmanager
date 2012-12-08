@@ -149,9 +149,12 @@
       <string name="restaurant_data_text_type">Comida</string>
       <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>
       <string name="restaurant_data_info">i</string>
-      <string name="restaurant_data_waze_text">¿Quieres que te lleve con <b>Waze</b>?</string>
-      <string name="restaurant_data_maps_text">Quieres llegar con <b>Google Maps</b>?</string>
+      <string name="restaurant_data_waze_description">¿Quieres llagar con <b>Waze</b>?</string>
+      <string name="restaurant_data_maps_description">¿Quieres llegar con <b>Google Maps</b>?</string>
+      <string name="restaurant_data_navigation_description">¿Quieres llegar con <b>Google Navigation</b>?</string>
       <string name="restaurant_data_view_more_info">Ver más información</string>
+      <string name="restaurant_data_maps_text">Abrir con</string>
+      <string name="restaurant_data_nav_text">Llegar con</string>
 
       
       <!-- more restaurant layout -->
@@ -162,5 +165,11 @@
     
       <!-- restaurant maps view -->
       <string name="restaurants_maps_layout_clik_list_view">Toca para ver en modo lista</string>
+      
+      <!-- google navigation app open dialog -->
+      <string name="gnavigation_dialog_open_title">Abrir Google Navigation</string>
+      <string name="gnavigation_dialog_open_message">¿Cómo vas a ir a %s?</string>
+      <string name="gnavigation_dialog_open_walking">Andando</string>
+      <string name="gnavigation_dialog_open_driving">En coche</string>
     
 </resources>
