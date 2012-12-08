@@ -78,35 +78,48 @@
             android:clickable="true"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/restaurant_data_apps_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/restaurant_data_info_layout"
-        android:gravity="center">
- 
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
+ 		
 	    <ImageButton
 	        android:id="@+id/restaurant_data_maps"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical|center_horizontal"
 	        android:background="@null"
 	        android:src="@drawable/android_maps"
-	        android:contentDescription="@string/restaurant_data_maps_text"
-            android:gravity="center_vertical|center_horizontal"
+	        android:contentDescription="@string/restaurant_data_maps_description"
 	        android:onClick="openMap"/>
+        
+        <ImageButton
+            android:id="@+id/restaurant_data_nav_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@drawable/navigation"
+            android:contentDescription="@string/restaurant_data_navigation_description"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="openNavigation"
+            android:visibility="gone"/>
         
          <ImageButton
             android:id="@+id/restaurant_data_waze_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/restaurant_data_maps"
             android:background="@null"
             android:src="@drawable/waze"
-            android:contentDescription="@string/restaurant_data_waze_text"
+            android:contentDescription="@string/restaurant_data_waze_description"
             android:gravity="center_vertical|center_horizontal"
-            android:onClick="openWaze"/>
+            android:onClick="openWaze"
+            android:visibility="gone"/>
         
-    </RelativeLayout>
+    </LinearLayout>
     
    
 

@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,15 +39,22 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 	private final static String TAG = RestaurantInfoAction.class.toString();
 	
 	private static final String WAZE_APP_URL = "waze://?q=Hawaii";
+	private static final String GOOGLE_NAV_APP_URL = "google.navigation:q=New+York+NY";
 	private final static String URI_TO_OPEN_MAPS = "http://maps.google.com/maps?z=%d&q=%s";
 	private final static int ZOOM_LEVEL = 18; 
-	private static final String URL_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
+	private static final String URI_TO_OPEN_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
+	private static final String URI_TO_OPEN_GOOGLE_NAV_ = "google.navigation:mode=%s&q=%s";
+	private static final String GOOGLE_NAV_MODE_WALK = "walking";
+	private static final String GOOGLE_NAV_MODE_DRIVE = "driving";
+	
 	
 	private RestaurantDao restaurant;
 	private int position;
 	private Activity activity;
 	
 	private boolean wazeInstalled;
+	private boolean gNavigationInstalled;
+	
     private LayoutInflater inflater;
     private AlertDialog dialog = null; 
     private boolean error = Boolean.FALSE;
@@ -57,6 +66,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 		activity = TRCardManagerApplication.getActualActivity();
 		inflater = LayoutInflater.from(activity);
 		setWazeInstalled();
+		setGNavigationInstalled();
 	}
 	
 	
@@ -117,7 +127,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_type)).setText(foodType);
 		((TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_phone)).setText(restaurant.getPhoneNumber());
 		
-		RelativeLayout buttonsLayout = (RelativeLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_apps_layout);
+		LinearLayout buttonsLayout = (LinearLayout)relativeMovementLayout.findViewById(R.id.restaurant_data_apps_layout);
 		buttonsLayout.setId(position);
 		
 		if(wazeInstalled){	
@@ -125,6 +135,12 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			wazeButton.setVisibility(View.VISIBLE);
 			wazeButton.setOnTouchListener(new TouchElementsListener<ImageButton>());
 			wazeButton.setOnClickListener(new WazeClickListener(restaurant));
+		}
+		if(gNavigationInstalled){
+			ImageButton gNavigationButton = (ImageButton)buttonsLayout.findViewById(R.id.restaurant_data_nav_image);
+			gNavigationButton.setVisibility(View.VISIBLE);
+			gNavigationButton.setOnTouchListener(new TouchElementsListener<ImageButton>());
+			gNavigationButton.setOnClickListener(new GNavClickListener(restaurant));
 		}
 		
 		TextView restaurantDataClose = (TextView)relativeMovementInfoLayout.findViewById(R.id.restaurant_data_close);
@@ -166,6 +182,12 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 		 wazeInstalled = (list.size()>0);  
 	}
 	
+	private void setGNavigationInstalled(){
+		 Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( GOOGLE_NAV_APP_URL ) );
+		 List<ResolveInfo> list = activity.getPackageManager().queryIntentActivities(intent,     
+		            PackageManager.MATCH_DEFAULT_ONLY);
+		 gNavigationInstalled = (list.size()>0);  
+	}
 	
 	
 	private class WazeClickListener implements OnClickListener{
@@ -175,7 +197,7 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 		}
 		public void onClick(View v) {
 			LocationDao location = restaurantDao.getLocation();
-			String urlwaze = String.format(URL_WAZE_APP,location.getLatitude(),location.getLongitude());
+			String urlwaze = String.format(URI_TO_OPEN_WAZE_APP,location.getLatitude(),location.getLongitude());
 			Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlwaze ) );
 			activity.startActivity(intent);
 			
@@ -191,6 +213,42 @@ public class RestaurantInfoAction extends AsyncTask<Void, Void, Void> {
 			String uri = String.format(URI_TO_OPEN_MAPS,
 					ZOOM_LEVEL,restaurantDao.getRestaurantDisplayDirection());
 			activity.startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+		}
+	}
+	
+	private class GNavClickListener implements OnClickListener{
+		private RestaurantDao restaurantDao;
+		private String mode = GOOGLE_NAV_MODE_WALK; 
+		public GNavClickListener(RestaurantDao restaurantDao){
+			this.restaurantDao = restaurantDao;
+		}
+		public void onClick(View v) {
+			Context ctx = TRCardManagerApplication.getActualActivity();
+			AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
+			alert.setMessage(String.format(ctx.getString(R.string.gnavigation_dialog_open_message),
+					restaurantDao.getRetaurantName()));
+			alert.setPositiveButton(R.string.gnavigation_dialog_open_walking,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						mode = GOOGLE_NAV_MODE_WALK;
+						openGNavigation();
+					}
+				});
+			alert.setNegativeButton(R.string.gnavigation_dialog_open_driving,
+					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					mode = GOOGLE_NAV_MODE_DRIVE;
+					openGNavigation();
+				}
+			});
+			alert.show();
+		}
+		
+		private void openGNavigation(){
+			String urlGNavigation = String.format(URI_TO_OPEN_GOOGLE_NAV_,mode,
+					restaurantDao.getRestaurantDisplayDirection());
+			Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( urlGNavigation ) );
+			activity.startActivity(intent);
 		}
 	}
 		
