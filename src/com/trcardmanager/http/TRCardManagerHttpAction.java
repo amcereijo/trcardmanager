@@ -39,6 +39,7 @@ import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
+import com.trcardmanager.exception.TRCardManagerRecoverPasswordException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
 import com.trcardmanager.exception.TRCardManagerUpdatePasswordException;
@@ -49,14 +50,18 @@ import com.trcardmanager.exception.TRCardManagerUpdatePasswordException;
  *
  */
 public class TRCardManagerHttpAction {
-	
+
 	private static final int HISTORICAL_LIST_MOVEMENTS_START_POSITION = 2;
 
 	private static final String TAG = TRCardManagerHttpAction.class.getName();
 	
+	private static final String LANG_PARAMETER_VALUE = "es";
+	private static final String LANG_PARAMETER = "swlang";
+	
 	private static final String LOGIN_FIELD_TYPE = "type";
 	private static final String LOGIN_FIELD_PASSW = "passwd";
 	private static final String LOGIN_FIELD_USER = "user";
+	
 
 	private static final int TIMEOUT = 15000;
 	private static final String LOGIN_RESPONSE_OK = "2";
@@ -82,15 +87,19 @@ public class TRCardManagerHttpAction {
     private static final String URL_INFO_RESTAURANT = "http://www.edenred.es/affiliates_search/show_affiliate/%s";
     private static final String SEARCH_RESTAURANTS_PRODUCT = "ticket-restaurant";
     private static final String SEARCH_RESTAURANTS_FORMAT = "tarjeta";
-    
+    private static final String URL_RECOVER_PASSWORD = "recoverPasswdTRC.php";
+    private static final String RECOVER_USER_PARAMETER = "user";
+	private static final String RECOVER_RESPONSE_OK = "2";
+	private static final String RECOVER_RESPONSE_ERROR = "1";
       
     
     public void getCookieLogin(UserDao user) throws TRCardManagerLoginException, 
     		ClientProtocolException, IOException{
-		Map<String, String> postMap = new HashMap<String, String>();
+    	Map<String, String> postMap = new HashMap<String, String>();
 			postMap.put(LOGIN_FIELD_USER, user.getEmail());
 			postMap.put(LOGIN_FIELD_PASSW, user.getPassword());
 			postMap.put(LOGIN_FIELD_TYPE, TYPE_PARAMETER);
+			postMap.put(LANG_PARAMETER, LANG_PARAMETER_VALUE);
 		
 		Response response = Jsoup.connect(URL_BASE+URL_LOGIN).data(postMap).execute();
 		if(response != null){
@@ -438,7 +447,7 @@ public class TRCardManagerHttpAction {
         	String id = getPrepareUpdateCard(user);
         	
         	Map<String, String> postMap = new HashMap<String, String>();
-				postMap.put("swlang",Locale.getDefault().getCountry());
+        		postMap.put(LANG_PARAMETER, LANG_PARAMETER_VALUE);
 				postMap.put("id",id);
 				postMap.put("profile",UPDATE_CARD_PROFILE_PARAMETER);
 				postMap.put("num_card",card.getCardNumber());
@@ -482,7 +491,7 @@ public class TRCardManagerHttpAction {
          */
     	String id = getPrepareUpdatePasswprd(user);
     	Map<String, String> postMap = new HashMap<String, String>();
-		postMap.put("swlang",Locale.getDefault().getCountry());
+    	postMap.put(LANG_PARAMETER, LANG_PARAMETER_VALUE);
 		postMap.put("id",id);
 		postMap.put("pwd",newPassword);
 		Response response = Jsoup.connect(URL_BASE+URL_UPDATE_PASSWORD).cookie(COOKIE_NAME,user.getCookieValue())
@@ -759,5 +768,32 @@ public class TRCardManagerHttpAction {
     private String getWhitOutHtmlWhiteSpaceTag(String value){
     	return value.replaceAll("&nbsp;", " ").replace("--", "+");
     }
-
+    
+    /**
+     * Call action to recover password
+     * @param email
+     */
+    public void callRecoverPassword(String email)throws TRCardManagerRecoverPasswordException{
+    	Response response;
+    	try{
+	    	Map<String, String> postMap = new HashMap<String, String>();
+	    	postMap.put(LANG_PARAMETER, LANG_PARAMETER_VALUE);
+			postMap.put(RECOVER_USER_PARAMETER,email);
+			response = Jsoup.connect(URL_BASE+URL_RECOVER_PASSWORD).data(postMap).execute();
+    	}catch(IOException e){
+    		Log.e(TAG, e.getMessage(),e);
+    		throw new TRCardManagerRecoverPasswordException(TRCardManagerRecoverPasswordException.CONECTION_ERROR);
+    	}catch(Exception e){
+    		Log.e(TAG, e.getMessage(),e);
+    		throw new TRCardManagerRecoverPasswordException(TRCardManagerRecoverPasswordException.UNKNOWN_ERROR);
+    	}
+		if(response != null){
+			String responseString = response.body();
+			if(RECOVER_RESPONSE_ERROR.equals(responseString)){
+				throw new TRCardManagerRecoverPasswordException(TRCardManagerRecoverPasswordException.BAD_USER);
+			}else if(!RECOVER_RESPONSE_OK.equals(responseString)){
+				throw new TRCardManagerRecoverPasswordException(TRCardManagerRecoverPasswordException.UNKNOWN_ERROR);
+			}
+	    }
+    }	
 }

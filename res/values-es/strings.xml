@@ -16,6 +16,14 @@
     <string name="loggin_load_dialog_title">Autenticar</string>
     <string name="loggin_load_dialog_text">Autenticando en el sistema&#8230;</string>
     <string name="session_expired">Tu sesión ha caducado. Debes volver a entrar.</string>
+    <string name="login_recover_password"><u>¿Has olvidado tu contraseña?</u></string>
+    <string name="recover_password_btn">Recuperar contraseña</string>
+    <string name="recover_password_btn_clicked">Enviando petición&#8230;</string>
+    <string name="recover_password_exception_connection">Problemas con la conexión a internet</string>
+    <string name="recover_password_exception_user">El usuario informado no existe</string>
+    <string name="recover_password_exception_other">Opps!! algo ha ido mal, prueba de nuevo</string>
+    <string name="recover_password_error_no_email">Debes indicar una dirección de email</string>
+    <string name="recover_password_ok">Consulta tu correo electrónico para obtener la nueva clave.\nRecuerda cambiar la clave desde el menú "Mi Cuenta".</string>
 
     <!-- cards list -->
     <string name="loadcards_load_dialog_title">Tarjeta</string>

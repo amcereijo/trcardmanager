@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +19,8 @@ import com.trcardmanager.action.TRCardManagerLoginAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
+import com.trcardmanager.exception.TRCardManagerRecoverPasswordException;
+import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.listener.TouchElementsListener;
 
 /**
@@ -30,6 +33,7 @@ public class TRCardManagerLoginActivity extends Activity {
 	private static final String TAG = TRCardManagerLoginActivity.class.getName(); 
 	
 	private UserDao user;
+	private boolean showLogin = Boolean.TRUE;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +52,11 @@ public class TRCardManagerLoginActivity extends Activity {
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		findActualUser();
-		setContentView(R.layout.login);    
-		fillUserFields();
+		if(showLogin){
+			findActualUser();
+			setContentView(R.layout.login);    
+			fillUserFields();
+		}
 		super.onConfigurationChanged(newConfig);
 	}
 	
@@ -98,12 +104,18 @@ public class TRCardManagerLoginActivity extends Activity {
 				checkRememberme.isChecked());
 	}
 	
-	
+	/**
+	 * 
+	 * @param v
+	 */
 	public void doLogin(View v) {
 		new TRCardManagerLoginAction(getUserData()).execute();
 	}
 	
 	
+	/**
+	 * 
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	    if(requestCode == TRCardManagerApplication.BACK_EXIT_APPLICATION){
@@ -118,6 +130,43 @@ public class TRCardManagerLoginActivity extends Activity {
 	    }
 	}
 
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void showRecoverPassword(View v){
+		this.setContentView(R.layout.recover_password_layout);
+		showLogin = Boolean.FALSE;
+		Button loginButton = (Button)findViewById(R.id.btn_recover_password_enter);
+		loginButton.setOnTouchListener(new TouchElementsListener<Button>());
+	}
+	
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void doRecoverPassword(View v){
+		final EditText emailEditText = (EditText) findViewById(R.id.recover_password_email);
+		if(emailEditText.getText().toString() == null || "".equals(emailEditText.getText().toString())){
+			Toast.makeText(getApplicationContext(), R.string.recover_password_error_no_email, Toast.LENGTH_LONG).show();
+		}else{
+			new Thread(new RecoverPasswordRunnable(emailEditText.getText().toString())).start();
+		}
+		
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if(!showLogin){
+			setContentView(R.layout.login);
+			showLogin = Boolean.TRUE;
+		}else{
+			this.finish();
+		}
+	}
+	
 	private void clearLoginForm() {
 		TextView emailTextView = (TextView)findViewById(R.id.login_email);
 		TextView passTextView = (TextView)findViewById(R.id.login_password);
@@ -139,5 +188,62 @@ public class TRCardManagerLoginActivity extends Activity {
 		boolean rememberme = ((CheckBox)findViewById(R.id.login_rememberme)).isChecked();
 		UserDao user = new UserDao(email, password, rememberme,rememberme);
 		return user;
+	}
+	
+	
+	private class RecoverPasswordRunnable implements Runnable{
+		private String email;
+		
+		/**
+		 * 
+		 * @param email
+		 */
+		public RecoverPasswordRunnable(String email){
+			this.email = email;
+		}
+		
+		public void run() {
+			runOnUiThread(new PrepareErrorRecoverViewRunnable());
+			try{
+				new TRCardManagerHttpAction().callRecoverPassword(email);
+				runOnUiThread(new LoginViewRunnable());
+			}catch (TRCardManagerRecoverPasswordException e) {
+				runOnUiThread(new ErrorRecoverPassWordRunnable(e));
+			}
+		}
+	}
+	
+	private class PrepareErrorRecoverViewRunnable implements Runnable{
+		public void run() {
+			Button loginButton = (Button)findViewById(R.id.btn_recover_password_enter);
+			loginButton.setText(R.string.recover_password_btn_clicked);
+			loginButton.setSelected(Boolean.TRUE);
+		}
+	}
+	
+	private class LoginViewRunnable implements Runnable{
+		public void run() {
+			setContentView(R.layout.login);
+			showLogin = Boolean.TRUE;
+			Toast t =  Toast.makeText(getApplicationContext(), R.string.recover_password_ok, Toast.LENGTH_LONG);
+			t.setGravity(Gravity.CENTER, 0, 0);
+			t.show();
+		}
+	}
+	
+	private class ErrorRecoverPassWordRunnable implements Runnable{
+		TRCardManagerRecoverPasswordException error;
+		public ErrorRecoverPassWordRunnable(TRCardManagerRecoverPasswordException e){
+			this.error = e;
+		}
+		public void run() {
+			TextView errorTextView = (TextView)findViewById(R.id.recover_password_error);
+			errorTextView.setText(error.getResourceIdError());
+			Button loginButton = (Button)findViewById(R.id.btn_recover_password_enter);
+			final EditText emailEditText = (EditText) findViewById(R.id.recover_password_email);
+			loginButton.setText(R.string.recover_password_btn);
+			loginButton.setSelected(Boolean.FALSE);
+			emailEditText.requestFocus();
+		}
 	}
 }

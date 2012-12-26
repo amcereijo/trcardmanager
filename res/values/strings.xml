@@ -15,6 +15,15 @@
     <string name="loggin_load_dialog_title">Log in</string>
     <string name="loggin_load_dialog_text">Logging in system&#8230;</string>
     <string name="session_expired">Session expired. You must log in again</string>
+    <string name="login_recover_password"><u>Forgot your password?</u></string>
+    <string name="recover_password_btn">Recover password</string>
+    <string name="recover_password_btn_clicked">Sending request&#8230;</string>
+    <string name="recover_password_exception_connection">Network problems!</string>
+    <string name="recover_password_exception_user">User do not exist</string>
+    <string name="recover_password_exception_other">Unknown error</string>
+    <string name="recover_password_error_no_email">Email is required</string>
+    <string name="recover_password_ok">Check your email to get the new password.\nRemember change your password from "My account" menu.</string>
+    
 
     <!-- cards list -->
     <string name="loadcards_load_dialog_title">Card</string>

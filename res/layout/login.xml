@@ -19,7 +19,7 @@
             android:textColor="@android:color/white"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:typeface="serif" />
+            android:typeface="serif"/>
 
         <EditText
             android:id="@+id/login_email"
@@ -103,6 +103,22 @@
             android:gravity="center_horizontal"
             android:textColor="#FFFFFF"
             android:visibility="gone" />
+        
+        
+        <TextView
+            android:id="@+id/recover_password_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="14sp"
+            android:layout_marginRight="14sp"
+            android:layout_marginTop="16sp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:text="@string/login_recover_password"
+            android:clickable="true"
+            android:onClick="showRecoverPassword"
+             />
     </LinearLayout>
 
 </ScrollView>
