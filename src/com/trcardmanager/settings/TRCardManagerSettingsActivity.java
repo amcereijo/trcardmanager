@@ -33,13 +33,29 @@ public class TRCardManagerSettingsActivity extends Activity {
 		userDao = TRCardManagerApplication.getUser();
 		CheckBox autoLoginCheck = (CheckBox)findViewById(R.id.settings_check_autologin);
 		autoLoginCheck.setChecked(userDao.isAutologin());
-		
+		CheckBox askExitCheck = (CheckBox)findViewById(R.id.settings_check_ask_exit);
+		askExitCheck.setChecked(userDao.isConfirmationClose());
 	}
 	
+	/**
+	 * 
+	 * @param v
+	 */
 	public void onClickAutoupdate(View v) {
 		CheckBox autoLoginCheck = (CheckBox)v;
 		userDao.setAutologin(autoLoginCheck.isChecked());
 		TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
 		dbHelper.updateUserAutoLogin(userDao);
+	}
+	
+	/**
+	 * 
+	 * @param v
+	 */
+	public void onClickAskExit(View v){
+		CheckBox askExitCheck = (CheckBox)v;
+		userDao.setConfirmationClose(askExitCheck.isChecked());
+		TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(getApplicationContext());
+		dbHelper.updateUserConfirmationClose(userDao);
 	}
 }

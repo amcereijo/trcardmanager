@@ -125,6 +125,7 @@
 
     <!-- setting layout -->
     <string name="settings_check_autologin">Autologin</string>
+    <string name="settings_check_ask_exit">Confirmation when application close</string>
 
     <!-- restaurants layout -->
     <string name="restaurants_search">Restaurants by direction/name</string>

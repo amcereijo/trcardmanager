@@ -170,17 +170,22 @@ public class TRCardManagerActivity extends Activity {
     @Override
     public void onBackPressed() {
     	Log.i(TAG, "On Back pressed.......");
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(R.string.exit_dialog_question_title);
-		alert.setMessage(R.string.exit_dialog_question_message);
-		alert.setPositiveButton(R.string.exit_dialog_question_yes,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						closeApplication();
-					}
-				});
-		alert.setNegativeButton(R.string.exit_dialog_question_no, null);
-		alert.show();
+    	UserDao user = TRCardManagerApplication.getUser();
+    	if(user.isConfirmationClose()){
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle(R.string.exit_dialog_question_title);
+			alert.setMessage(R.string.exit_dialog_question_message);
+			alert.setPositiveButton(R.string.exit_dialog_question_yes,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int whichButton) {
+							closeApplication();
+						}
+					});
+			alert.setNegativeButton(R.string.exit_dialog_question_no, null);
+			alert.show();
+    	}else{
+    		closeApplication();
+    	}
     }
     
     private void initActivity(){

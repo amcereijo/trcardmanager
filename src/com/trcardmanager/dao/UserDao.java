@@ -15,6 +15,7 @@ public class UserDao {
 	private String password;
 	private boolean rememberme;
 	private boolean autologin;
+	private boolean confirmationClose;
 	private String cookieValue;
 	
 	private List<CardDao> cards;
@@ -27,6 +28,12 @@ public class UserDao {
 		setRememberme(rememberme);
 		setAutologin(autologin);
 		cards = new ArrayList<CardDao>();
+	}
+	
+	public UserDao(String email, String password, boolean rememberme, 
+			boolean autologin, boolean confirmationClose) {
+		this(email, password,rememberme,autologin);
+		setConfirmationClose(confirmationClose);
 	}
 	
 	public void setActualCard(CardDao actualCard) {
@@ -85,6 +92,13 @@ public class UserDao {
 	}
 	public boolean isAutologin() {
 		return autologin;
+	}
+	
+	public void setConfirmationClose(boolean confirmationClose) {
+		this.confirmationClose = confirmationClose;
+	}
+	public boolean isConfirmationClose() {
+		return confirmationClose;
 	}
 	
 }

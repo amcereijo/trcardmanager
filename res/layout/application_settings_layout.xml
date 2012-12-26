@@ -10,42 +10,13 @@
         android:onClick="onClickAutoupdate"
         android:text="@string/settings_check_autologin"
         android:textColor="@android:color/white" />
-
+	
+    <CheckBox
+        android:id="@+id/settings_check_ask_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickAskExit"
+        android:text="@string/settings_check_ask_exit"
+        android:textColor="@android:color/white" />
+    
 </LinearLayout>
-
-<!-- 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@android:color/black"
-    android:orientation="vertical"
-    android:padding="0px" >
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <CheckBox
-            android:id="@+id/settings_check_autologin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@android:color/black"
-            android:gravity="center_vertical"
-            android:onClick="onClickAutoupdate"
-            android:text="@string/settings_check_autologin"
-            android:textColor="@android:color/white"
-            android:width="40dp" />
-        
-             TextView android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:background="@android:color/black"
-		    android:textColor="@android:color/white"
-		    android:text="@string/settings_check_autologin"
-		    android:layout_toRightOf="@id/settings_check_autologin"
-		    android:gravity="center_vertical"
-		    android:layout_marginLeft="2dp"/
-       
-    </RelativeLayout>
-
-</RelativeLayout> -->
