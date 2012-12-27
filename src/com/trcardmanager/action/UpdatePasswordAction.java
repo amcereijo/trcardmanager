@@ -19,7 +19,7 @@ import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdatePasswordException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpUserAction;
 
 /**
  * 
@@ -50,9 +50,8 @@ public class UpdatePasswordAction extends AsyncTask<String, Void, Integer> {
 	}
 	
 	private void updatePassword(String newPassword){
-		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		try {
-			httpAction.changePassword(userDao, newPassword);
+			new TRCardManagerHttpUserAction().changePassword(userDao, newPassword);
 			CheckBox checkSave = (CheckBox)activity.findViewById(R.id.update_password_savedb);
 			//¿save in db?
 			if(checkSave.isChecked() && userDao.isRememberme()){
@@ -60,8 +59,6 @@ public class UpdatePasswordAction extends AsyncTask<String, Void, Integer> {
 				TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(activity.getApplicationContext());
 				dbHelper.updateUserPassword(userDao, newPassword);
 			}
-
-			//TODO return a code to principal activity to repaint screen
 			finalizeWithState(TRCardManagerApplication.PASSWORD_UPDATED);
 		} catch (ClientProtocolException e) {
 			Log.e(TAG,"Error updating password:"+e.getMessage(),e);

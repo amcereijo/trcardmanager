@@ -15,6 +15,7 @@ import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpCardAction;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.ScrollDirection;
 
@@ -70,9 +71,8 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 	
     private List<MovementDao> updateMovements() {
     	List<MovementDao> myListItems = new ArrayList<MovementDao>();
-		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
     	try {
-    		myListItems = httpAction.updateLastMovementsAndBalance(user);
+    		myListItems = new TRCardManagerHttpCardAction().updateLastMovementsAndBalance(user);
     		if(myListItems == null || myListItems.size()==0){
     			myListItems = new ArrayList<MovementDao>();
 			}
@@ -110,9 +110,8 @@ public class MovementListAction extends AsyncTask<Void, Void, Void>{
 	
 	private List<MovementDao> callHttpFindMovements(){
 		List<MovementDao> myListItems = new ArrayList<MovementDao>();
-		final TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
 		try {
-			myListItems = httpAction.getNextMovements(user);
+			myListItems = new TRCardManagerHttpCardAction().getNextMovements(user);
 		} catch (IOException e) {
 			Log.e(this.getClass().toString(), e.getMessage(),e);
 		}catch(TRCardManagerSessionException se){

@@ -20,7 +20,7 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerRecoverPasswordException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpUserAction;
 import com.trcardmanager.listener.TouchElementsListener;
 
 /**
@@ -205,7 +205,7 @@ public class TRCardManagerLoginActivity extends Activity {
 		public void run() {
 			runOnUiThread(new PrepareErrorRecoverViewRunnable());
 			try{
-				new TRCardManagerHttpAction().callRecoverPassword(email);
+				new TRCardManagerHttpUserAction().callRecoverPassword(email);
 				runOnUiThread(new LoginViewRunnable());
 			}catch (TRCardManagerRecoverPasswordException e) {
 				runOnUiThread(new ErrorRecoverPassWordRunnable(e));

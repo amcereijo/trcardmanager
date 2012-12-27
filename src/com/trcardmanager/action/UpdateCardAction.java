@@ -17,7 +17,7 @@ import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
 import com.trcardmanager.exception.TRCardManagerUpdateCardException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpCardAction;
 
 
 /**
@@ -53,8 +53,7 @@ public class UpdateCardAction extends AsyncTask<String, Void, Integer> {
     	try {
     		if(cardDao != null){
     			//http active card
-	    		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-				httpAction.activateCard(userDao, cardDao);
+	    		new TRCardManagerHttpCardAction().activateCard(userDao, cardDao);
 				
 				publishProgress();
 				

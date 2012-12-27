@@ -20,7 +20,7 @@ import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpUserAction;
 
 /**
  * 
@@ -99,8 +99,7 @@ public class TRCardManagerLoginAction extends AsyncTask<Void, Void, Integer>{
 	
 	
 	private void httpLogin() throws TRCardManagerLoginException, ClientProtocolException, IOException{
-		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-		httpAction.getCookieLogin(userDao);
+		new TRCardManagerHttpUserAction().getCookieLogin(userDao);
 	}
 	
 	

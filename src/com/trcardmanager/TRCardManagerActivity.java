@@ -32,7 +32,7 @@ import com.trcardmanager.dao.CardDao;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerSessionException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpCardAction;
 import com.trcardmanager.myaccount.TRCardManagerMyAccountActivity;
 import com.trcardmanager.restaurant.TRCardManagerRestaurantsActivity;
 import com.trcardmanager.settings.TRCardManagerSettingsActivity;
@@ -257,12 +257,12 @@ public class TRCardManagerActivity extends Activity {
     
     
     private void loadMoreMovementsBackGround(final UserDao user){
-    	final TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+    	
     	new Thread(new Runnable() {
 			public void run() {
 				try {
-					user.getActualCard().getMovementsData().setNextMovements(
-						httpAction.getNextMovements(user));
+					List<MovementDao> movements = new TRCardManagerHttpCardAction().getNextMovements(user);
+					user.getActualCard().getMovementsData().setNextMovements(movements);
 				} catch (IOException e) {
 					Log.e(this.getClass().toString(), e.getMessage(),e);
 				}catch(TRCardManagerSessionException se){

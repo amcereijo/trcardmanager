@@ -10,7 +10,7 @@ import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerDataException;
 import com.trcardmanager.exception.TRCardManagerSessionException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
+import com.trcardmanager.http.TRCardManagerHttpCardAction;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class UserDataAction {
 	public void loadAndSaveUserData(UserDao userDao) throws ClientProtocolException, IOException,
 		TRCardManagerDataException, TRCardManagerSessionException{
 		
-			TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
+			TRCardManagerHttpCardAction httpAction = new TRCardManagerHttpCardAction();
 			TRCardManagerDbHelper dbHelper = new TRCardManagerDbHelper(TRCardManagerApplication.getActualActivity());
 			//http actions
 			httpAction.getActualCard(userDao);
