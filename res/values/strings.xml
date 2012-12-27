@@ -70,7 +70,7 @@
     <string name="principal_menu_about">About</string>
 
     <!-- About layout -->
-    <string name="about_version_title">About</string>
+    <string name="about_version_title">TRCardManager - About</string>
     <string name="about_version">Version</string>
     <string name="about_developer">XilvirSoft</string>
     <string name="about_application">\nThe application allows you to check the balance on your ticketrestaurant card in the same way that could be done on the web.\n
@@ -95,7 +95,7 @@
     <string name="update_card_dialog_error_button">Close</string>
 
     <!-- my account tab -->
-    <string name="myaccount_tab_title">My Account</string>
+    <string name="myaccount_tab_title">TRCardManager - My Account</string>
     <string name="myaccount_tab_update_car_tab_title">Update Card</string>
     <string name="myaccount_tab_update_password_tab_title">Change Password</string>
 
@@ -124,13 +124,14 @@
     <string name="update_password_changed">The password has been successfully updated.</string>
 
     <!-- setting layout -->
+    <string name="settings_title">TRCardManager - Settings</string>
     <string name="settings_check_autologin">Autologin</string>
     <string name="settings_check_ask_exit">Confirmation when application close</string>
 
     <!-- restaurants layout -->
     <string name="restaurants_search">Restaurants by direction/name</string>
     <string name="restaurants_location">Restaurants in location</string>
-    <string name="restaurants_title">Restaurants</string>
+    <string name="restaurants_title">TRCardManager - Restaurants</string>
     <string name="restaurants_select_search_type">Select search type</string>
     <string name="restaurants_search_direction">Street,CP,City,&#8230;</string>
     <string name="restaurants_search_restaurant">Restaurant Name</string>
