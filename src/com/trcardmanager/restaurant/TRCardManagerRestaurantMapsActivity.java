@@ -1,8 +1,6 @@
 package com.trcardmanager.restaurant;
 
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -13,8 +11,6 @@ import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction;
 import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.LocationDao;
-import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.listener.TouchElementsListener;
@@ -26,10 +22,6 @@ import com.trcardmanager.location.TRCardManagerLocationAction;
  *
  */
 public class TRCardManagerRestaurantMapsActivity extends MapActivity {
-	
-	private final static String URI_TO_OPEN_MAPS = "http://maps.google.com/maps?z=%d&q=%s";
-	private final static int ZOOM_LEVEL = 18; 
-	private static final String URL_WAZE_APP = "waze://?ll=%s,%s&navigate=yes";
 	
 	private RestaurantSearchDao restaurantSearchDao;
 	private SearchType searchType;
