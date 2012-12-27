@@ -26,6 +26,7 @@ public class TRCardManagerSettingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.application_settings_layout);
+		setTitle(R.string.settings_title);
 		setSettingsValues();
 	}
 
