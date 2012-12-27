@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_alignParentTop="true"
-    android:background="#041F50"
+    android:background="@android:color/white"
     android:gravity="top"
     android:orientation="vertical" >
 
