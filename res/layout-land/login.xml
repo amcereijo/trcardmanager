@@ -11,24 +11,23 @@
         android:layout_gravity="center_vertical" 
         android:gravity="center_vertical">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8sp"
-            android:gravity="center_horizontal"
-            android:text="@string/app_name"
-            android:textColor="@android:color/white"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            android:typeface="serif" />
+        <ImageView
+	        android:id="@+id/about_icon_layout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="0sp"
+	        android:layout_marginBottom="0sp"
+	        android:contentDescription="@string/about_application_icon"
+	        android:src="@drawable/about_application_icon"
+	        android:layout_gravity="center" />
         <EditText
             android:id="@+id/login_email"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="6sp"
-            android:layout_marginLeft="30sp"
-            android:layout_marginRight="30sp"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"
             android:layout_marginTop="5sp"
             android:background="@drawable/login_text_border"
             android:hint="@string/login_email_hint"
@@ -41,8 +40,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="30sp"
-            android:layout_marginRight="30sp"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"
             android:layout_marginTop="5sp"
             android:background="@drawable/login_text_border"
             android:hint="@string/login_password_hint"
@@ -53,7 +52,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30sp"
+            android:layout_marginLeft="60sp"
             android:layout_marginTop="5sp"
             android:background="#2A4678"
             android:orientation="horizontal"
@@ -69,7 +68,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_rememberme"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white" 
+                android:paddingLeft="2sp"/>
         </LinearLayout>
         <!-- Login button -->
 
@@ -78,8 +78,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="30sp"
-            android:layout_marginRight="30sp"
+            android:layout_marginLeft="60sp"
+            android:layout_marginRight="60sp"
             android:layout_marginTop="6sp"
             android:background="@drawable/login_btn_border"
             android:clickable="true"
@@ -88,7 +88,7 @@
             android:text="@string/login_btn_enter"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
-            android:typeface="serif">
+            >
             <requestFocus />
         </Button>
 
@@ -98,8 +98,8 @@
 	        android:gravity="center_horizontal"
 	        android:layout_marginTop="8sp"
 	        android:textColor="#FFFFFF"
-	        android:layout_marginLeft="30sp"
-	        android:layout_marginRight="30sp"
+	        android:layout_marginLeft="60sp"
+	        android:layout_marginRight="60sp"
 	        android:id="@+id/error_login_text_view"
 	        android:visibility="gone"/>
         
@@ -107,13 +107,14 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center_horizontal"
 	        android:gravity="center_horizontal"
-	        android:layout_marginTop="16sp"
+	        android:paddingTop="8sp"
+	        android:paddingBottom="8sp"
 	        android:textColor="@android:color/white"
             android:text="@string/login_recover_password"
             android:clickable="true"
             android:onClick="showRecoverPassword"
-	        android:layout_marginLeft="30sp"
-	        android:layout_marginRight="30sp"
+	        android:layout_marginLeft="60sp"
+	        android:layout_marginRight="60sp"
 	        android:id="@+id/recover_password_text_view"
 	        />
     </LinearLayout>
