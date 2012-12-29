@@ -24,14 +24,14 @@
 	    android:layout_alignParentLeft="true"
 	    >
 	        <ImageButton android:src="@drawable/application_icon"
-	            android:maxHeight="80sp"
-	            android:maxWidth="80sp"
+	            
 	            android:layout_alignParentLeft="true"
 	            android:id="@+id/image_button_icon"
 	            android:contentDescription="@string/imagen_icon_text"
 	           	android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
-		    	android:background="@drawable/icon_btn_border"
+		    	android:background="@null"
+		    	android:paddingTop="2sp"
 		    />
         </RelativeLayout>
         

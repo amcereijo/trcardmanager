@@ -23,7 +23,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="10sp"
-                android:background="@drawable/icon_btn_border"
+                android:background="@null"
                 android:contentDescription="@string/about_application_icon"
                 android:maxHeight="120sp"
                 android:maxWidth="160sp"
