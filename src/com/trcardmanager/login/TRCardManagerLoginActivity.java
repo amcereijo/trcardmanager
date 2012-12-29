@@ -1,6 +1,7 @@
 package com.trcardmanager.login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import com.trcardmanager.action.TRCardManagerLoginAction;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.db.TRCardManagerDbHelper;
+import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerRecoverPasswordException;
 import com.trcardmanager.http.TRCardManagerHttpUserAction;
 import com.trcardmanager.listener.TouchElementsListener;
@@ -39,7 +42,6 @@ public class TRCardManagerLoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
 		setContentView(R.layout.login);    
 		TRCardManagerApplication.setActualActivity(this);
 		
@@ -109,7 +111,13 @@ public class TRCardManagerLoginActivity extends Activity {
 	 * @param v
 	 */
 	public void doLogin(View v) {
-		new TRCardManagerLoginAction(getUserData()).execute();
+		try{
+			new TRCardManagerLoginAction(getUserData()).execute();
+		}catch(TRCardManagerLoginException e){
+			TextView errorView = (TextView)findViewById(R.id.error_login_text_view);
+			errorView.setText(R.string.login_empty_message);
+			errorView.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	
@@ -136,6 +144,7 @@ public class TRCardManagerLoginActivity extends Activity {
 	 * @param v
 	 */
 	public void showRecoverPassword(View v){
+		findActualUser();
 		this.setContentView(R.layout.recover_password_layout);
 		showLogin = Boolean.FALSE;
 		Button loginButton = (Button)findViewById(R.id.btn_recover_password_enter);
@@ -149,8 +158,10 @@ public class TRCardManagerLoginActivity extends Activity {
 	 */
 	public void doRecoverPassword(View v){
 		final EditText emailEditText = (EditText) findViewById(R.id.recover_password_email);
+		hideKeyboard(emailEditText);
 		if(emailEditText.getText().toString() == null || "".equals(emailEditText.getText().toString())){
-			Toast.makeText(getApplicationContext(), R.string.recover_password_error_no_email, Toast.LENGTH_LONG).show();
+			TextView errorTextView = (TextView)findViewById(R.id.recover_password_error);
+			errorTextView.setText(R.string.recover_password_error_no_email);
 		}else{
 			new Thread(new RecoverPasswordRunnable(emailEditText.getText().toString())).start();
 		}
@@ -160,12 +171,14 @@ public class TRCardManagerLoginActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		if(!showLogin){
-			setContentView(R.layout.login);
+			setContentView(R.layout.login);    
+			fillUserFields();
 			showLogin = Boolean.TRUE;
 		}else{
 			this.finish();
 		}
 	}
+	
 	
 	private void clearLoginForm() {
 		TextView emailTextView = (TextView)findViewById(R.id.login_email);
@@ -182,12 +195,25 @@ public class TRCardManagerLoginActivity extends Activity {
 		dbHelper.updateUserRemeberMe(user);
 	}
 		
-	private UserDao getUserData(){
-		String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
+	private UserDao getUserData() throws TRCardManagerLoginException{
+		EditText emailEditText = (EditText)findViewById(R.id.login_email);
+		String email = emailEditText.getText().toString();
 		String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
+		hideKeyboard(emailEditText);
+		if("".equals(email) || email==null ||
+				"".equals(password) || password == null){
+			throw new TRCardManagerLoginException();
+		}
+		
 		boolean rememberme = ((CheckBox)findViewById(R.id.login_rememberme)).isChecked();
 		UserDao user = new UserDao(email, password, rememberme,rememberme);
 		return user;
+	}
+
+	private void hideKeyboard(EditText emailEditText) {
+		InputMethodManager imm = (InputMethodManager)getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(emailEditText.getWindowToken(), 0);
 	}
 	
 	
