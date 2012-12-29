@@ -8,6 +8,7 @@
     <string name="login_email_hint">email</string>
     <string name="login_password_hint">password</string>
     <string name="login_btn_enter">Enter</string>
+    <string name="login_empty_message">You must type email and password.</string>
     <string name="login_error_message">Email and/or password incorrect</string>
     <string name="login_error_connection_message">Network problems. Try again.</string>
     <string name="login_error_connection_error">Connection problems Try again.</string>

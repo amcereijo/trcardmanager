@@ -9,6 +9,7 @@
     <string name="login_email_hint">dirección de correo electrónico</string>
     <string name="login_password_hint">contraseña</string>
     <string name="login_btn_enter">Entrar</string>
+    <string name="login_empty_message">Debes informar el email y la contraseña.</string>
     <string name="login_error_message">Email y/o contraseña incorrecto</string>
     <string name="login_error_connection_message">Problemas de red. Prueba otra vez.</string>
     <string name="login_error_connection_error">Problemas de conexión. Prueba otra vez.</string>
