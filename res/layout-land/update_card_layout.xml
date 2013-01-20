@@ -33,7 +33,7 @@
             android:layout_marginLeft="30sp"
             android:layout_marginRight="30sp"
             android:layout_marginTop="5sp"
-            android:background="@drawable/login_btn_border"
+            android:background="@drawable/buttom_background"
             android:clickable="true"
             android:onClick="updateCard"
             android:text="@string/update_card_btn_update"
