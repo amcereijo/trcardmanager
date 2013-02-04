@@ -6,10 +6,9 @@
     android:baselineAligned="false"
     android:background="#2A4678"
     android:gravity="center">
-	
     
-    
-    <RelativeLayout 
+
+	  <RelativeLayout 
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
 	    android:background="#041F50"
@@ -46,20 +45,16 @@
 	    />
         
 	</RelativeLayout>
-    
-    
 	    
-	    
-	    
-	    <TextView  android:id="@+id/restaurant_search_text_select"
+	    <TextView android:id="@+id/restaurant_search_text_select" 
 	        android:text="@string/restaurants_select_search_type"
          android:layout_width="fill_parent"
          android:layout_height="wrap_content"
          android:textColor="@android:color/white"
          android:gravity="center_horizontal"
          android:textStyle="bold"
-         android:layout_marginBottom="20dip" 
-         android:layout_below="@id/layout_title"/>
+         android:layout_marginBottom="20dip"
+         android:layout_below="@id/layout_title" />
 	    
 		 <LinearLayout android:layout_below="@id/restaurant_search_text_select"
 		    android:layout_width="fill_parent"
@@ -112,9 +107,6 @@
 			
 	    </LinearLayout>
 	    
-
-
-	
 	
 
 </RelativeLayout>

@@ -72,8 +72,8 @@
                 android:id="@+id/about_button_opinon"
                 android:onClick="showFeedBackInput"
                 android:layout_below="@id/about_developer_text"
-                android:background="@null"
-                android:textColor="@android:color/white"
+                android:background="@drawable/about_send_opinion_background"
+                
                 android:textStyle="bold"/>
             
         </RelativeLayout>

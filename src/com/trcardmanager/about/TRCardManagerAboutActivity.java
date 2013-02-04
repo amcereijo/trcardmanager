@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,8 @@ public class TRCardManagerAboutActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setTitle(R.string.about_version_title);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//setTitle(R.string.about_version_title);
 		setContentView(R.layout.about_layout);
 		loadAppVersion();
 		TRCardManagerApplication.setActualActivity(this);

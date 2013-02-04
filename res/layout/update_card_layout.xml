@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#2A4678" >
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:background="#2A4678"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -22,7 +19,8 @@
             android:singleLine="true" 
             android:inputType="number"
             android:textColor="#2A4678"
-            android:background="@drawable/login_text_border"/>
+            android:background="@drawable/login_text_border"
+            android:textCursorDrawable="@null"/>
         
         
         
@@ -44,5 +42,3 @@
 
 
     </LinearLayout>
-
-</ScrollView>

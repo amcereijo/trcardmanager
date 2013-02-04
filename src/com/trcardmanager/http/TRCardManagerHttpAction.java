@@ -3,6 +3,7 @@ package com.trcardmanager.http;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.util.Log;
 
@@ -304,4 +306,132 @@ public class TRCardManagerHttpAction {
 
 		return postMap;
 	}
+	
+	
+	/**
+	 * 
+	 * @param restaurantSeachDao
+	 * @return
+	 * @throws IOException
+	 */
+	public List<RestaurantDao> getRestaurantsAdvanced(RestaurantSearchDao restaurantSeachDao) throws IOException{
+    	List<RestaurantDao> restaurants = new ArrayList<RestaurantDao>();
+    	DirectionDao directionDao = restaurantSeachDao.getDirectionDao();
+    	
+    	do{
+    	Map<String, String> postMap = new HashMap<String, String>();
+			postMap.put("advanced", "1");
+			postMap.put("producto", "ticket-restaurant");
+			postMap.put("formato", "tarjeta");
+			postMap.put("city", directionDao.getLocality());// "Madrid");
+			postMap.put("province", directionDao.getArea());// "");
+			postMap.put("address_cp", directionDao.getPostalCode());// "");
+			postMap.put("address_type", directionDao.getAddressType());// "");
+			postMap.put("address_name", directionDao.getStreet());// "");
+			postMap.put("address_number", directionDao.getStreetNumber());
+			postMap.put("affiliate", restaurantSeachDao.getAffiliate());// "Vips");
+			postMap.put("locale", "es");
+    		postMap.put("page", ""+restaurantSeachDao.getCurrentPage());
+    		
+    	Connection con = Jsoup.connect("http://www.edenred.es/affiliates_search/search")
+			.method(Method.POST)
+			.header("X-Requested-With","XMLHttpRequest")
+			.timeout(TIMEOUT).data(postMap);
+		Response response = con.execute();
+		if(response != null){
+			String htmlParsedResponse = getParsedResponse2(response);
+			Document d = Jsoup.parse(htmlParsedResponse);
+			//Log.i(TAG, htmlParsedResponse);
+			Elements resultList = d.getElementsByClass("result-list");
+			if(resultList!=null && resultList.size()>0){
+				Elements restaurantsLi = resultList.get(0).getElementsByTag("li");
+				boolean firstResult = true;
+				for(Element elRest : restaurantsLi){
+					RestaurantDao restaurantDao = new RestaurantDao();
+					
+					Element elemFoodType = elRest.getElementsByClass("tipo-label").first();
+					restaurantDao.setFoodType(htmlDecoded(elemFoodType.html()));
+					
+					if("".equals(restaurantSeachDao.getFoodType()) || 
+						(!"".equals(restaurantSeachDao.getFoodType()) && 
+						restaurantDao.getFoodType().equalsIgnoreCase(restaurantSeachDao.getFoodType()))){
+						
+						Element map =  elRest.getElementsByTag("a").first();
+							String hrefElemVal = map.attr("href"); // http://maps.google.com/?q=to:40.4426693,-3.7131982
+							hrefElemVal = hrefElemVal.replaceAll(Pattern.quote("http://maps.google.com/?q=to:"), "");
+							String[] longLat = hrefElemVal.split("[,]");
+							LocationDao resLocationDao = new LocationDao(Float.parseFloat(longLat[1].trim()), Float.parseFloat(longLat[0].trim()));
+							restaurantDao.setLocation(resLocationDao);
+						Element elemClassResult = elRest.getElementsByClass("result").first();
+						Element elementName = elemClassResult.getElementsByTag("a").first();
+						restaurantDao.setRetaurantName(htmlDecoded(elementName.html()));
+						Element elemPhone = elemClassResult.getElementsByClass("phone").first();
+						restaurantDao.setPhoneNumber(elemPhone.html());
+						Element elemStreetPostaCode = elemClassResult.getElementsByTag("strong").first();
+						String[] valStreetPostaCode = elemStreetPostaCode.html().split(",");
+						restaurantDao.setStreet(htmlDecoded(valStreetPostaCode[0]));
+						restaurantDao.setPostalCode(valStreetPostaCode[1]);
+						Element elemAddress = elemClassResult.getElementsByClass("address").first();
+						String[] valAddress = elemAddress.html().split(",");
+						restaurantDao.setLocality(htmlDecoded(valAddress[0]));
+						restaurantDao.setSubArea(htmlDecoded(valAddress[1]));
+						
+						restaurantDao.setCompleteDataLoaded(Boolean.TRUE);
+						
+						restaurants.add(restaurantDao);
+						
+						if(firstResult && restaurantSeachDao.getCurrentPage()==1){
+							restaurantSeachDao.getDirectionDao().setLocation(resLocationDao);
+							firstResult = false;
+						}
+					}
+				}
+				
+				Element elemPagination = d.getElementsByClass("pagination").first();
+				if(elemPagination!=null){
+					int lastPag = elemPagination.getElementsByTag("a").size()-2;
+					Element lastSecureAElement = elemPagination.getElementsByTag("a").get(lastPag);
+					int lastSecureAElementVal = Integer.parseInt(lastSecureAElement.html());;
+					restaurantSeachDao.setCurrentPage(Integer.parseInt(elemPagination.getElementsByClass("current").first().html()));
+					if(restaurantSeachDao.getCurrentPage()<=lastSecureAElementVal){
+						restaurantSeachDao.setNumberOfPages(lastSecureAElementVal);
+					}
+				}else{
+					restaurantSeachDao.setNumberOfPages(restaurantSeachDao.getCurrentPage());
+				}
+				
+			}else{
+				//no results
+			}
+		}
+		Log.i(TAG, "Done page "+restaurantSeachDao.getCurrentPage()+" of "+restaurantSeachDao.getNumberOfPages()+"!!");
+		restaurantSeachDao.setCurrentPage(restaurantSeachDao.getCurrentPage()+1);
+    	}while(restaurantSeachDao.getCurrentPage() <= restaurantSeachDao.getNumberOfPages());
+    	
+//    	if(restaurantSeachDao.getRestaurantList()==null){
+//    		restaurantSeachDao.setRestaurantList(restaurants);
+//    	}else{
+//    		restaurantSeachDao.getRestaurantList().addAll(restaurants);
+//    	}
+    	
+    	restaurantSeachDao.setSearchDone(Boolean.TRUE);
+    	return restaurants;
+	}
+	
+	
+	
+	private String getParsedResponse2(Response response)throws UnsupportedEncodingException{
+    	String htmlParsedResponse = new String(response.bodyAsBytes(),"UTF-8");
+    	htmlParsedResponse = htmlParsedResponse.replaceAll(Pattern.quote("$(\"#results\").replaceWith(\""),"")
+			.replaceAll(Pattern.quote("\\u003C"), "<")
+			.replaceAll(Pattern.quote("\\u003E"), ">")
+			.replaceAll(Pattern.quote("\")"),"")
+			.replaceAll(Pattern.quote("\\\""), "\"")
+			.replaceAll(Pattern.quote("\");"), "");
+    	int startRemov = htmlParsedResponse.indexOf("$(\"#filter-advanced-search.replaceWith");
+    	htmlParsedResponse = htmlParsedResponse.substring(0,startRemov);
+		return htmlParsedResponse;
+    }
+	
+	
 }

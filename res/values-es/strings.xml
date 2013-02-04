@@ -148,14 +148,113 @@
       <string name="restaurants_dialog_location_title">Localización</string>
       <string name="restaurants_dialog_location_message">Esperando localización&#8230;</string>
       <string name="restaurants_dialog_search_title">Restaurantes</string>
-      <string name="restaurants_dialog_search_message">Buscando restaurantes en \"%s\"&#8230;</string>
-      <string name="restaurants_dialog_search_more_message">Buscando más restaurantes en \"%s\"&#8230;</string>
+      <string name="restaurants_dialog_search_message">Buscando restaurantes en %s&#8230;</string>
+      <string name="restaurants_dialog_search_message_afiliate_foodtype" formatted="false">Buscando restaurantes %s con comida %s en %s&#8230;</string>
+      <string name="restaurants_dialog_search_message_afiliate" formatted="false">Buscando restaurantes %s en %s&#8230;</string>
+      <string name="restaurants_dialog_search_message_foodtype" formatted="false">Buscando restaurantes %s con comida %s&#8230;</string>
+      <string name="restaurants_dialog_search_more_message">Buscando más restaurantes en %s&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_afiliate_foodtype" formatted="false">Buscando más restaurantes %s con comida %s en %s&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_afiliate" formatted="false">Buscando más restaurantes %s en %s&#8230;</string>
+      <string name="restaurants_dialog_search_more_message_foodtype" formatted="false">Buscando más restaurantes %s con comida %s&#8230;</string>
       <string name="restaurants_dialog_search_message_location">Buscando restaurantes en tu zona&#8230;</string>
       <string name="restaurants_dialog_search_more_message_location">Buscando más restaurantes en tu zona&#8230;</string>
       <string name="restaurants_dialog_direction_title">Restaurantes</string>
       <string name="restaurants_dialog_direction_message">Localizando dirección&#8230;</string>
       <string name="restaurants_search_error">Ha habído algún problema buscando restaurantes, por favor prueba de nuevo&#8230;</string>
-      
+	  <string name="restaurants_search_adv_locality">Localidad</string>
+	  <string name="restaurants_search_adv_locality_hint">localidad</string>
+	   <string name="restaurants_search_adv_area">Provincia</string>
+	   <string name="restaurants_search_adv_area_hint">provincia</string>
+	   <string name="restaurants_search_adv_postal_code">Código Postal</string>
+	   <string name="restaurants_search_adv_postal_code_hint">código Postal</string>
+	   <string name="restaurants_search_adv_trade">Establecimiento</string>
+	   <string name="restaurants_search_adv_trade_hint">establecimiento</string>
+	   <string name="restaurants_search_adv_street">Vía</string>
+	   <string name="restaurants_search_adv_cook_type">Tipo de cocina</string>
+	   <string name="restaurants_search_adv_stret_hint">nombre, número,&#8230;</string>
+	   <string name="restaurants_search_adv_no_data_in">Introduce algún dato para la búsqueda</string>
+	   <string name="restaurants_search_list_title_afiliate_foodtype" formatted="false">%s con comida %s en %s</string>
+	   <string name="restaurants_search_list_title_afiliate" formatted="false">%s en %s</string>
+	   <string name="restaurants_search_list_title_foodtype" formatted="false">%s con comida %s</string>
+	  <string-array name="street_types">
+        <item> </item>
+        <item>CL</item>
+        <item>AV</item>
+        <item>GV</item>
+        <item>CT</item>
+        <item>RB</item>
+        <item>PZ</item>
+        <item>TR</item>
+        <item>PG</item>
+        <item>PO</item>
+        <item>RD</item>
+        <item>LG</item>
+        <item>CM</item>
+        <item>AL</item>
+        <item>PJ</item>
+        <item>BO</item>
+        <item>PI</item>
+        <item>BV</item>
+        <item>PQ</item>
+        <item>GL</item>
+        <item>RA</item>
+        <item>CJ</item>
+    </string-array>
+    <string-array name="food_types">
+        <item>Todos</item>
+        <item>Alemana</item>
+        <item>Americana</item>
+        <item>Andaluza</item>
+        <item>Árabe</item>
+        <item>Argentina</item>
+        <item>Arrocería</item>
+        <item>Asador</item>
+        <item>Asiática</item>
+        <item>Asturiana</item>
+        <item>Brasileña</item>
+        <item>Cafetería/Pastelería</item>
+        <item>Casera</item>
+        <item>Castellana</item>
+        <item>Catalana</item>
+        <item>China</item>
+        <item>Cocina Creativa</item>
+        <item>Comedor de empresa</item>
+        <item>Comida preparada</item>
+        <item>Comida rápida</item>
+        <item>Cubana</item>
+        <item>Ecológica</item>
+        <item>Egipcia</item>
+        <item>Española</item>
+        <item>Fondue/Raclette</item>
+        <item>Francesa</item>
+        <item>Gallega</item>
+        <item>Griega</item>
+        <item>Heladería</item>
+        <item>India</item>
+        <item>Internacional</item>
+        <item>Italiana</item>
+        <item>Japonesa</item>
+        <item>Libanesa</item>
+        <item>Marisquería/Pescado</item>
+        <item>Mediterránea</item>
+        <item>Mejicana</item>
+        <item>Mercado</item>
+        <item>Nepal</item>
+        <item>Oriental</item>
+        <item>Peruana</item>
+        <item>Portuguesa</item>
+        <item>Regional</item>
+        <item>Sueca</item>
+        <item>Tapas-Cervecería</item>
+        <item>Thailandesa</item>
+        <item>Tradicional</item>
+        <item>Turca</item>
+        <item>Variada</item>
+        <item>Vasca</item>
+        <item>Vegetariana</item>
+        <item>Vietnamita</item>
+    </string-array>
+       
    	  <!-- restaurant data  -->
       <string name="restaurant_data_text_type">Comida</string>
       <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>

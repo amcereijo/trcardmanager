@@ -17,6 +17,28 @@
         android:gravity="center_vertical"
         android:orientation="vertical">
 
+        <TextView android:id="@+id/restaurant_list_show_more_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:drawable/ic_search_category_default"
+            android:clickable="true"
+            android:onClick="showMoreSearch" 
+            android:maxWidth="48dp"
+	        android:maxHeight="48dp"/>
+        
+        <TextView android:id="@+id/restaurant_list_change_to_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/restaurant_list_show_more_search"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/android_maps"
+            android:clickable="true"
+            android:onClick="changeToMapsView"
+            
+            android:maxWidth="48dp"
+	        android:maxHeight="48dp"/>
         <TextView
             android:id="@+id/restaurant_search_minimized_text"
             android:layout_width="wrap_content"
@@ -24,17 +46,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:paddingLeft="2sp"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@android:drawable/ic_search_category_default"
-            android:clickable="true"
-            android:onClick="showMoreSearch" />
+            android:paddingLeft="6sp"
+            android:textColor="@android:color/white" 
+            android:layout_toLeftOf="@id/restaurant_list_change_to_map"/>
     </RelativeLayout>
 
     <ListView
@@ -59,6 +73,7 @@
        android:alpha="0.7"
        android:clickable="true"
        android:onClick="changeToMapsView"
+       android:visibility="gone"
        />   
 
 </RelativeLayout>

@@ -24,7 +24,6 @@ import com.trcardmanager.db.TRCardManagerDbHelper;
 import com.trcardmanager.exception.TRCardManagerLoginException;
 import com.trcardmanager.exception.TRCardManagerRecoverPasswordException;
 import com.trcardmanager.http.TRCardManagerHttpUserAction;
-import com.trcardmanager.listener.TouchElementsListener;
 
 /**
  * Activity to login
@@ -37,16 +36,15 @@ public class TRCardManagerLoginActivity extends Activity {
 	
 	private UserDao user;
 	private boolean showLogin = Boolean.TRUE;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.login);    
-		TRCardManagerApplication.setActualActivity(this);
 		
-		Button loginButton = (Button)findViewById(R.id.btn_login_enter);
-		loginButton.setOnTouchListener(new TouchElementsListener<Button>());
+		setContentView(R.layout.login);
+		
+		TRCardManagerApplication.setActualActivity(this);
 		
 		findRemeberedUser();
 		prepareLoginView();
@@ -147,8 +145,6 @@ public class TRCardManagerLoginActivity extends Activity {
 		findActualUser();
 		this.setContentView(R.layout.recover_password_layout);
 		showLogin = Boolean.FALSE;
-		Button loginButton = (Button)findViewById(R.id.btn_recover_password_enter);
-		loginButton.setOnTouchListener(new TouchElementsListener<Button>());
 	}
 	
 	

@@ -4,18 +4,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -47,8 +54,10 @@ import com.trcardmanager.views.TRCardManagerListView.OnRefreshListenerBottomLoad
 public class TRCardManagerActivity extends Activity {
 
 	private static final int POSITION_AD_VIEW_IN_PARENT = 1;
-	final private static String TAG = TRCardManagerActivity.class.getName();
-
+	private static final String TAG = TRCardManagerActivity.class.getName();
+	
+	private View popupView = null;
+    private PopupWindow pw;
 	
 	
 	/** Called when the activity is first created. */
@@ -57,16 +66,33 @@ public class TRCardManagerActivity extends Activity {
         super.onCreate(savedInstanceState);
         try{
 	        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        	
 	        setContentView(R.layout.main);
 	        AdView adView = (AdView)this.findViewById(R.id.adView);
 	        adView.loadAd(new AdRequest());
+	        prepareMenuOptions();
 	        initActivity();
+	        
         }catch(Exception e){
         	Log.e(TAG, e.getMessage(),e);
         	this.finish();
         }
     }
    
+    @SuppressLint("NewApi")
+	private void prepareMenuOptions(){    	
+    	boolean fixedMenu = Boolean.TRUE;
+    	try{
+    		fixedMenu = ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey();
+    	}catch(NoSuchMethodError se){//nothing to do
+    	} 
+    	if(!fixedMenu){
+	        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	        popupView = inflater.inflate(R.layout.menu_layout,null,false);
+	        findViewById(R.id.menu_button_icon).setVisibility(View.VISIBLE);
+	        ((RelativeLayout) findViewById(R.id.layout_card_number_balance)).setPadding(0, 0, 2, 0);
+        }
+    }
     
     
     @Override
@@ -100,9 +126,29 @@ public class TRCardManagerActivity extends Activity {
         return true;
     }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()){
+    
+    public void showPoup(View v){
+    	pw = new PopupWindow(getApplicationContext());
+        pw.setTouchable(true);
+        pw.setFocusable(true);
+        pw.setOutsideTouchable(true);
+        pw.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        pw.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+        pw.setOutsideTouchable(false);
+        pw.setContentView(popupView);
+        pw.showAsDropDown((View)v.getParent(), ((View)v.getParent()).getWidth(), 0);
+    }
+    
+    
+    
+    public void clickMenuOption(View v) {
+    	executeSelectedOption(v.getId());
+    	pw.dismiss();
+    }
+
+
+	protected void executeSelectedOption(int optionId) {
+		switch(optionId){
     		case R.id.principal_menu_myaccount:
     			Intent myAccount = new Intent(this, TRCardManagerMyAccountActivity.class);
     			startActivityForResult(myAccount, TRCardManagerApplication.MY_ACCOUNT_CLOSED);
@@ -123,6 +169,13 @@ public class TRCardManagerActivity extends Activity {
     			startActivity(settingsAbout);
     			break;
     	}
+	}
+    
+    
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	executeSelectedOption(item.getItemId());
     	return true;
     }
 
@@ -240,7 +293,14 @@ public class TRCardManagerActivity extends Activity {
 
     
     private void addCardsToView(final UserDao user){
+    	
+//    	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+//                R.layout.custom_title_bar_layout);
+    	
+    	
     	RelativeLayout cardsLayout = (RelativeLayout)findViewById(R.id.layout_card_information);
+    	
+//    	((RelativeLayout)cardsLayout.findViewById(R.id.layout_card_number_balance)).setVisibility(View.VISIBLE);
     	
     	CardDao actualCard = user.getActualCard();
 	    TextView cardNumber = (TextView)cardsLayout.findViewById(R.id.card_number);

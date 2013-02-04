@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:baselineAligned="false"
+    android:background="#2A4678">
+	
+    
+    
+    <RelativeLayout 
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:background="#041F50"
+	    android:padding="4sp"
+	    android:id="@+id/layout_title_advanced"
+	    android:layout_alignParentTop="true">
+	    
+        <ImageButton
+        android:id="@+id/image_button_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:contentDescription="@string/imagen_icon_text"
+        android:paddingLeft="2sp"
+        android:paddingRight="4sp"
+        android:paddingTop="2sp"
+        android:paddingBottom="2sp"
+        android:src="@drawable/application_icon" 
+        android:layout_centerVertical="true"/>
+        
+        <TextView android:id="@+id/restaurant_title"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:textColor="@android:color/white"
+         android:paddingTop="2sp"
+         android:paddingBottom="2sp"
+         android:textSize="20sp"
+         android:typeface="serif"
+         android:text="@string/principal_menu_restaurant"
+         android:layout_toRightOf="@id/image_button_icon"
+         android:layout_centerVertical="true"
+	    />
+        
+	</RelativeLayout>
+
+
+<ScrollView 
+    android:id="@+id/restaurants_search_scroll_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#2A4678"
+    android:layout_below="@id/layout_title_advanced">
+	
+    
+    
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"> 
+        
+        <TextView android:layout_alignParentTop="true"
+            android:id="@+id/restaurants_search_locality_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_marginTop="30sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="4sp"
+            android:text="@string/restaurants_search_adv_locality"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <EditText android:layout_alignParentTop="true"
+            android:id="@+id/restaurants_search_locality_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_marginTop="30sp"
+            android:layout_toRightOf="@id/restaurants_search_locality_title"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/restaurants_search_adv_locality_hint"
+            android:paddingLeft="6sp"
+            android:textColor="#2A4678" 
+            android:textCursorDrawable="@null"/>
+
+        <TextView
+            android:id="@+id/restaurants_search_subarea_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurants_search_locality_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="4sp"
+            android:text="@string/restaurants_search_adv_area"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <EditText
+            android:id="@+id/restaurants_search_subarea_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_locality_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_subarea_title"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/restaurants_search_adv_area_hint"
+            android:paddingLeft="6sp"
+            android:textColor="#2A4678" 
+            android:textCursorDrawable="@null"/>
+
+        <TextView
+            android:id="@+id/restaurants_search_cp_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurants_search_subarea_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="4sp"
+            android:text="@string/restaurants_search_adv_postal_code"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <EditText
+            android:id="@+id/restaurants_search_cp_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_subarea_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_cp_title"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/restaurants_search_adv_postal_code_hint"
+            android:inputType="number"
+            android:maxLength="5"
+            android:paddingLeft="6sp"
+            android:textColor="#2A4678" 
+            android:textCursorDrawable="@null"/>
+
+        <TextView
+            android:id="@+id/restaurants_search_restaurant_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurants_search_cp_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="4sp"
+            android:text="@string/restaurants_search_adv_trade"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <EditText
+            android:id="@+id/restaurants_search_restaurant_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_cp_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_restaurant_title"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/restaurants_search_adv_trade_hint"
+            android:paddingLeft="6sp"
+            android:textColor="#2A4678" 
+            android:textCursorDrawable="@null"/>
+
+        <TextView
+            android:id="@+id/restaurants_search_street_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurants_search_restaurant_title"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="18sp"
+            android:text="@string/restaurants_search_adv_street"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <Spinner
+            android:id="@+id/restaurants_search_vtype_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_restaurant_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_street_title"
+            android:entries="@array/street_types"
+            android:paddingLeft="6sp"
+            android:popupBackground="@android:color/white"
+            android:spinnerMode="dropdown" />
+
+        <EditText
+            android:id="@+id/restaurants_search_street_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_restaurant_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_vtype_spinner"
+            android:background="@drawable/login_text_border"
+            android:hint="@string/restaurants_search_adv_stret_hint"
+            android:paddingLeft="6sp"
+            android:singleLine="true"
+            android:textColor="#2A4678" 
+            android:textCursorDrawable="@null"/>
+
+        <View
+            android:id="@+id/restaurants_search_separator"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/restaurants_search_street_text"
+            android:layout_marginBottom="6sp"
+            android:layout_marginLeft="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_marginTop="6sp"
+            android:background="@android:color/white" />
+
+        <TextView
+            android:id="@+id/restaurants_search_foodtype_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/restaurants_search_separator"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:paddingLeft="6sp"
+            android:paddingTop="4sp"
+            android:text="@string/restaurants_search_adv_cook_type"
+            android:textColor="@android:color/white"
+            android:width="120sp" />
+
+        <Spinner
+            android:id="@+id/restaurants_search_foodtype_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_separator"
+            android:layout_marginBottom="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_toRightOf="@id/restaurants_search_foodtype_title"
+            android:entries="@array/food_types"
+            android:paddingLeft="6sp"
+            android:popupBackground="@android:color/white"
+            android:spinnerMode="dropdown" />
+
+        <LinearLayout
+            android:id="@+id/restaurant_search_direction_click_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/restaurants_search_foodtype_spinner"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/buttom_background"
+            android:clickable="true"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="search" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_search_category_default" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dip"
+                android:text="@string/restaurants_search_text_button"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>
+</RelativeLayout>

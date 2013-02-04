@@ -29,11 +29,11 @@ import com.trcardmanager.listener.TouchElementsListener;
  */
 public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	
-	private LayoutInflater inflater;
-	private Context context;
-	private ListView.LayoutParams linearLayoutParams;
-	private int numberOfPages;
-	private int actualPage;
+	protected LayoutInflater inflater;
+	protected Context context;
+	protected ListView.LayoutParams linearLayoutParams;
+	protected int numberOfPages;
+	protected int actualPage;
 	
 	public RestaurantListViewAdapter(Context context, int textViewResourceId,
 			RestaurantSearchDao resturantSearchDao) {
@@ -89,18 +89,24 @@ public class RestaurantListViewAdapter extends ArrayAdapter<RestaurantDao> {
 	
 	private View getRestaurantView(int position, RestaurantDao restaurant){
 		View view;
+		view = loadRestaurantElementLayout(position);
+		view.setLayoutParams(linearLayoutParams);
+		((LinearLayout)view).addView(createAndFillDataMovementLayout(restaurant,position));
+		return view;
+	}
+
+	private View loadRestaurantElementLayout(int position) {
+		View view;
 		if(position%2!=0){
 			view = (LinearLayout)inflater.inflate(R.layout.restaurant_element, null,false);
 		}else{
 			view = (LinearLayout)inflater.inflate(R.layout.restaurant_element_odd, null,false);
 		}
-		view.setLayoutParams(linearLayoutParams);
-		((LinearLayout)view).addView(createAndFillDataMovementLayout(restaurant,position));
 		return view;
 	}
 	
 	
-	private RelativeLayout createAndFillDataMovementLayout(final RestaurantDao restaurant, final int position){
+	protected RelativeLayout createAndFillDataMovementLayout(final RestaurantDao restaurant, final int position){
 		RelativeLayout relativeMovementLayout = (RelativeLayout)inflater.inflate(
 				R.layout.restaurant_data_list_view, null,false);
 		

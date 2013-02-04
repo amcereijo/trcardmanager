@@ -18,6 +18,7 @@ import android.util.Log;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.DirectionDao;
 import com.trcardmanager.dao.LocationDao;
+import com.trcardmanager.dao.RestaurantSearchDao;
 
 /**
  * 
@@ -49,6 +50,12 @@ public class TRCardManagerLocationAction implements LocationListener {
 		return phisicalDirecction;
 	}
 	
+	
+	public void getLocationFromAddress(RestaurantSearchDao restaurantSearchDao) throws IOException{
+		Geocoder geoCoder = new Geocoder(TRCardManagerApplication.getActualActivity());
+		List<Address> addresses = geoCoder.getFromLocationName(restaurantSearchDao.getAddressSearch(), 5);
+		restaurantSearchDao.getDirectionDao().setLocation(getLocation(addresses.get(0)));
+	}
 	
 	
 	public DirectionDao getActualLocation(ProgressDialog processDialog) throws InterruptedException{
@@ -90,6 +97,10 @@ public class TRCardManagerLocationAction implements LocationListener {
     	return directionDao;
     }
 	
+	
+	private LocationDao getLocation(Address address){
+    	return new LocationDao(address.getLongitude(), address.getLatitude());
+    }
 	
 	public void onLocationChanged(Location location) {
 		this.actualLocation = location;

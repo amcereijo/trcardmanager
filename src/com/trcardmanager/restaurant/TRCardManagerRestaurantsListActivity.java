@@ -3,16 +3,15 @@ package com.trcardmanager.restaurant;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction;
-import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.RestaurantDao;
-import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
@@ -28,26 +27,21 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 	
 	
 	private TRCardManagerLocationAction locationAction;
-	private RestaurantSearchDao restaurantSearchDao;
-	private SearchType searchType;
 	private ArrayAdapter<RestaurantDao> adapter;
 	
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        setTitle(R.string.restaurants_title);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //setTitle(R.string.restaurants_title);
         setContentView(R.layout.restaurants_list);
         TRCardManagerApplication.setActualActivity(this);
         
         locationAction = new TRCardManagerLocationAction();
-        restaurantSearchDao = new RestaurantSearchDao();
         
         ((TextView)findViewById(R.id.restaurants_list_maps_textView))
     		.setOnTouchListener(new TouchElementsListener<TextView>());
-        
-        getIntentParameters();
         
         launchSearchRestaurantAction();
     }
@@ -57,12 +51,6 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 	public void onBackPressed() {
 		setResult(TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT);
 		super.onBackPressed();
-	}
-	
-	private void getIntentParameters() {
-		Bundle bundle = getIntent().getExtras();
-        restaurantSearchDao.setAddressSearch(bundle.getString("directiontoSearch"));
-        searchType = SearchType.valueOf(bundle.getString("searchType"));
 	}
 
     
@@ -91,12 +79,15 @@ public class TRCardManagerRestaurantsListActivity extends Activity {
 	 * @param v
 	 */
 	public void viewMoreRestaurants(View v){
+		TRCardManagerApplication.getRestaurantSearchDao().setCurrentPage(
+				TRCardManagerApplication.getRestaurantSearchDao().getCurrentPage()+1);
+		TRCardManagerApplication.getRestaurantSearchDao().setSearchDone(Boolean.FALSE);
 		launchSearchRestaurantAction();
 	}
 
 
 	private void launchSearchRestaurantAction() {
-		new SearchRestaurantsAction(restaurantSearchDao,locationAction,searchType,adapter).execute();
+		new SearchRestaurantsAction(locationAction,adapter).execute();
 	}
 	
 	

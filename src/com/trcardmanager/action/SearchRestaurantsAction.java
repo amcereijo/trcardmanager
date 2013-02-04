@@ -20,11 +20,13 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.trcardmanager.R;
 import com.trcardmanager.adapter.RestaurantListViewAdapter;
+import com.trcardmanager.adapter.RestaurantListViewAdvancedAdapter;
 import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.DirectionDao;
 import com.trcardmanager.dao.LocationDao;
 import com.trcardmanager.dao.RestaurantDao;
 import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchType;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.location.TRCardManagerLocationAction;
@@ -39,11 +41,7 @@ import com.trcardmanager.restaurant.TRCardManagerRestaurantsListActivity;
  *
  */
 public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
-	
-	public enum SearchType{
-		DIRECTION_SEARCH,
-		LOCATION_SEARCH
-	}
+
 	
 	final private static String TAG = SearchRestaurantsAction.class.getName();
 	private static final int CANCEL_PROCESS = 0;
@@ -55,42 +53,31 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	private TRCardManagerLocationAction locationAction;
 	private ListView restaurantsListView;
 	private ArrayAdapter<RestaurantDao> adapter;
-	private RestaurantSearchDao restaurantSearchDao;
 	private int lastViewPosition = 0;
 	private DirectionDao userDirection;
-	private SearchType searchMode;
 	private TextView textOfSearch = null;
 	private boolean error = Boolean.FALSE;
-	
+	private RestaurantSearchDao restaurantSearchDao;
 	
 	public SearchRestaurantsAction() {
 		activity = TRCardManagerApplication.getActualActivity();
 	}
 
 	
-	public SearchRestaurantsAction(RestaurantSearchDao restaurantSearchDao,TRCardManagerLocationAction locationAction,
-			SearchType searchMode,ArrayAdapter<RestaurantDao> adapter) {
+	public SearchRestaurantsAction(TRCardManagerLocationAction locationAction
+			,ArrayAdapter<RestaurantDao> adapter) {
 		this();
-		prepareRestaurantSearch(restaurantSearchDao);
+		restaurantSearchDao = TRCardManagerApplication.getRestaurantSearchDao();
 		this.locationAction = locationAction;
-		this.searchMode = searchMode;
 		this.adapter = adapter;
 	}
 	
-	private void prepareRestaurantSearch(RestaurantSearchDao restaurantSearchDao){
-		RestaurantSearchDao appRestaurantSearch = TRCardManagerApplication.getRestaurantSearchDao();
-		if(appRestaurantSearch != null && appRestaurantSearch.isSearchDone() ){
-			this.restaurantSearchDao = appRestaurantSearch;
-		}else{
-			this.restaurantSearchDao = restaurantSearchDao;
-		}
-	}
 	
 	
 	@Override
 	protected void onPreExecute() {
 		if(restaurantSearchDao.getSearchViewType() == SearchViewType.LIST_VIEW){
-			if(searchMode == SearchType.LOCATION_SEARCH){
+			if(TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.LOCATION_SEARCH){
 				RelativeLayout searchedLayout = (RelativeLayout)activity.findViewById(R.id.restaurants_search_minimized_layout);
 				searchedLayout.setVisibility(View.GONE);
 			}
@@ -116,16 +103,16 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 				}
 				break;
 			case SEARCH_RESTAURANTS:
-				if(searchMode == SearchType.DIRECTION_SEARCH){
-					message = String.format(activity.getText(R.string.restaurants_dialog_search_message).toString(), restaurantSearchDao.getAddressSearch());
+				if(TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.DIRECTION_SEARCH){
+					message = prepareMessageToDirectionSearch();
 				}else{
 					message = activity.getText(R.string.restaurants_dialog_search_message_location).toString();
 				}
 				loadingDialog.setMessage(message);
 				break;
 			case SEARCH_MORE_RESTAURANTS:
-				if(searchMode == SearchType.DIRECTION_SEARCH){
-					message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message).toString(), restaurantSearchDao.getAddressSearch());
+				if(TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.DIRECTION_SEARCH){
+					message = prepareMessageToDirectionSearchMore();
 				}else{
 					message = activity.getText(R.string.restaurants_dialog_search_more_message_location).toString();
 				}
@@ -193,9 +180,11 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
          List<Overlay> mapOverlays = mapView.getOverlays();
          Drawable drawable = activity.getResources().getDrawable(R.drawable.map_marker); 
          for(RestaurantDao r : restaurants){
-             RestaurantItemOverlay itemizedoverlay = createOverLayItemForMap(
-					drawable, r);
-             mapOverlays.add(itemizedoverlay);
+        	 if(r!=null){
+	             RestaurantItemOverlay itemizedoverlay = createOverLayItemForMap(
+						drawable, r);
+	             mapOverlays.add(itemizedoverlay);
+        	 }
          }
 	}
 
@@ -222,9 +211,9 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 
 
 	private void showDirectionOfSearch() {
-		if(searchMode == SearchType.DIRECTION_SEARCH){
+		if(TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.DIRECTION_SEARCH){
 			textOfSearch = (TextView)activity.findViewById(R.id.restaurant_search_minimized_text);
-			textOfSearch.setText(restaurantSearchDao.getAddressSearch());
+			textOfSearch.setText(prepareTitleToDirectionSearchListView());
 		}
 	}
 	
@@ -241,28 +230,25 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
     }
 	
 	
-	private void searchLocationFromDirection() throws IOException{
-		DirectionDao directionToSearch = locationAction.getLocationFromAddress(restaurantSearchDao.getAddressSearch());
-		restaurantSearchDao.setDirectionDao(directionToSearch);
-		publishProgress(SEARCH_RESTAURANTS);
-	}
-	
 	private void searchLocation() throws IOException{
-		if(restaurantSearchDao.getDirectionDao() == null){
-			switch(searchMode){
-				case DIRECTION_SEARCH:
-					searchLocationFromDirection();
-					break;
-				case LOCATION_SEARCH:
-					getPhisicalDirecction();
-					break;
+		if(restaurantSearchDao.getDirectionDao()==null || restaurantSearchDao.getDirectionDao().getLocation() == null || 
+				restaurantSearchDao.getDirectionDao().getLocation().getLatitude() == 0.0d || 
+				restaurantSearchDao.getDirectionDao().getLocation().getLongitude() == 0.0d){
+			
+			if(restaurantSearchDao.getSearchType() == SearchType.LOCATION_SEARCH){
+				getPhisicalDirecction();
 			}
 		}
 	}
 
 	private void searchRestaurantList() throws IOException {
 		TRCardManagerHttpAction httpAction = new TRCardManagerHttpAction();
-		List<RestaurantDao> restaurants = httpAction.getRestaurants(restaurantSearchDao);
+		List<RestaurantDao> restaurants = null;
+		if(restaurantSearchDao.getSearchType() == SearchType.DIRECTION_SEARCH){
+			restaurants = httpAction.getRestaurantsAdvanced(restaurantSearchDao);
+		}else{
+			restaurants = httpAction.getRestaurants(restaurantSearchDao);	
+		}
 		//TODO remove if do inside "httpAction.getRestaurants"
 		addFoundRestaurantsToList(restaurants);
 	}
@@ -287,7 +273,8 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 	
 	private void createAdapterAndSetAndListView() {
 		if(adapter == null){
-			adapter = new RestaurantListViewAdapter(activity,R.id.restaurants_list_view, restaurantSearchDao);
+			prepareAdaptarAndViewForSearchType();
+			
 			restaurantsListView.setAdapter(adapter);
 			restaurantsListView.refreshDrawableState();
 		}else{
@@ -302,16 +289,43 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		}
 		restaurantsListView.setSelection(lastViewPosition);
 	}
+
+
+	protected void prepareAdaptarAndViewForSearchType() {
+		if(restaurantSearchDao.getSearchType() == SearchType.DIRECTION_SEARCH){
+			adapter = new RestaurantListViewAdvancedAdapter(activity,R.id.restaurants_list_view, restaurantSearchDao);
+		}else{
+			adapter = new RestaurantListViewAdapter(activity,R.id.restaurants_list_view, restaurantSearchDao);
+		}
+		showBottomChangeToMapListView(restaurantSearchDao.getSearchType() != SearchType.DIRECTION_SEARCH);
+		showTopChangeToMapListView(restaurantSearchDao.getSearchType() == SearchType.DIRECTION_SEARCH);
+	}
 	
+	
+	private void showBottomChangeToMapListView(boolean show){
+		if(show){
+			((TextView) activity.findViewById(R.id.restaurants_list_maps_textView)).setVisibility(View.VISIBLE);
+		}else{
+			((TextView) activity.findViewById(R.id.restaurants_list_maps_textView)).setVisibility(View.GONE);
+		}
+	}
+	
+	private void showTopChangeToMapListView(boolean show){
+		if(show){
+			((TextView) activity.findViewById(R.id.restaurant_list_change_to_map)).setVisibility(View.VISIBLE);
+		}else{
+			((TextView) activity.findViewById(R.id.restaurant_list_change_to_map)).setVisibility(View.GONE);
+		}
+	}
 	
 	private String loadStartLoadMessage() {
 		String message = "";
-		if(restaurantSearchDao.getDirectionDao() != null){
-			if(searchMode == SearchType.DIRECTION_SEARCH){
-				message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message).toString(),
-						restaurantSearchDao.getAddressSearch());
+		//if(restaurantSearchDao.getDirectionDao() != null){
+		if(restaurantSearchDao.getNumberOfPages()==0){	
+			if(TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.DIRECTION_SEARCH){
+				message = prepareMessageToDirectionSearch();
 			}else{
-				message = activity.getText(R.string.restaurants_dialog_search_more_message_location).toString();
+				message = activity.getText(R.string.restaurants_dialog_direction_message).toString();
 			}
 		}else{
 			message = activity.getText(R.string.restaurants_dialog_direction_message).toString();
@@ -319,5 +333,68 @@ public class SearchRestaurantsAction extends AsyncTask<Void, Integer, Void> {
 		return message;
 	}
 
+
+	protected String prepareMessageToDirectionSearch() {
+		String message;
+		if(!"".equals(restaurantSearchDao.getAffiliate()) && !"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_message_afiliate_foodtype).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getFoodType(), restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getAffiliate())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_message_afiliate).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_message_foodtype).toString(),
+					restaurantSearchDao.getAddressSearch(),
+					restaurantSearchDao.getFoodType());
+		}else{
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_message).toString(),
+					restaurantSearchDao.getAddressSearch());
+		}
+		return message;
+	}
+	
+	protected String prepareMessageToDirectionSearchMore() {
+		String message;
+		if(!"".equals(restaurantSearchDao.getAffiliate()) && !"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message_afiliate_foodtype).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getFoodType(), restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getAffiliate())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message_afiliate).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message_foodtype).toString(),
+					restaurantSearchDao.getAddressSearch(),
+					restaurantSearchDao.getFoodType());
+		}else{
+			message = String.format(activity.getText(R.string.restaurants_dialog_search_more_message_location).toString(),
+					restaurantSearchDao.getAddressSearch());
+		}
+		return message;
+	}
+
+	
+	protected String prepareTitleToDirectionSearchListView() {
+		String message;
+		if(!"".equals(restaurantSearchDao.getAffiliate()) && !"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_search_list_title_afiliate_foodtype).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getFoodType(), restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getAffiliate())){
+			message = String.format(activity.getText(R.string.restaurants_search_list_title_afiliate).toString(),
+					restaurantSearchDao.getAffiliate(),
+					restaurantSearchDao.getAddressSearch());
+		}else if(!"".equals(restaurantSearchDao.getFoodType())){
+			message = String.format(activity.getText(R.string.restaurants_search_list_title_foodtype).toString(),
+					restaurantSearchDao.getAddressSearch(),
+					restaurantSearchDao.getFoodType());
+		}else{
+			message = restaurantSearchDao.getAddressSearch();
+		}
+		return message;
+	}
 	
 }

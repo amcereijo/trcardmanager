@@ -80,8 +80,8 @@ public class UpdateCardAction extends AsyncTask<String, Void, Integer> {
 	
 	private void finalizeWithState(int endState){
 		Activity act = TRCardManagerApplication.getActualActivity();
-		act.getParent().setResult(endState);
-		act.getParent().finish();
+		act.setResult(endState);
+		act.finish();
 	}
 	
 	@Override

@@ -1,22 +1,83 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <CheckBox
-        android:id="@+id/settings_check_autologin"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClickAutoupdate"
-        android:text="@string/settings_check_autologin"
-        android:textColor="@android:color/white" />
-	
-    <CheckBox
-        android:id="@+id/settings_check_ask_exit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onClickAskExit"
-        android:text="@string/settings_check_ask_exit"
-        android:textColor="@android:color/white" />
-    
-</LinearLayout>
+        android:layout_alignParentTop="true"
+        android:background="#2A4678"
+        android:padding="4sp" >
+
+        <ImageButton
+            android:id="@+id/image_button_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:contentDescription="@string/imagen_icon_text"
+            android:paddingBottom="2sp"
+            android:paddingLeft="2sp"
+            android:paddingRight="4sp"
+            android:paddingTop="2sp"
+            android:src="@drawable/application_icon" />
+
+        <TextView
+            android:id="@+id/restaurant_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/image_button_icon"
+            android:paddingBottom="2sp"
+            android:paddingTop="2sp"
+            android:text="@string/principal_menu_restaurant"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:typeface="serif" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_title"
+        android:background="#EEF3FD"
+        android:orientation="vertical" >
+
+        <CheckBox
+            android:id="@+id/settings_check_autologin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickAutoupdate"
+            android:text="@string/settings_check_autologin"
+            android:textColor="#2A4678" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="6sp"
+            android:layout_marginLeft="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_marginTop="6sp"
+            android:background="#2A4678" />
+
+        <CheckBox
+            android:id="@+id/settings_check_ask_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickAskExit"
+            android:text="@string/settings_check_ask_exit"
+            android:textColor="#2A4678" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="6sp"
+            android:layout_marginLeft="6sp"
+            android:layout_marginRight="6sp"
+            android:layout_marginTop="6sp"
+            android:background="#2A4678" />
+    </LinearLayout>
+
+</RelativeLayout>

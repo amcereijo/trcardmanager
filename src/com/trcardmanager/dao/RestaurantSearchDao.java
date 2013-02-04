@@ -16,9 +16,17 @@ public class RestaurantSearchDao {
 		LIST_VIEW
 	}
 	
-	private DirectionDao directionDao;
-	private String addressSearch = "";
+	public enum SearchType{
+		DIRECTION_SEARCH,
+		LOCATION_SEARCH
+	}
+	
 	private String affiliate = "";
+	private String foodType = "";
+	
+	private SearchType searchType;
+	
+	private DirectionDao directionDao;
 	private List<RestaurantDao> restaurantList;
 	private int numberOfPages;
 	private int currentPage = 1;
@@ -34,14 +42,9 @@ public class RestaurantSearchDao {
 	}
 	
 	public String getAddressSearch() {
-		if(addressSearch==null || "".equals(addressSearch)){
-			addressSearch = directionDaoToString();
-		}
-		return addressSearch;
+		return directionDaoToString();
 	}
-	public void setAddressSearch(String addressSearch) {
-		this.addressSearch = addressSearch;
-	}
+	
 	
 	public String getAffiliate() {
 		return affiliate;
@@ -88,27 +91,39 @@ public class RestaurantSearchDao {
 		return searchDone;
 	}
 	
+	public void setFoodType(String foodType) {
+		this.foodType = foodType;
+	}
+	public String getFoodType() {
+		return foodType;
+	}
+	
+	public void setSearchType(SearchType searchType) {
+		this.searchType = searchType;
+	}
+	public SearchType getSearchType() {
+		return searchType;
+	}
+	
 	private String directionDaoToString(){
 		String addressSearch = "";
 		if(directionDao!=null){
-			addressSearch = new StringBuilder()
-				.append(directionDao.getStreet())
-				.append(",")
-				.append(directionDao.getLocality())
-				.append(",")
-				.append(directionDao.getSubArea())
-				.append(",")
-				.append(directionDao.getArea())
-				.append(",")
-				.append(directionDao.getPostalCode())
-				.append(",")
-				.append(directionDao.getCountry())
-				.toString();
-			addressSearch = addressSearch.replaceAll(Pattern.quote("null,"), "")
-				.replaceAll(Pattern.quote(",null"), "")
-				.replaceAll(Pattern.quote(",,"), "");
+			addressSearch = String.format("%s %s, %s, %s, %s, %s, %s",directionDao.getAddressType(),
+					directionDao.getStreet(), directionDao.getLocality(), directionDao.getSubArea(),
+					directionDao.getArea(), directionDao.getPostalCode(), directionDao.getCountry())
+					.trim();
+			if(addressSearch.startsWith(", ")){
+				addressSearch = addressSearch.replaceFirst(Pattern.quote(", "), "");
+			}
+			while(addressSearch.contains(", ,")){
+				addressSearch = addressSearch.replaceFirst(Pattern.quote(", ,"), ",");
+				addressSearch = addressSearch.replaceFirst(Pattern.quote(",,"), ",");
+			}
+			if(addressSearch.endsWith(",")){
+				addressSearch = addressSearch.substring(0,addressSearch.length()-1);
+			}
 		}
 		return addressSearch;
 	}
-
+	
 }

@@ -7,21 +7,27 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.trcardmanager.R;
-import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
+import com.trcardmanager.dao.DirectionDao;
+import com.trcardmanager.dao.RestaurantSearchDao;
+import com.trcardmanager.dao.RestaurantSearchDao.SearchType;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
-import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
 
 /**
@@ -33,26 +39,25 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	final private static String TAG = TRCardManagerRestaurantsActivity.class.getName();
 	
-	private SearchType searchType;
-	private String directiontoSearch;
+	private RestaurantSearchDao directiontoSearch;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		setContentView(R.layout.restaurants);
-		setTitle(R.string.restaurants_title);
+		
 		TRCardManagerApplication.setActualActivity(this);
-		
-		final LinearLayout lSearch = (LinearLayout)findViewById(R.id.restaurant_search_layout);
-		lSearch.setOnTouchListener(new TouchElementsListener<LinearLayout>());
-		
-		final LinearLayout lLocation = (LinearLayout)findViewById(R.id.restaurant_location_layout);
-		lLocation.setOnTouchListener(new TouchElementsListener<LinearLayout>());
-			
-		final LinearLayout lSearchText = (LinearLayout)findViewById(R.id.restaurant_search_direction_click_layout);
-		lSearchText.setOnTouchListener(new TouchElementsListener<LinearLayout>());
 	}
+	
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+	
 	
 	@Override
 	protected void onResume() {
@@ -66,10 +71,14 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 		if (requestCode == TRCardManagerApplication.GPS_ACTIVATED){
 			findRestaurants();
 		}else if(requestCode == TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST && 
-				resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST_BACK_RESULT){
+				(resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST_BACK_RESULT
+						|| TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.DIRECTION_SEARCH)){
+			TRCardManagerApplication.getRestaurantSearchDao().setSearchViewType(SearchViewType.LIST_VIEW);
 			findRestaurants();
 		}else if(requestCode == TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP &&
-				resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT){
+				(resultCode != TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP_BACK_RESULT
+						|| TRCardManagerApplication.getRestaurantSearchDao().getSearchType() == SearchType.LOCATION_SEARCH)){
+			TRCardManagerApplication.getRestaurantSearchDao().setSearchViewType(SearchViewType.MAP_VIEW);
 			findRestaurants();
 		}
 	}
@@ -77,10 +86,9 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		LinearLayout selectSearchLayout = (LinearLayout)findViewById(R.id.restaurants_select_search_layout);
-		if(selectSearchLayout.getVisibility() == LinearLayout.GONE){
-			showSearchLayout(false);
-			showSearchSelectLayout(true);
+		RelativeLayout relativeLayoutTitleSearch = (RelativeLayout)findViewById(R.id.layout_title_advanced);
+		if(relativeLayoutTitleSearch != null){
+			setContentView(R.layout.restaurants);
 		}else{
 			super.onBackPressed();
 		}
@@ -91,17 +99,9 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 * @param v
 	 */
 	public void showSearch(View v){
-		if(v!=null){
-			searchType = SearchType.DIRECTION_SEARCH;
-		}
-		boolean showSearchSelectLayout = false;
-		boolean showSearchLayout = true;
-		if(searchType == SearchType.LOCATION_SEARCH){
-			showSearchSelectLayout = true;
-			showSearchLayout = false ;
-		}
-		showSearchSelectLayout(showSearchSelectLayout);
-		showSearchLayout(showSearchLayout);	
+		setContentView(R.layout.restaurant_search_advanced);
+		ScrollView searchLayout = (ScrollView)findViewById(R.id.restaurants_search_scroll_layout);
+		setCustomSpinnerItems(searchLayout);
 	}
 	
 	/**
@@ -112,7 +112,10 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 */
 	public void findInLocation(View v){
 		TRCardManagerApplication.setRestaurantSearchDao(null);
-		searchType = SearchType.LOCATION_SEARCH;
+		
+		TRCardManagerApplication.getRestaurantSearchDao().setSearchType(SearchType.LOCATION_SEARCH);
+		
+		
 		checkGPSLocationAndStartSearch();
 	}
 	
@@ -123,16 +126,56 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	 * @param v
 	 */
 	public void search(View v){
-		directiontoSearch = ((EditText)findViewById(R.id.restaurants_search_direction_text)).getText().toString();
-		if(directiontoSearch.toString()==null || "".equals(directiontoSearch.toString())){
-			Toast.makeText(this, getText(R.string.restaurants_search_text_empty), Toast.LENGTH_LONG).show();
+		
+		TRCardManagerApplication.setRestaurantSearchDao(null);
+		directiontoSearch = TRCardManagerApplication.getRestaurantSearchDao();
+		
+		saveDataDirectionSearch();
+		
+		//restaurants_search_restaurant_text
+		directiontoSearch.setAffiliate(((EditText)findViewById(R.id.restaurants_search_restaurant_text)).getText().toString());
+		
+		
+		if("".equals(directiontoSearch.getAddressSearch()) && "".equals(directiontoSearch.getAffiliate())){
+			//No data to search
+			Toast.makeText(this, R.string.restaurants_search_adv_no_data_in, Toast.LENGTH_LONG).show();
 		}else{
-			searchType = SearchType.DIRECTION_SEARCH;
-			TRCardManagerApplication.setRestaurantSearchDao(null);
+			//restaurants_search_foodtype_spinner
+			int position = ((Spinner)findViewById(R.id.restaurants_search_foodtype_spinner)).getSelectedItemPosition();
+			String[] foodTypesValues = getResources().getStringArray(R.array.food_types_values);
+			directiontoSearch.setFoodType(foodTypesValues[position]);
+			
+			directiontoSearch.setSearchViewType(SearchViewType.LIST_VIEW);
+				
+			directiontoSearch.setSearchType(SearchType.DIRECTION_SEARCH);
+			
 			findRestaurants();
+			
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_direction_text)).getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_locality_text)).getWindowToken(), 0);
 		}
+	}
+
+
+	protected void saveDataDirectionSearch() {
+		DirectionDao directionDao = new DirectionDao();
+		//restaurants_search_locality_text
+		directionDao.setLocality(((EditText)findViewById(R.id.restaurants_search_locality_text)).getText().toString());
+		//restaurants_search_subarea_text
+		directionDao.setSubArea(((EditText)findViewById(R.id.restaurants_search_subarea_text)).getText().toString());
+		//restaurants_search_cp_text
+		directionDao.setPostalCode(((EditText)findViewById(R.id.restaurants_search_cp_text)).getText().toString());
+		
+		//restaurants_search_vtype_spinner
+		directionDao.setAddressType(((Spinner)findViewById(R.id.restaurants_search_vtype_spinner)).getSelectedItem().toString());
+		//restaurants_search_street_text
+		directionDao.setStreet(((EditText)findViewById(R.id.restaurants_search_street_text)).getText().toString());
+		if(directionDao.getStreet()!=null && !"".equals(directionDao.getStreet())){
+			directionDao.setStreetNumber(directionDao.getStreet().replaceAll("[^0-9]", ""));
+			directionDao.setStreet(directionDao.getStreet().replaceAll("[^A-Za-z ]", "").trim());
+		}
+		
+		directiontoSearch.setDirectionDao(directionDao);
 	}
 
 
@@ -176,40 +219,44 @@ public class TRCardManagerRestaurantsActivity extends Activity {
 	
 	private void findRestarurantsInList(){
 		Intent restaturants = new Intent(this,TRCardManagerRestaurantsListActivity.class);
-				
-		restaturants.putExtra("directiontoSearch", directiontoSearch);
-		restaturants.putExtra("searchType", searchType.name());
-		
 		startActivityForResult(restaturants, TRCardManagerApplication.SEARCH_RESTAURANTS_LIST_TO_MAP);
 	}
 	
 	private void findRestaurantsInMap(){
 		Intent restaturants = new Intent(this,TRCardManagerRestaurantMapsActivity.class);
-		
-		restaturants.putExtra("directiontoSearch", directiontoSearch);
-		restaturants.putExtra("searchType", searchType.name());
-		
 		startActivityForResult(restaturants,TRCardManagerApplication.SEARCH_RESTAURANTS_MAP_TO_LIST);
 	}
-	
-	
-	private void showSearchLayout(boolean show){
-		RelativeLayout searchLayout = (RelativeLayout)findViewById(R.id.restaurants_search_layout);
-		if(show){
-			searchLayout.setVisibility(RelativeLayout.VISIBLE);
-		}else{
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-			searchLayout.setVisibility(RelativeLayout.GONE);
-		}
-	}
-	
 
-	private void showSearchSelectLayout(boolean show){
-		LinearLayout searchSelectLayout = (LinearLayout)findViewById(R.id.restaurants_select_search_layout);
-		if(show){
-			searchSelectLayout.setVisibility(LinearLayout.VISIBLE);
-		}else{
-			searchSelectLayout.setVisibility(LinearLayout.GONE);
+
+	private void setCustomSpinnerItems(ScrollView searchLayout) {
+		Spinner foodTypeSpinner = (Spinner) searchLayout.findViewById(R.id.restaurants_search_foodtype_spinner);
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> arrayAdapter = (ArrayAdapter<String>)foodTypeSpinner.getAdapter();
+			arrayAdapter.setDropDownViewResource(R.layout.search_spinner_item);
+		Spinner vTypeSpinner = (Spinner) searchLayout.findViewById(R.id.restaurants_search_vtype_spinner);
+		@SuppressWarnings("unchecked")
+		ArrayAdapter<String> vArrayAdapter = (ArrayAdapter<String>)vTypeSpinner.getAdapter();
+		vArrayAdapter.setDropDownViewResource(R.layout.search_spinner_item);
+		
+		
+		//add on click to hide keyboard
+		foodTypeSpinner.setOnTouchListener(new SpinnerTouchListener());
+		vTypeSpinner.setOnTouchListener(new SpinnerTouchListener());
+	}
+
+
+	
+	/**
+	 * private class to hide keyboard on touch a spinner
+	 * @author angelcereijo
+	 *
+	 */
+	private class SpinnerTouchListener implements OnTouchListener {
+		
+		public boolean onTouch(View v, MotionEvent event) {
+			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(((EditText)findViewById(R.id.restaurants_search_locality_text)).getWindowToken(), 0);
+			return false;
 		}
 	}
 	

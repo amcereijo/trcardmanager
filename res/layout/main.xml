@@ -12,92 +12,123 @@
 	    android:layout_width="fill_parent"
 	    android:background="#2A4678"
 	    android:padding="4sp"
-	    android:id="@+id/layout_card_information"
-	    >
+	    android:id="@+id/layout_card_information">
 	    
-        <RelativeLayout 
-	    android:layout_height="wrap_content"
-	    android:layout_width="wrap_content"
-	    android:background="#2A4678"
-	    android:padding="4sp"
-	    android:id="@+id/layout_image_button_icon"
-	    android:layout_alignParentLeft="true"
-	    >
-	        <ImageButton android:src="@drawable/application_icon"
-	            
-	            android:layout_alignParentLeft="true"
-	            android:id="@+id/image_button_icon"
-	            android:contentDescription="@string/imagen_icon_text"
-	           	android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		    	android:background="@null"
-		    	android:paddingTop="2sp"
-		    />
-        </RelativeLayout>
-        
-         <RelativeLayout 
-		    android:layout_height="wrap_content"
-		    android:layout_width="wrap_content"
-		    android:background="#2A4678"
-		    android:padding="4sp"
-		    android:id="@+id/layout_card_number_balance"
-		    android:layout_toRightOf="@id/layout_image_button_icon"
-	    	>
-			<TextView android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textColor="@android:color/white"
-		        android:id="@+id/card_number_title"
-		        android:text="@string/cards_list_card_title"
-		        android:textSize="18sp"
-		        android:paddingLeft="0sp"
-		        android:typeface="serif"
-		       	android:layout_alignParentLeft="true"
-		        />
-			<TextView android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textColor="@android:color/white"
-		        android:id="@+id/card_number"
-		        android:textSize="18sp"
-		        android:paddingLeft="5sp"
-		        android:typeface="serif"
-		        android:textStyle="bold"
-		        android:layout_alignParentRight="true"
-		        /><!-- android:layout_toRightOf="@id/card_number_title" -->
-			<TextView android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textColor="@android:color/white"
-		        android:id="@+id/card_balance_title"
-		        android:text="@string/cards_list_card_balance"
-		        android:textSize="18sp"
-		        android:paddingLeft="0sp"
-		        android:typeface="serif"
-		        android:layout_below="@id/card_number_title"
-		        />
-			<TextView android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textColor="@android:color/white"
-		        android:id="@+id/card_balance_symbol"
-		        android:text="@string/cards_list_card_balance_symbol"
-		        android:textSize="20sp"
-		        android:paddingLeft="1sp"
-		        android:typeface="serif"
-		        android:layout_below="@id/card_number_title"
-		        android:layout_alignParentRight="true"
-		        />
-			<TextView android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textColor="@android:color/white"
-		        android:id="@+id/card_balance"
-		        android:textSize="20sp"
-		        android:paddingLeft="5sp"
-		        android:typeface="serif"
-		        android:textStyle="bold"
-		        android:layout_below="@id/card_number"
-		        android:layout_toLeftOf="@id/card_balance_symbol"
-	        />
-		</RelativeLayout>
-	</RelativeLayout>
+        <ImageButton
+        android:id="@+id/image_button_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:contentDescription="@string/imagen_icon_text"
+        android:paddingLeft="2sp"
+        android:paddingRight="4sp"
+        android:paddingTop="2sp"
+        android:paddingBottom="2sp"
+        android:src="@drawable/application_icon" 
+        android:layout_centerVertical="true"/>
 	
+    <ImageButton
+        android:id="@+id/menu_button_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/buttom_background_light"
+        android:contentDescription="@string/imagen_icon_text"
+        android:onClick="showPoup"
+        android:src="@drawable/ic_action_overflow" 
+        android:visibility="gone"
+        android:layout_margin="0sp"
+        android:paddingLeft="0sp"
+        android:paddingRight="0sp"
+        android:paddingTop="2sp"
+        android:paddingBottom="2sp"
+        android:layout_centerVertical="true"/>
+            
+    
+    <RelativeLayout
+        android:id="@+id/layout_card_number_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_button_icon"
+        android:layout_toLeftOf="@id/menu_button_icon"
+        android:background="@android:color/white"
+        android:paddingLeft="0sp"
+        android:paddingRight="0sp"
+        android:paddingTop="0sp"
+        android:paddingBottom="0sp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_button_icon"
+        android:layout_toLeftOf="@id/menu_button_icon"
+        android:background="#2A4678"
+        android:paddingLeft="4sp"
+        android:paddingRight="0sp"
+        android:paddingTop="2sp"
+        android:paddingBottom="2sp" >
+
+        <TextView
+            android:id="@+id/card_number_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="0sp"
+            android:text="@string/cards_list_card_title"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="5sp"
+            android:paddingRight="10sp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="serif" /> <!-- android:layout_toRightOf="@id/card_number_title" -->
+
+        <TextView
+            android:id="@+id/card_balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_number_title"
+            android:paddingLeft="0sp"
+            android:text="@string/cards_list_card_balance"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/card_balance_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/card_number_title"
+            android:paddingLeft="1sp"
+            android:paddingRight="10sp"
+            android:text="@string/cards_list_card_balance_symbol"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/card_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_number"
+            android:layout_toLeftOf="@id/card_balance_symbol"
+            android:paddingLeft="5sp"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
+    </RelativeLayout>
+	</RelativeLayout>
+	</RelativeLayout>
     
     <com.google.ads.AdView android:layout_width="wrap_content"
         android:layout_height="wrap_content" 

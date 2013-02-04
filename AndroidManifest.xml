@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.trcardmanager"
     android:versionCode="14"
-    android:versionName="1.3.0" >
+    android:versionName="1.3.0" 
+    android:installLocation="auto">
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="7" />
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,45 +18,45 @@
         android:icon="@drawable/application_icon"
         android:label="@string/app_name" 
         android:allowBackup="true">
+        
         <activity
             android:name=".login.TRCardManagerLoginActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name" >
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".TRCardManagerActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         <activity
             android:name=".about.TRCardManagerAboutActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
         <activity
             android:name=".myaccount.TRCardManagerMyAccountActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".updatecard.TRCardManagerUpdateCardActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".updatepassword.TRCardManagerUpdatePasswordActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".settings.TRCardManagerSettingsActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".restaurant.TRCardManagerRestaurantsActivity"
-            android:configChanges="keyboardHidden|orientation" />
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+            android:configChanges="keyboard|orientation|keyboardHidden|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
             android:name=".restaurant.TRCardManagerRestaurantsListActivity"
-            android:configChanges="keyboardHidden|orientation" >
+            android:configChanges="orientation|keyboardHidden|screenSize" >
         </activity>
 
         <activity

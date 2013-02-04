@@ -20,6 +20,22 @@
 	        android:contentDescription="@string/about_application_icon"
 	        android:src="@drawable/about_application_icon"
 	        android:layout_gravity="center" />
+        
+        <TextView
+            android:id="@+id/error_login_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:layout_marginTop="2sp"
+            android:layout_marginBottom="8sp"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textSize="18sp"/>
+        
         <EditText
             android:id="@+id/login_email"
             android:layout_width="fill_parent"
@@ -33,7 +49,8 @@
             android:hint="@string/login_email_hint"
             android:singleLine="true"
             android:textColor="#2A4678" 
-            android:inputType="text|textEmailAddress"/>
+            android:inputType="text|textEmailAddress"
+            android:textCursorDrawable="@null"/>
 
         <EditText
             android:id="@+id/login_password"
@@ -47,7 +64,8 @@
             android:hint="@string/login_password_hint"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:textColor="#2A4678" />
+            android:textColor="#2A4678"
+            android:textCursorDrawable="@null" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,16 +110,7 @@
             <requestFocus />
         </Button>
 
-        <TextView android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center_horizontal"
-	        android:gravity="center_horizontal"
-	        android:layout_marginTop="8sp"
-	        android:textColor="#FFFFFF"
-	        android:layout_marginLeft="60sp"
-	        android:layout_marginRight="60sp"
-	        android:id="@+id/error_login_text_view"
-	        android:visibility="gone"/>
+
         
         <TextView android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"

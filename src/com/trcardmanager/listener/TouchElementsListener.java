@@ -41,6 +41,7 @@ public class TouchElementsListener<T extends View> implements OnTouchListener {
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public boolean onTouch(View v, MotionEvent event) {
 		touchElement = (T)v;
 		if(event.getAction() == MotionEvent.ACTION_DOWN){

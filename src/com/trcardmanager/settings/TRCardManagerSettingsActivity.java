@@ -3,6 +3,7 @@ package com.trcardmanager.settings;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.CheckBox;
 
 import com.trcardmanager.R;
@@ -25,8 +26,9 @@ public class TRCardManagerSettingsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//setTitle(R.string.settings_title);
 		setContentView(R.layout.application_settings_layout);
-		setTitle(R.string.settings_title);
 		setSettingsValues();
 	}
 

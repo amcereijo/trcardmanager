@@ -7,8 +7,8 @@ package com.trcardmanager.dao;
  */
 public class LocationDao {
 
-	double longitude;
-	double latitude;
+	double longitude = 0.0d;
+	double latitude = 0.0d;
 	
 	public LocationDao() {
 	}

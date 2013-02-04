@@ -145,13 +145,166 @@
     <string name="restaurants_dialog_location_title">Location</string>
     <string name="restaurants_dialog_location_message">Waiting for actual location&#8230;</string>
     <string name="restaurants_dialog_search_title">Restaurants</string>
-    <string name="restaurants_dialog_search_message">Looking for restaurants in \"%s\"&#8230;</string>
-    <string name="restaurants_dialog_search_more_message">Looking for more restaurants in \"%s\"&#8230;</string>
+    <string name="restaurants_dialog_search_message">Looking for restaurants in %s&#8230;</string>
+    <string name="restaurants_dialog_search_more_message">Looking for more restaurants in %s&#8230;</string>
     <string name="restaurants_dialog_search_message_location">Looking for restaurants in your area&#8230;</string>
+    <string name="restaurants_dialog_search_message_afiliate_foodtype" formatted="false">Looking for restaurants %s with food type %s at %s &#8230;</string>
+    <string name="restaurants_dialog_search_message_afiliate" formatted="false">Looking for restaurants %s at %s&#8230;</string>
+    <string name="restaurants_dialog_search_message_foodtype" formatted="false">Looking for restaurants %s with food type %s&#8230;</string>
     <string name="restaurants_dialog_search_more_message_location">Looking for more restaurants in your area&#8230;</string>
+    <string name="restaurants_dialog_search_more_message_afiliate_foodtype" formatted="false">Looking for more restaurants %s with food type %s in %s &#8230;</string>
+    <string name="restaurants_dialog_search_more_message_afiliate" formatted="false">Looking for more restaurants %s in %s&#8230;</string>
+    <string name="restaurants_dialog_search_more_message_foodtype" formatted="false">Looking for more restaurants %s with food type %s&#8230;</string>
     <string name="restaurants_dialog_direction_title">Restaurants</string>
     <string name="restaurants_dialog_direction_message">Locating direction&#8230;</string>
     <string name="restaurants_search_error">Some problem has happened looking for restaurants, please try again&#8230;</string>
+    <string name="restaurants_search_adv_locality">Locality</string>
+    <string name="restaurants_search_adv_locality_hint">locality</string>
+    <string name="restaurants_search_adv_area">Area</string>
+    <string name="restaurants_search_adv_area_hint">area</string>
+    <string name="restaurants_search_adv_postal_code">Postal Code</string>
+    <string name="restaurants_search_adv_postal_code_hint">postal Code</string>
+    <string name="restaurants_search_adv_trade">Establishment</string>
+    <string name="restaurants_search_adv_trade_hint">establishment</string>
+    <string name="restaurants_search_adv_street">Street</string>
+    <string name="restaurants_search_adv_cook_type">Cuisine</string>
+    <string name="restaurants_search_adv_stret_hint">name, number,...</string>
+    <string name="restaurants_search_adv_no_data_in">Type some data to search</string>
+    <string name="restaurants_search_list_title_afiliate_foodtype" formatted="false">%s with food type %s at %s</string>
+	<string name="restaurants_search_list_title_afiliate" formatted="false">%s at %s</string>
+	<string name="restaurants_search_list_title_foodtype" formatted="false">%s with food type %s</string>
+    <string-array name="street_types">
+        <item> </item>
+        <item>CL</item>
+		<item>AV</item>
+		<item>GV</item>
+		<item>CT</item>
+		<item>RB</item>
+		<item>PZ</item>
+		<item>TR</item>
+		<item>PG</item>
+		<item>PO</item>
+		<item>RD</item>
+		<item>LG</item>
+		<item>CM</item>
+		<item>AL</item>
+		<item>PJ</item>
+		<item>BO</item>
+		<item>PI</item>
+		<item>BV</item>
+		<item>PQ</item>
+		<item>GL</item>
+		<item>RA</item>
+		<item>CJ</item>
+    </string-array>
+    <string-array name="food_types">
+        <item>Todos</item>
+        <item>Alemana</item>
+        <item>Americana</item>
+        <item>Andaluza</item>
+        <item>Árabe</item>
+        <item>Argentina</item>
+        <item>Arrocería</item>
+        <item>Asador</item>
+        <item>Asiática</item>
+        <item>Asturiana</item>
+        <item>Brasileña</item>
+        <item>Cafetería/Pastelería</item>
+        <item>Casera</item>
+        <item>Castellana</item>
+        <item>Catalana</item>
+        <item>China</item>
+        <item>Cocina Creativa</item>
+        <item>Comedor de empresa</item>
+        <item>Comida preparada</item>
+        <item>Comida rápida</item>
+        <item>Cubana</item>
+        <item>Ecológica</item>
+        <item>Egipcia</item>
+        <item>Española</item>
+        <item>Fondue/Raclette</item>
+        <item>Francesa</item>
+        <item>Gallega</item>
+        <item>Griega</item>
+        <item>Heladería</item>
+        <item>India</item>
+        <item>Internacional</item>
+        <item>Italiana</item>
+        <item>Japonesa</item>
+        <item>Libanesa</item>
+        <item>Marisquería/Pescado</item>
+        <item>Mediterránea</item>
+        <item>Mejicana</item>
+        <item>Mercado</item>
+        <item>Nepal</item>
+        <item>Oriental</item>
+        <item>Peruana</item>
+        <item>Portuguesa</item>
+        <item>Regional</item>
+        <item>Sueca</item>
+        <item>Tapas-Cervecería</item>
+        <item>Thailandesa</item>
+        <item>Tradicional</item>
+        <item>Turca</item>
+        <item>Variada</item>
+        <item>Vasca</item>
+        <item>Vegetariana</item>
+        <item>Vietnamita</item>
+    </string-array>
+    <string-array name="food_types_values">
+        <item></item>
+        <item>alemana</item>
+        <item>americana</item>
+        <item>andaluza</item>
+        <item>arabe</item>
+        <item>argentina</item>
+        <item>arroceria</item>
+        <item>asador</item>
+        <item>asiatica</item>
+        <item>asturiana</item>
+        <item>brasilena</item>
+        <item>cafeteria_pasteleria</item>
+        <item>casera</item>
+        <item>castellana</item>
+        <item>catalana</item>
+        <item>china</item>
+        <item>cocina_creativa</item>
+        <item>comedor_empresa</item>
+        <item>comida_preparada</item>
+        <item>comida_rapida</item>
+        <item>cubana</item>
+        <item>ecologica</item>
+        <item>egipcia</item>
+        <item>espanola</item>
+        <item>fondue_raclette</item>
+        <item>francesa</item>
+        <item>fallega</item>
+        <item>griega</item>
+        <item>heladeria</item>
+        <item>india</item>
+        <item>internacional</item>
+        <item>italiana</item>
+        <item>japonesa</item>
+        <item>libanesa</item>
+        <item>marisqueria_pescado</item>
+        <item>mediterranea</item>
+        <item>mejicana</item>
+        <item>mercado</item>
+        <item>nepal</item>
+        <item>oriental</item>
+        <item>peruana</item>
+        <item>portuguesa</item>
+        <item>regional</item>
+        <item>sueca</item>
+        <item>tapas_cerveceria</item>
+        <item>thailandesa</item>
+        <item>tradicional</item>
+        <item>turca</item>
+        <item>variada</item>
+        <item>vasca</item>
+        <item>vegetariana</item>
+        <item>vietnamita</item>
+    </string-array>
 
     <!-- restaurant data -->
     <string name="restaurant_data_text_type">Food</string>

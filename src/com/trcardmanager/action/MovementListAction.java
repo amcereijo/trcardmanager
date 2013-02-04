@@ -14,7 +14,6 @@ import com.trcardmanager.application.TRCardManagerApplication;
 import com.trcardmanager.dao.MovementDao;
 import com.trcardmanager.dao.UserDao;
 import com.trcardmanager.exception.TRCardManagerSessionException;
-import com.trcardmanager.http.TRCardManagerHttpAction;
 import com.trcardmanager.http.TRCardManagerHttpCardAction;
 import com.trcardmanager.views.TRCardManagerListView;
 import com.trcardmanager.views.TRCardManagerListView.ScrollDirection;

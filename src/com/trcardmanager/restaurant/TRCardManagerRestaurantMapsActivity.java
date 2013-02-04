@@ -9,9 +9,7 @@ import android.widget.TextView;
 import com.google.android.maps.MapActivity;
 import com.trcardmanager.R;
 import com.trcardmanager.action.SearchRestaurantsAction;
-import com.trcardmanager.action.SearchRestaurantsAction.SearchType;
 import com.trcardmanager.application.TRCardManagerApplication;
-import com.trcardmanager.dao.RestaurantSearchDao;
 import com.trcardmanager.dao.RestaurantSearchDao.SearchViewType;
 import com.trcardmanager.listener.TouchElementsListener;
 import com.trcardmanager.location.TRCardManagerLocationAction;
@@ -23,8 +21,6 @@ import com.trcardmanager.location.TRCardManagerLocationAction;
  */
 public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 	
-	private RestaurantSearchDao restaurantSearchDao;
-	private SearchType searchType;
 	private TRCardManagerLocationAction locationAction;
 	
     @Override
@@ -36,12 +32,10 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
         setContentView(R.layout.restaurants_maps_layout);
         
 	    locationAction = new TRCardManagerLocationAction();
-	    restaurantSearchDao = new RestaurantSearchDao();
+	 
 	    
 	    ((TextView)findViewById(R.id.restaurants_maps_change_list_textView))
 	    	.setOnTouchListener(new TouchElementsListener<TextView>());
-	    
-	    getIntentParameters();
 	    
 	    launchSearchRestaurantAction();
     }
@@ -77,15 +71,9 @@ public class TRCardManagerRestaurantMapsActivity extends MapActivity {
 	
 	
 	private void launchSearchRestaurantAction() {
-		new SearchRestaurantsAction(restaurantSearchDao,locationAction,searchType,null).execute();
+		new SearchRestaurantsAction(locationAction,null).execute();
 	}
 	
-
-	private void getIntentParameters() {
-		Bundle bundle = getIntent().getExtras();
-        restaurantSearchDao.setAddressSearch(bundle.getString("directiontoSearch"));
-        searchType = SearchType.valueOf(bundle.getString("searchType"));
-	}
 
 	
 }

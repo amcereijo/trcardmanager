@@ -14,6 +14,8 @@ public class DirectionDao {
 	private String area = "";	//In spain "Comunidad autonoma"
 	private String subArea = ""; //In spain "provincia"
 	private String locality = "";
+	private String addressType = "";
+	private String streetNumber = "";
 	
 	public LocationDao getLocation() {
 		return location;
@@ -58,5 +60,18 @@ public class DirectionDao {
 		this.locality = locality;
 	}
 	
+	public void setAddressType(String addressType) {
+		this.addressType = addressType;
+	}
+	public String getAddressType() {
+		return addressType;
+	}
+	
+	public void setStreetNumber(String streetNumber) {
+		this.streetNumber = streetNumber;
+	}
+	public String getStreetNumber() {
+		return streetNumber;
+	}
 	
 }
