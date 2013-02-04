@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">TRCardManager</string>
-
     <string name="deveolper_email1">amcereijo@gmail.com</string>
     
     <!-- login -->
@@ -52,9 +51,8 @@
 
     <!-- card relative layout -->
     <string name="card_hour_date_separator">-</string>
-
+    
     <!-- movements foot -->
-    <string name="pull_to_refresh_pull_label">Arrastra para buscar más&#8230;</string>
     <string name="pull_to_refresh_release_label">Suelta para buscar más&#8230;</string>
     <string name="pull_to_refresh_refreshing_label">Cargando&#8230;</string>
     <string name="pull_to_refresh_tap_label">Toca para buscar más&#8230;</string>
@@ -90,7 +88,6 @@
     <string name="feed_back_no_intention_found">No hay un cliente de correo electrónico instalado.</string>
 
     <!-- Update card laytout -->
-    <string name="update_card_title">Actualizar tarjeta</string>
     <string name="update_card_cardnumber_text">nuevo número de tarjeta</string>
     <string name="update_card_btn_update">Actualizar</string>
     <string name="update_card_error_card_size">El número de la tarjeta debe ser de 16 dígitos</string>
@@ -99,7 +96,6 @@
     <string name="update_card_dialog_error_button">Cerrar</string>
 
      <!-- my account tab -->
-     <string name="myaccount_tab_title">TRCardManager - Mi Cuenta</string>
      <string name="myaccount_tab_update_car_tab_title">Actualizar Tarjeta</string>
      <string name="myaccount_tab_update_password_tab_title">Cambiar Contraseña</string>
      
@@ -113,7 +109,6 @@
       <string name="update_password_error">No se ha podido cambiar la contraseña</string>
      
        <!-- update password layout -->
-      <string name="update_password_title">Cambiar Contraseña</string>
       <string name="update_password_hint">nueva contraseña</string>
       <string name="update_password_confirm_hint">confirma nueva contraseña</string>
       <string name="update_password_btn_update">Actualizar</string>
@@ -128,25 +123,20 @@
       <string name="update_password_changed">La contraseña se ha actualizado correctamente.</string>
       
       <!-- setting layout -->
-      <string name="settings_title">TRCardManager - Configuración</string>
       <string name="settings_check_autologin">Inicio de sesión automático</string>
       <string name="settings_check_ask_exit">Confirmación al cerrar aplicación</string>
       
       <!-- restaurants layout -->
       <string name="restaurants_search">Restaurantes por dirección/nombre</string>
       <string name="restaurants_location">Restaurantes en mi localización</string>
-      <string name="restaurants_title">TRCardManager - Restaurantes</string>
       <string name="restaurants_select_search_type">Selecciona tipo de búsqueda</string>
       <string name="restaurants_search_direction">Calle, CP, Ciudad,&#8230;</string>
       <string name="restaurants_search_restaurant">Nombre de Restaurante</string>
       <string name="restaurants_search_text_button">Buscar</string>
-      <string name="restaurants_search_text_empty">Debes introducir una dirección</string>
       <string name="restaurants_no_gps_title">GPS</string>
       <string name="restaurants_no_gps_message">El GPS parece estar deshabilitado, ¿deseas habilitarlo?</string>
       <string name="restaurants_no_gps_yes">Si</string>
       <string name="restaurants_no_gps_no">No</string>
-      <string name="restaurants_dialog_location_title">Localización</string>
-      <string name="restaurants_dialog_location_message">Esperando localización&#8230;</string>
       <string name="restaurants_dialog_search_title">Restaurantes</string>
       <string name="restaurants_dialog_search_message">Buscando restaurantes en %s&#8230;</string>
       <string name="restaurants_dialog_search_message_afiliate_foodtype" formatted="false">Buscando restaurantes %s con comida %s en %s&#8230;</string>
@@ -254,17 +244,68 @@
         <item>Vegetariana</item>
         <item>Vietnamita</item>
     </string-array>
+    <string-array name="food_types_values">
+        <item></item>
+        <item>alemana</item>
+        <item>americana</item>
+        <item>andaluza</item>
+        <item>arabe</item>
+        <item>argentina</item>
+        <item>arroceria</item>
+        <item>asador</item>
+        <item>asiatica</item>
+        <item>asturiana</item>
+        <item>brasilena</item>
+        <item>cafeteria_pasteleria</item>
+        <item>casera</item>
+        <item>castellana</item>
+        <item>catalana</item>
+        <item>china</item>
+        <item>cocina_creativa</item>
+        <item>comedor_empresa</item>
+        <item>comida_preparada</item>
+        <item>comida_rapida</item>
+        <item>cubana</item>
+        <item>ecologica</item>
+        <item>egipcia</item>
+        <item>espanola</item>
+        <item>fondue_raclette</item>
+        <item>francesa</item>
+        <item>fallega</item>
+        <item>griega</item>
+        <item>heladeria</item>
+        <item>india</item>
+        <item>internacional</item>
+        <item>italiana</item>
+        <item>japonesa</item>
+        <item>libanesa</item>
+        <item>marisqueria_pescado</item>
+        <item>mediterranea</item>
+        <item>mejicana</item>
+        <item>mercado</item>
+        <item>nepal</item>
+        <item>oriental</item>
+        <item>peruana</item>
+        <item>portuguesa</item>
+        <item>regional</item>
+        <item>sueca</item>
+        <item>tapas_cerveceria</item>
+        <item>thailandesa</item>
+        <item>tradicional</item>
+        <item>turca</item>
+        <item>variada</item>
+        <item>vasca</item>
+        <item>vegetariana</item>
+        <item>vietnamita</item>
+    </string-array>
        
    	  <!-- restaurant data  -->
       <string name="restaurant_data_text_type">Comida</string>
       <string name="restaurant_data_no_restaurants">No se han encontrado restaurantes</string>
-      <string name="restaurant_data_info">i</string>
       <string name="restaurant_data_waze_description">¿Quieres llagar con <b>Waze</b>?</string>
       <string name="restaurant_data_maps_description">¿Quieres llegar con <b>Google Maps</b>?</string>
       <string name="restaurant_data_navigation_description">¿Quieres llegar con <b>Google Navigation</b>?</string>
       <string name="restaurant_data_view_more_info">Ver más información</string>
-      <string name="restaurant_data_maps_text">Abrir con</string>
-      <string name="restaurant_data_nav_text">Llegar con</string>
 
       
       <!-- more restaurant layout -->
@@ -277,7 +318,6 @@
       <string name="restaurants_maps_layout_clik_list_view">Toca para ver en modo lista</string>
       
       <!-- google navigation app open dialog -->
-      <string name="gnavigation_dialog_open_title">Abrir Google Navigation</string>
       <string name="gnavigation_dialog_open_message">¿Cómo vas a ir a %s?</string>
       <string name="gnavigation_dialog_open_walking">Andando</string>
       <string name="gnavigation_dialog_open_driving">En coche</string>
